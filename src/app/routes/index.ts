@@ -17,12 +17,14 @@ import { ReservationRoutes } from '../modules/reservation/reservation.routes';
 import { ReportRoutes } from '../modules/report/report.routes';
 import { PaymentRoutes } from '../modules/payment/payment.routes';
 import { OfferRoutes } from '../modules/offer/offer.routes';
+import { MentorRoutes } from '../modules/mentor/mentor.route';
 const router = express.Router();
 
 const apiRoutes = [
     { path: "/user", route: UserRoutes },
     { path: "/auth", route: AuthRoutes },
     { path: "/admin", route: AdminRoutes },
+    { path: "/mentor", route: MentorRoutes },
     { path: "/bookmark", route: BookmarkRoutes },
     { path: "/category", route: CategoryRoutes },
     { path: "/subCategory", route: SubCategoryRoutes },
