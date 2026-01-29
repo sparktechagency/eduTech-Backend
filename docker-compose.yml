@@ -1,0 +1,27 @@
+services:
+  redis:
+    image: redis:6-alpine
+    container_name: eduTech-temp-redis
+    ports:
+      - "6389:6389"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - eduTech-network
+
+networks:
+  eduTech-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+
+# docker-compose up -d, docker-compose down
