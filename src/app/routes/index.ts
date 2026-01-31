@@ -20,6 +20,7 @@ import { OfferRoutes } from '../modules/offer/offer.routes';
 import { MentorTimeTrackRoutes } from '../modules/mentor/timeTrack/time.route';
 import { MentorReportRoutes } from '../modules/mentor/report/report.route';
 import { LearningMaterialRoutes } from '../modules/mentor/lmetarial/learning.route';
+import { MentorWoopRoutes } from '../modules/mentor/woops/woop.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -32,6 +33,7 @@ const apiRoutes = [
     { path: "/mentor/time-track", route: MentorTimeTrackRoutes },
     { path: "/mentor/report", route: MentorReportRoutes },
     { path: "/learning", route: LearningMaterialRoutes },
+    { path: "/mentor/woops", route: MentorWoopRoutes },
     { path: "/rule", route: RuleRoutes },
     { path: "/faq", route: FaqRoutes },
     { path: "/chat", route: ChatRoutes },

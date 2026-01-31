@@ -29,6 +29,7 @@ router.route("/:id")
         auth(USER_ROLES.MENTOR),
         mentorLearningMaterial.deleteResource
     );
+    
 router.route("/resource/:id")
     .get(
         mentorLearningMaterial.getResourceById
