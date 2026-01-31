@@ -34,6 +34,7 @@ const userSchema = new Schema<IUser, UserModal>(
     mobileNumber: {
       type: String,
       required: false,
+      unique: false,
     },
 
     password: {
@@ -196,7 +197,7 @@ userSchema.pre('save', async function (next) {
   }
 
 
-  if (user.role === USER_ROLES.PROVIDER || user.role === USER_ROLES.CUSTOMER) {
+  if (user.role === USER_ROLES.MENTOR || user.role === USER_ROLES.STUDENT) {
     if (!user.accountInformation) {
       user.accountInformation = {
         status: false

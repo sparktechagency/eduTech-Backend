@@ -1,19 +1,57 @@
-
-// controller
 import { Request, Response } from 'express';
 import { WeeklyReport } from './report.model';
 import catchAsync from '../../../../shared/catchAsync';
+import { WeeklyReportService } from './report.service';
 
-// Create a weekly report
 const createWeeklyReport = catchAsync(async (req: Request, res: Response) => {
     const reportData = req.body;
-    const newReport = await WeeklyReport.create(reportData);
+    const newReport = await WeeklyReportService.createWeeklyReport(reportData);
     res.status(201).json({
         success: true,
         data: newReport,
     });
 });
 
+const getStudentReports = catchAsync(async (req: Request, res: Response) => {
+    const studentId = req.params.studentId;
+    const reports = await WeeklyReportService.getStudentReportsFromDB(studentId);
+    res.status(200).json({
+        success: true,
+        data: reports,
+    });
+});
+
+const  getAllReports = catchAsync(async (req: Request, res: Response) => {
+    const reports = await WeeklyReportService.getAllStudentReportsFromDB();
+    res.status(200).json({
+        success: true,
+        data: reports,
+    });
+});
+
+const updateWeeklyReport = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const updateData = req.body;
+    const updatedReport = await WeeklyReportService.updateWeeklyReportInDB(id, updateData);
+    res.status(200).json({
+        success: true,
+        data: updatedReport,
+    });
+});
+
+const deleteWeeklyReport = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    await WeeklyReportService.deleteWeeklyReportFromDB(id);
+    res.status(200).json({
+        success: true,
+        message: 'Weekly Report deleted successfully',
+    });
+});
+
 export const mentorWeeklyReport = {
     createWeeklyReport,
+    getStudentReports,
+    getAllReports,
+    deleteWeeklyReport,
+    updateWeeklyReport,
 };
