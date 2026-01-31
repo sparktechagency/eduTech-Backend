@@ -19,17 +19,19 @@ import { PaymentRoutes } from '../modules/payment/payment.routes';
 import { OfferRoutes } from '../modules/offer/offer.routes';
 import { MentorTimeTrackRoutes } from '../modules/mentor/timeTrack/time.route';
 import { MentorReportRoutes } from '../modules/mentor/report/report.route';
+import { LearningMaterialRoutes } from '../modules/mentor/lmetarial/learning.route';
 const router = express.Router();
 
 const apiRoutes = [
     { path: "/user", route: UserRoutes },
     { path: "/auth", route: AuthRoutes },
     { path: "/admin", route: AdminRoutes },
-    { path: "/mentor/time-track", route: MentorTimeTrackRoutes },
-    { path: "/mentor/report", route: MentorReportRoutes },
     { path: "/bookmark", route: BookmarkRoutes },
     { path: "/category", route: CategoryRoutes },
     { path: "/subCategory", route: SubCategoryRoutes },
+    { path: "/mentor/time-track", route: MentorTimeTrackRoutes },
+    { path: "/mentor/report", route: MentorReportRoutes },
+    { path: "/learning", route: LearningMaterialRoutes },
     { path: "/rule", route: RuleRoutes },
     { path: "/faq", route: FaqRoutes },
     { path: "/chat", route: ChatRoutes },
