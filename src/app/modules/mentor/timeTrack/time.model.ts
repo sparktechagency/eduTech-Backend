@@ -9,6 +9,9 @@ const weeklySchema = new Schema<ITimeTrack>({
     endTime: { type: Date, required: true },
     requesting: { type: String, required: true },
     comments: { type: String },
-}, { timestamps: true });
+}, {
+     timestamps: true,
+    collection: 'timetracks'
+});
 
 export const TimeTrack = model<ITimeTrack>('TimeTrack', weeklySchema);

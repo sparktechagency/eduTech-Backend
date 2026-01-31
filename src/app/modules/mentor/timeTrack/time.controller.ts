@@ -15,8 +15,8 @@ const createTimeTrack = catchAsync(async (req, res) => {
 });
   
 const getMentorTimeTracks = catchAsync(async (req, res) => {
-    const userId = req.user.id;
-    const timeTracks = await TimeTrackService.getMentorTimeTracksFromDB(userId);
+    const id = req.user.id;
+    const timeTracks = await TimeTrackService.getMentorTimeTracksFromDB(id);
     res.status(200).json({
         success: true,
         data: timeTracks,
@@ -32,8 +32,29 @@ const  getAllTimeTracks = catchAsync(async (req, res) => {
     });
 });
 
+const updateTimeTrack = catchAsync(async (req, res) => {
+    const id = req.params.id;
+    const updateData = req.body;
+    const updatedTimeTrack = await TimeTrackService.updateTimeTrackInDB(id, updateData);
+    res.status(200).json({
+        success: true,
+        data: updatedTimeTrack,
+    });
+});
+
+const deleteTimeTrack = catchAsync(async (req, res) => {
+    const id = req.params.id;
+    await TimeTrackService.deleteTimeTrackFromDB(id);
+    res.status(200).json({
+        success: true,
+        message: 'Time Track deleted successfully',
+    });
+});
+
 export const mentorTimeTrack = {
     createTimeTrack,
     getMentorTimeTracks,
     getAllTimeTracks,
+    updateTimeTrack,
+    deleteTimeTrack,
 };
