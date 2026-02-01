@@ -1,53 +1,62 @@
 class QueryBuilder {
-    queryModel: any;
-    query: any;
+  queryModel: any;
+  query: any;
 
-    constructor(queryModel: any, query: Record<string, any>) {
-        this.queryModel = queryModel;
-        this.query = query;
+  constructor(queryModel: any, query: Record<string, any>) {
+    this.queryModel = queryModel;
+    this.query = query;
+  }
+
+  search(searchableFields: string[]) {
+    if (this?.query.searchTerm) {
+      this.queryModel = this.queryModel.find({
+        $or: searchableFields.map((field) => ({
+          [field]: { $regex: this?.query?.searchTerm, $options: "i" },
+        })),
+      });
     }
+    return this;
+  }
 
-    search(searchableFields: string[]) {
-       if(this?.query.searchTerm) {
-        this.queryModel = this.queryModel.find({
-            $or: searchableFields.map((field) => ({
-                [field]: { $regex: this?.query?.searchTerm, $options: 'i' },
-            })),
-        });
-       }
-        return this;
-    }
+  filter() {
+    const queryObj = { ...this.query };
+    const excludedFields = ["page", "limit", "searchTerm"];
+    excludedFields.forEach((el) => delete queryObj[el]);
 
-    filter(){
-        const queryObj = { ...this.query };
-        const excludedFields = ['page', 'limit','searchTerm'];
-        excludedFields.forEach((el) => delete queryObj[el]);
+    this.queryModel = this.queryModel.find(queryObj);
+    return this;
+  }
 
-        this.queryModel = this.queryModel.find(queryObj);
-        return this;
-    }
+  paginate() {
+    const page = Number(this.query.page) || 1;
+    const limit = Number(this.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    this.queryModel = this.queryModel.skip(skip).limit(limit);
+    return this;
+  }
+  //sorting
+  sort() {
+    let sort = (this?.query?.sort as string) || "-createdAt";
+    this.queryModel = this.queryModel.sort(sort);
 
-    paginate(){
-        const page = Number(this.query.page) || 1;
-        const limit = Number( this.query.limit) || 10;
-        const skip = (page - 1) * limit;
-        this.queryModel = this.queryModel.skip(skip).limit(limit);
-        return this;    
-    }
+    return this;
+  }
 
-    async getPaginationInfo() {
-        const total = await this.queryModel.model.countDocuments(this.queryModel.getQuery());
-        const totalPage = Math.ceil(total / 10);
-        const page = Number(this.query.page) || 1;
-        const limit = Number( this.query.limit) || 10;
-        
-        return {
-            total,
-            totalPage,
-            page,
-            limit
-        };
-    }
+  async getPaginationInfo() {
+    const total = await this.queryModel.model.countDocuments(
+      this.queryModel.getQuery(),
+    );
+    const totalPage = Math.ceil(total / 10);
+    const page = Number(this.query.page) || 1;
+    const limit = Number(this.query.limit) || 10;
+
+    return {
+      total,
+      totalPage,
+      page,
+      limit,
+    };
+  }
 }
 
 export default QueryBuilder;

@@ -101,7 +101,14 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
-
+    userGroup: {
+      type: Schema.Types.ObjectId,
+      ref: 'UserGroup'
+    },
+    userGroupTrack: {
+      type: Schema.Types.ObjectId,
+      ref: 'UserGroupTrack'
+    },
     gender: {
       type: String,
       enum: ["Male", "Female", "Children", 'Others'],
