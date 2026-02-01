@@ -1,3 +1,5 @@
+import { FilterQuery } from "mongoose";
+
 class QueryBuilder {
   queryModel: any;
   query: any;
@@ -7,12 +9,17 @@ class QueryBuilder {
     this.query = query;
   }
 
+  //searching
   search(searchableFields: string[]) {
-    if (this?.query.searchTerm) {
-      this.queryModel = this.queryModel.find({
+    if (this.query.searchTerm) {
+      const searchQuery = {
         $or: searchableFields.map((field) => ({
-          [field]: { $regex: this?.query?.searchTerm, $options: "i" },
+          [field]: { $regex: this.query.searchTerm, $options: "i" },
         })),
+      };
+
+      this.queryModel = this.queryModel.find({
+        $and: [this.queryModel.getQuery(), searchQuery],
       });
     }
     return this;

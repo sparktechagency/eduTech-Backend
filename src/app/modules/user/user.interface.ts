@@ -46,7 +46,7 @@ export type IUser = {
         expireAt: Date;
     };
     accountInformation?: IStripeAccountInfo;
-    userGroup?: mongoose.Types.ObjectId | IUserGroup;
+    userGroup?: (mongoose.Types.ObjectId | IUserGroup)[];
     userGroupTrack?: mongoose.Types.ObjectId | IUserGroupTrack;
 }
 

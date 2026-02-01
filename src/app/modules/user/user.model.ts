@@ -39,13 +39,13 @@ const userSchema = new Schema<IUser, UserModal>(
     password: {
       type: String,
       required: false,
-      select: 0,  // Password is not required for OTP-based login
+      select: 0, // Password is not required for OTP-based login
     },
 
     location: {
       type: {
         type: String,
-        enum: ['Point'],
+        enum: ["Point"],
         required: false,
       },
       coordinates: {
@@ -56,23 +56,23 @@ const userSchema = new Schema<IUser, UserModal>(
 
     profile: {
       type: String,
-      default: 'https://res.cloudinary.com/ddqovbzxy/image/upload/v1736572642/avatar_ziy9mp.jpg',
+      default:
+        "https://res.cloudinary.com/ddqovbzxy/image/upload/v1736572642/avatar_ziy9mp.jpg",
     },
     tradeLicences: {
       type: String,
       required: false,
-      default: ""
+      default: "",
     },
     proofOwnerId: {
       type: String,
       required: false,
-      default: ""
+      default: "",
     },
     sallonPhoto: {
       type: String,
       required: false,
-      default: ""
-
+      default: "",
     },
     isUpdate: {
       type: Boolean,
@@ -101,17 +101,19 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
-    userGroup: {
-      type: Schema.Types.ObjectId,
-      ref: 'UserGroup'
-    },
+    userGroup: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "UserGroup",
+      },
+    ],
     userGroupTrack: {
       type: Schema.Types.ObjectId,
-      ref: 'UserGroupTrack'
+      ref: "UserGroupTrack",
     },
     gender: {
       type: String,
-      enum: ["Male", "Female", "Children", 'Others'],
+      enum: ["Male", "Female", "Children", "Others"],
       required: false,
     },
 
@@ -151,10 +153,10 @@ const userSchema = new Schema<IUser, UserModal>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-userSchema.index({ location: '2dsphere' });
+userSchema.index({ location: "2dsphere" });
 
 userSchema.statics.isExistUserById = async (id: string) => {
   const isExist = await User.findById(id);
@@ -178,35 +180,42 @@ userSchema.statics.isAccountCreated = async (id: string) => {
 };
 
 //is match password
-userSchema.statics.isMatchPassword = async (password: string, hashPassword: string): Promise<boolean> => {
+userSchema.statics.isMatchPassword = async (
+  password: string,
+  hashPassword: string,
+): Promise<boolean> => {
   return await bcrypt.compare(password, hashPassword);
 };
 
 // Updated pre-save middleware section only
-userSchema.pre('save', async function (next) {
+userSchema.pre("save", async function (next) {
   const user = this as IUser;
 
   if (this.isNew) {
     if (user.mobileNumber) {
-      const existingUserByMobile = await User.findOne({ mobileNumber: user.mobileNumber });
+      const existingUserByMobile = await User.findOne({
+        mobileNumber: user.mobileNumber,
+      });
       if (existingUserByMobile) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Mobile number already exists');
+        throw new ApiError(
+          StatusCodes.BAD_REQUEST,
+          "Mobile number already exists",
+        );
       }
     }
 
     if (user.email) {
       const existingUserByEmail = await User.findOne({ email: user.email });
       if (existingUserByEmail) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already exists!');
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Email already exists!");
       }
     }
   }
 
-
   if (user.role === USER_ROLES.PROVIDER || user.role === USER_ROLES.CUSTOMER) {
     if (!user.accountInformation) {
       user.accountInformation = {
-        status: false
+        status: false,
       };
     }
     if (user.discount === undefined) {
@@ -214,7 +223,7 @@ userSchema.pre('save', async function (next) {
     }
 
     if (!user.about) {
-      user.about = '';
+      user.about = "";
     }
 
     // if role is PROVIDER the isSubscribe initially set as false
@@ -224,21 +233,19 @@ userSchema.pre('save', async function (next) {
   }
 
   // Apply isUpdate logic to all users (not just PROVIDER)
-  const hasTradelicences = user.tradeLicences && user.tradeLicences.trim() !== '';
-  const hasProofOwnerId = user.proofOwnerId && user.proofOwnerId.trim() !== '';
-  const hasSallonPhoto = user.sallonPhoto && user.sallonPhoto.trim() !== '';
+  const hasTradelicences =
+    user.tradeLicences && user.tradeLicences.trim() !== "";
+  const hasProofOwnerId = user.proofOwnerId && user.proofOwnerId.trim() !== "";
+  const hasSallonPhoto = user.sallonPhoto && user.sallonPhoto.trim() !== "";
 
   // Only set isUpdate to true when ALL three fields have values
   user.isUpdate = !!(hasTradelicences && hasProofOwnerId && hasSallonPhoto);
   this.password = await bcrypt.hash(
     this.password,
-    Number(config.bcrypt_salt_rounds)
+    Number(config.bcrypt_salt_rounds),
   );
 
   next();
 });
 
-
 export const User = model<IUser, UserModal>("User", userSchema);
-
-
