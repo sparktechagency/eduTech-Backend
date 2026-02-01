@@ -59,22 +59,50 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       default: 'https://res.cloudinary.com/ddqovbzxy/image/upload/v1736572642/avatar_ziy9mp.jpg',
     },
-    tradeLicences: {
+    professionalTitle: {
       type: String,
       required: false,
-      default: ""
     },
-    proofOwnerId: {
+    company: {
       type: String,
       required: false,
-      default: ""
     },
-    sallonPhoto: {
+    preferedGroup: {
       type: String,
       required: false,
-      default: ""
+    },
+    aviliableHours: {
+      type: String,
+      required: false,
+    },
+    linkedInProfile: {
+      type: String,
+      required: false,
+    },
+    githubProfile: {
+      type: String,
+      required: false,
+    },
+    PortfolioWebsite: {
+      type: String,
+      required: false,
+    },
+    // tradeLicences: {
+    //   type: String,
+    //   required: false,
+    //   default: ""
+    // },
+    // proofOwnerId: {
+    //   type: String,
+    //   required: false,
+    //   default: ""
+    // },
+    // sallonPhoto: {
+    //   type: String,
+    //   required: false,
+    //   default: ""
 
-    },
+    // },
     isUpdate: {
       type: Boolean,
       default: false,
@@ -218,12 +246,12 @@ userSchema.pre('save', async function (next) {
   }
 
   // Apply isUpdate logic to all users (not just PROVIDER)
-  const hasTradelicences = user.tradeLicences && user.tradeLicences.trim() !== '';
-  const hasProofOwnerId = user.proofOwnerId && user.proofOwnerId.trim() !== '';
-  const hasSallonPhoto = user.sallonPhoto && user.sallonPhoto.trim() !== '';
+  // const hasTradelicences = user.tradeLicences && user.tradeLicences.trim() !== '';
+  // const hasProofOwnerId = user.proofOwnerId && user.proofOwnerId.trim() !== '';
+  // const hasSallonPhoto = user.sallonPhoto && user.sallonPhoto.trim() !== '';
 
   // Only set isUpdate to true when ALL three fields have values
-  user.isUpdate = !!(hasTradelicences && hasProofOwnerId && hasSallonPhoto);
+  // user.isUpdate = !!(hasTradelicences && hasProofOwnerId && hasSallonPhoto);
   this.password = await bcrypt.hash(
     this.password,
     Number(config.bcrypt_salt_rounds)

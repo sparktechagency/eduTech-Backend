@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
-import ApiError from '../../../errors/ApiError';
-import { IUser } from '../user/user.interface';
-import { User } from '../user/user.model';
-import { Reservation } from '../reservation/reservation.model';
-import QueryBuilder from '../../../shared/apiFeature';
+import ApiError from '../../../../errors/ApiError';
+import { IUser } from '../../user/user.interface';
+import { User } from '../../user/user.model';
+import { Reservation } from '../../reservation/reservation.model';
+import QueryBuilder from '../../../../shared/apiFeature';
 
 const createAdminToDB = async (payload: IUser): Promise<IUser> => {
     const createAdmin: any = await User.create(payload);

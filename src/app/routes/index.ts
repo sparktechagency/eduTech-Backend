@@ -5,7 +5,7 @@ import { BookmarkRoutes } from '../modules/bookmark/bookmark.routes';
 import { CategoryRoutes } from '../modules/category/category.route';
 import { RuleRoutes } from '../modules/rule/rule.route';
 import { FaqRoutes } from '../modules/faq/faq.route';
-import { AdminRoutes } from '../modules/admin/admin.route';
+import { AdminRoutes } from '../modules/admin/auth/admin.route';
 import { ChatRoutes } from '../modules/chat/chat.route';
 import { MessageRoutes } from '../modules/message/message.route';
 import { NotificationRoutes } from '../modules/notification/notification.routes';
@@ -21,6 +21,8 @@ import { MentorTimeTrackRoutes } from '../modules/mentor/timeTrack/time.route';
 import { MentorReportRoutes } from '../modules/mentor/report/report.route';
 import { LearningMaterialRoutes } from '../modules/mentor/lmetarial/learning.route';
 import { MentorWoopRoutes } from '../modules/mentor/woops/woop.route';
+import { StudentAdminPartRoutes } from '../modules/admin/students/management/students.route';
+import { AttendenceRoutes } from '../modules/admin/students/attendence/attendence.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -34,6 +36,8 @@ const apiRoutes = [
     { path: "/mentor/report", route: MentorReportRoutes },
     { path: "/learning", route: LearningMaterialRoutes },
     { path: "/mentor/woops", route: MentorWoopRoutes },
+    { path: "/student-admin", route: StudentAdminPartRoutes },
+    { path: "/student-admin/attendence", route: AttendenceRoutes },
     { path: "/rule", route: RuleRoutes },
     { path: "/faq", route: FaqRoutes },
     { path: "/chat", route: ChatRoutes },

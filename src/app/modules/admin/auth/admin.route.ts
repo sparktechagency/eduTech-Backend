@@ -1,8 +1,8 @@
 import express from 'express';
-import auth from '../../middlewares/auth';
-import { USER_ROLES } from '../../../enums/user';
+import auth from '../../../middlewares/auth';
+import { USER_ROLES } from '../../../../enums/user';
 import { AdminController } from './admin.controller';
-import validateRequest from '../../middlewares/validateRequest';
+import validateRequest from '../../../middlewares/validateRequest';
 import { AdminValidation } from './admin.validation';
 const router = express.Router();
 
