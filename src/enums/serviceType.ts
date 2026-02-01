@@ -1,4 +1,7 @@
-export enum ServiceType {
-    SALOON = "SALOON",
-    HOME = "HOME",
+export enum ResourceType {
+   PDF = "PDF",
+   DOCX = "DOCX",
+   VIDEO = "VIDEO",
+   AUDIO = "AUDIO",
+   LINK = "LINK"
 }

@@ -37,7 +37,7 @@ router.route("/")
 
 
 router.get("/PROVIDER",
-    auth(USER_ROLES.PROVIDER),
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
     CategoryController.getCategoryForPROVIDER
 )
 

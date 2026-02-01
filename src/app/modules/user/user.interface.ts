@@ -2,6 +2,7 @@ import mongoose, { Model } from 'mongoose';
 import { USER_ROLES } from '../../../enums/user';
 import { IUserGroup } from '../user-group/user-group.interface';
 import { IUserGroupTrack } from '../user-group/user-group-track/user-group-track.interface';
+import { Portfolio } from '../portfolio/portfolio.model';
 
 interface IStripeAccountInfo {
     status?: boolean;
@@ -23,6 +24,10 @@ export type IUser = {
     role: USER_ROLES;
     mobileNumber?: string;
     email?: string;
+    professionalTitle?: string;
+    company: string;
+    preferedGroup: string;
+    aviliableHours: string;
     password: string;
     isSubscribed?: boolean;
     location: {};
@@ -31,9 +36,12 @@ export type IUser = {
     dateOfBirth:string;
     gender: "Male" | "Female" | "Children" | "Others";
     profile: string;
-    tradeLicences?: string;
-    proofOwnerId?: string;
-    sallonPhoto?: string;
+    linkedInProfile?: string;
+    githubProfile?: string;
+    PortfolioWebsite?:string;
+    // tradeLicences?: string;
+    // proofOwnerId?: string;
+    // sallonPhoto?: string;
     isUpdate: boolean;
     verified: boolean;
     discount?: number;

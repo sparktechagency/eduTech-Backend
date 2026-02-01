@@ -25,3 +25,8 @@ volumes:
     driver: local
 
 # docker-compose up -d, docker-compose down
+# sudo lsof -i :6389 //to check port usage
+# sudo kill -9 <PID_NUMBER>
+# docker stop eduTech-temp-redis && docker rm eduTech-temp-redis
+# docker system prune -f
+# docker network prune -f
