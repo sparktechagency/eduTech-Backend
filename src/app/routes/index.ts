@@ -23,6 +23,9 @@ import { LearningMaterialRoutes } from '../modules/mentor/lmetarial/learning.rou
 import { MentorWoopRoutes } from '../modules/mentor/woops/woop.route';
 import { StudentAdminPartRoutes } from '../modules/admin/students/management/students.route';
 import { AttendenceRoutes } from '../modules/admin/students/attendence/attendence.route';
+import { UserGroupRoutes } from '../modules/user-group/user-group.route';
+import { TeacherRoutes } from '../modules/(teacher)/teacher/teacher.route';
+import { ClassRoutes } from '../modules/(teacher)/class/class.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -50,6 +53,9 @@ const apiRoutes = [
     { path: "/report", route: ReportRoutes },
     { path: "/payment", route: PaymentRoutes },
     { path: "/offer", route: OfferRoutes },
+    { path: "/user-group", route: UserGroupRoutes },
+    { path: "/teacher", route: TeacherRoutes },
+    { path: "/class", route: ClassRoutes },
 ]
 
 apiRoutes.forEach(route => router.use(route.path, route.route));

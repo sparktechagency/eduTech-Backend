@@ -1,0 +1,34 @@
+import express from 'express';
+import { USER_ROLES } from '../../../../enums/user';
+import auth from '../../../middlewares/auth';
+import { ClassController } from './class.controller';
+
+const router = express.Router();
+
+router
+  .route('/')
+  .post(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    ClassController.createClass
+  )
+  .get(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
+    ClassController.getAllClasses
+  );
+
+router
+  .route('/:id')
+  .get(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
+    ClassController.getClassById
+  )
+  .patch(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    ClassController.updateClass
+  )
+  .delete(
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    ClassController.deleteClass
+  );
+
+export const ClassRoutes = router;

@@ -1,5 +1,7 @@
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { USER_ROLES } from '../../../enums/user';
+import { IUserGroup } from '../user-group/user-group.interface';
+import { IUserGroupTrack } from '../user-group/user-group-track/user-group-track.interface';
 import { Portfolio } from '../portfolio/portfolio.model';
 
 interface IStripeAccountInfo {
@@ -15,7 +17,6 @@ interface IAuthenticationProps {
     oneTimeCode: string;
     expireAt: Date;
 }
-
 export type IUser = {
     _id: any;
     name: string;
@@ -53,6 +54,8 @@ export type IUser = {
         expireAt: Date;
     };
     accountInformation?: IStripeAccountInfo;
+    userGroup?: (mongoose.Types.ObjectId | IUserGroup)[];
+    userGroupTrack?: mongoose.Types.ObjectId | IUserGroupTrack;
 }
 
 export type UserModal = {
