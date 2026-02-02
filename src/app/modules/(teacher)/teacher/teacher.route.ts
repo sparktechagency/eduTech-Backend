@@ -11,5 +11,11 @@ router.get(
   TeacherController.getAllMyStudent
 );
 
+router.get(
+  '/overview',
+  auth(USER_ROLES.TEACHER, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  TeacherController.getOverview
+);
+
 
 export const TeacherRoutes = router;

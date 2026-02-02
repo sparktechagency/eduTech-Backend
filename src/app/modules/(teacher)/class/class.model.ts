@@ -3,6 +3,11 @@ import { ClassModel, IClass } from './class.interface';
 
 const classSchema = new Schema<IClass, ClassModel>(
   {
+    teacher: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -30,14 +35,12 @@ const classSchema = new Schema<IClass, ClassModel>(
     userGroup: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'UserGroup',
-        required: true,
+        ref: 'UserGroup'
       },
     ],
     userGroupTrack: {
       type: Schema.Types.ObjectId,
-      ref: 'UserGroupTrack',
-      required: true,
+      ref: 'UserGroupTrack'
     },
   },
   { timestamps: true }
