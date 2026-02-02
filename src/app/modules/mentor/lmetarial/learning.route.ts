@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.route("/")
     .post(
-        auth(USER_ROLES.MENTOR),
+        auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         mentorLearningMaterial.createResource
     )
     .get(
@@ -18,15 +18,15 @@ router.route("/")
 
 router.route("/:id")
     .get(
-        auth(USER_ROLES.MENTOR),
+        auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         mentorLearningMaterial.getMentorResources
     )
     .patch(
-        auth(USER_ROLES.MENTOR),
+        auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         mentorLearningMaterial.updateResource
     )
     .delete(
-        auth(USER_ROLES.MENTOR),
+        auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         mentorLearningMaterial.deleteResource
     );
     
