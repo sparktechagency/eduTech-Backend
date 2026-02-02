@@ -71,16 +71,7 @@ const addReviewToStudent = async (studentId: string, reviewData: IStudentReview)
   return result;
 };
 
-// const oopsGoalsFromDB = async (studentId: string, goalData: IOOpsGoal) => {
-//   const result = await StudentProfile.findByIdAndUpdate(
-//     studentId,
-//     {
-//       $push: { oopsGoals: goalData },
-//     },
-//     { new: true, runValidators: true }
-//   );
-//   return result;
-// };
+
 
 // 6. Delete Student (Soft Delete)
 const deleteStudentFromDB = async (id: string) => {

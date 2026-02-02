@@ -6,19 +6,24 @@ import { StatusCodes } from "http-status-codes";
 
 const reviewSchema = new Schema<IReview, ReviewModel>(
     {
-        customer: {
+        MENTOR: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            required: false,
         },
-        PROVIDER: {
+        TEACHER: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            required: false,
         },
-        service: {
+        COORDINATOR: {
             type: Schema.Types.ObjectId,
-            ref: "Service",
+            ref: "User",
+            required: false,
+        },
+        CLASS: {
+            type: Schema.Types.ObjectId,
+            ref: "Class",
             required: true,
         },
         comment: {
