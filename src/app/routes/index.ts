@@ -26,6 +26,9 @@ import { AttendenceRoutes } from '../modules/admin/students/attendence/attendenc
 import { UserGroupRoutes } from '../modules/user-group/user-group.route';
 import { TeacherRoutes } from '../modules/(teacher)/teacher/teacher.route';
 import { ClassRoutes } from '../modules/(teacher)/class/class.route';
+import { adminMentorRoutes } from '../modules/admin/mentor/mentor.route';
+import { adminTeacherRoutes } from '../modules/admin/teacher/teacher.route';
+import { EventRoutes } from '../modules/admin/event/event.route';
 import { AssignmentRoutes } from '../modules/(teacher)/assignment/assignment.route';
 import { RecentActivityRoutes } from '../modules/(teacher)/recentActivities/recentActivity.route';
 const router = express.Router();
@@ -43,6 +46,9 @@ const apiRoutes = [
     { path: "/mentor/woops", route: MentorWoopRoutes },
     { path: "/student-admin", route: StudentAdminPartRoutes },
     { path: "/student-admin/attendence", route: AttendenceRoutes },
+    { path: "/admin-mentor", route: adminMentorRoutes },
+    { path: "/admin-teacher", route: adminTeacherRoutes },
+    { path: "/admin-event", route: EventRoutes },
     { path: "/rule", route: RuleRoutes },
     { path: "/faq", route: FaqRoutes },
     { path: "/chat", route: ChatRoutes },

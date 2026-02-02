@@ -68,6 +68,10 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
+    jobTitle: {
+      type: String,
+      required: false,
+    },
     preferedGroup: {
       type: String,
       required: false,
@@ -88,22 +92,6 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
-    // tradeLicences: {
-    //   type: String,
-    //   required: false,
-    //   default: ""
-    // },
-    // proofOwnerId: {
-    //   type: String,
-    //   required: false,
-    //   default: ""
-    // },
-    // sallonPhoto: {
-    //   type: String,
-    //   required: false,
-    //   default: ""
-
-    // },
     isUpdate: {
       type: Boolean,
       default: false,

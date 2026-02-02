@@ -7,7 +7,7 @@ import { ReviewValidation } from "./review.validation";
 const router = express.Router();
 
 router.post("/",
-    auth(USER_ROLES.CUSTOMER),
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
     validateRequest(ReviewValidation.reviewZodSchema),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -21,7 +21,11 @@ router.post("/",
             return res.status(500).json({ message: "Failed to convert string to number" });
         }
     },
-    auth(USER_ROLES.CUSTOMER), ReviewController.createReview
+    ReviewController.createReview
+);
+router.get("/",
+    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
+    ReviewController.getAllReview
 );
 
 

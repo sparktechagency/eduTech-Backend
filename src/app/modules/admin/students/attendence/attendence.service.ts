@@ -23,7 +23,7 @@ const saveBatchAttendanceInDB = async (payload: IClassAttendance) => {
 // Get Attendance for a specific Date & Class (To show in UI)
 const getAttendanceByDateAndClass = async (date: string, classId: string) => {
     const result = await ClassAttendance.findOne({ date, classId })
-        .populate('records.studentId', 'studentId userId name'); // স্টুডেন্টের নাম সহ দেখানোর জন্য
+        .populate('records.studentId', 'studentId userId name'); 
     return result;
 };
 

@@ -26,6 +26,7 @@ export type IUser = {
     email?: string;
     professionalTitle?: string;
     company: string;
+    jobTitle: string;
     preferedGroup: string;
     aviliableHours: string;
     password: string;

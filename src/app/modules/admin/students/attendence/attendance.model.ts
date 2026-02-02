@@ -26,6 +26,7 @@ const classAttendanceSchema = new Schema<IClassAttendance>({
         status: {
             type: String,
             enum: ['present', 'absent', 'late', 'excused'],
+            default: 'present',
             required: true
         },
         note: {

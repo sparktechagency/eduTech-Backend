@@ -1,9 +1,10 @@
 import { Model, Types } from "mongoose";
 
 export type IReview = {
-    customer: Types.ObjectId;
-    PROVIDER: Types.ObjectId;
-    service: Types.ObjectId;
+    MENTOR: Types.ObjectId;
+    TEACHER: Types.ObjectId;
+    COORDINATOR: Types.ObjectId;
+    CLASS: Types.ObjectId;
     comment: string;
     rating: number;
 }
