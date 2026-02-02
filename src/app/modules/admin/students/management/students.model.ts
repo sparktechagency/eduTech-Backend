@@ -15,9 +15,9 @@ const studentProfileSchema = new Schema<IStudentProfile>({
     },
     
     // Academic Information
-    batchId: {
+    classId: {
         type: Schema.Types.ObjectId,
-        ref: 'Batch', 
+        ref: 'Class', 
         requiured: false
     },
     department: {

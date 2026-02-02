@@ -19,7 +19,7 @@ export type IAttendanceSummary = {
 export interface IStudentProfile extends Document {
     userId: Types.ObjectId;
     studentId: string; 
-    batchId?: Types.ObjectId; 
+    classId?: Types.ObjectId; 
     department?: string;
     rollNumber?: number;
     group?: string;    // like: "Skill Path", "Expedition", "beginners"
