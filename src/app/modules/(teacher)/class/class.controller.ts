@@ -6,12 +6,14 @@ import { ClassService } from './class.service';
 
 const createClass = catchAsync(async (req: Request, res: Response) => {
   const { ...classData } = req.body;
-  const { message, result } = await ClassService.createClassToDB(classData);
+  const teacherId = req.user?.id;
+  classData.teacher = teacherId;
+  const result = await ClassService.createClassToDB(classData);
 
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
-    message,
+    message: 'Class Created successfully',
     data: result,
   });
 });

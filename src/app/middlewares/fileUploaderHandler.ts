@@ -38,6 +38,9 @@ const fileUploadHandler = () => {
                 case 'sallonPhoto':
                     uploadDir = path.join(baseUploadDir, 'sallonPhoto');
                 break;
+                case 'attachment':
+                    uploadDir = path.join(baseUploadDir, 'attachments');
+                break;
                 default:
                     throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
             }
@@ -73,7 +76,25 @@ const fileUploadHandler = () => {
             } else {
                 cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .jpeg, .png, .jpg file supported'))
             }
-        }else {
+        }
+        else if (file.fieldname === 'attachment') {
+            if (
+                file.mimetype === 'application/pdf' ||
+                file.mimetype === 'text/html' ||
+                file.mimetype === 'text/css' ||
+                file.mimetype === 'application/javascript' ||
+                file.mimetype === 'text/javascript' ||
+                file.mimetype === 'text/plain' ||
+                file.mimetype === 'application/typescript' ||
+                file.mimetype === 'text/typescript'
+
+            ) {
+                cb(null, true);
+            } else {
+                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .pdf, .html, .css, .js, .ts, .txt file supported'))
+            }
+        }
+        else {
             cb(new ApiError(StatusCodes.BAD_REQUEST, 'This file is not supported'))
         }
     };
@@ -84,7 +105,7 @@ const fileUploadHandler = () => {
         { name: 'tradeLicences', maxCount: 15 },
         { name: 'proofOwnerId', maxCount: 15 },
         { name: 'sallonPhoto', maxCount: 15 },
-
+        { name: 'attachment', maxCount: 15 },
      ]);
     return upload;
 

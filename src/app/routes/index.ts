@@ -26,6 +26,8 @@ import { AttendenceRoutes } from '../modules/admin/students/attendence/attendenc
 import { UserGroupRoutes } from '../modules/user-group/user-group.route';
 import { TeacherRoutes } from '../modules/(teacher)/teacher/teacher.route';
 import { ClassRoutes } from '../modules/(teacher)/class/class.route';
+import { AssignmentRoutes } from '../modules/(teacher)/assignment/assignment.route';
+import { RecentActivityRoutes } from '../modules/(teacher)/recentActivities/recentActivity.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -56,6 +58,8 @@ const apiRoutes = [
     { path: "/user-group", route: UserGroupRoutes },
     { path: "/teacher", route: TeacherRoutes },
     { path: "/class", route: ClassRoutes },
+    { path: "/assignment", route: AssignmentRoutes },
+    { path: "/recent-activity", route: RecentActivityRoutes },
 ]
 
 apiRoutes.forEach(route => router.use(route.path, route.route));

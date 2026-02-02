@@ -19,6 +19,21 @@ const getAllMyStudent = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getOverview = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const result = await TeacherService.getOverview(user);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Teacher overview retrieved successfully',
+    data: result,
+  });
+});
+
+
+
 export const TeacherController = {
   getAllMyStudent,
+  getOverview,
 };

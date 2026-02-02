@@ -1,8 +1,7 @@
 import express from 'express';
 import { USER_ROLES } from '../../../../enums/user';
 import auth from '../../../middlewares/auth';
-import { ClassController } from './class.controller';
-import fileUploadHandler from '../../../middlewares/fileUploaderHandler';
+import { RecentActivityController } from './recentActivity.controller';
 
 const router = express.Router();
 
@@ -10,26 +9,26 @@ router
   .route('/')
   .post(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
-    ClassController.createClass
+    RecentActivityController.createRecentActivity
   )
   .get(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
-    ClassController.getAllClasses
+    RecentActivityController.getAllRecentActivities
   );
 
 router
   .route('/:id')
   .get(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
-    ClassController.getClassById
+    RecentActivityController.getRecentActivityById
   )
   .patch(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
-    ClassController.updateClass
+    RecentActivityController.updateRecentActivity
   )
   .delete(
     auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
-    ClassController.deleteClass
+    RecentActivityController.deleteRecentActivity
   );
 
-export const ClassRoutes = router;
+export const RecentActivityRoutes = router;
