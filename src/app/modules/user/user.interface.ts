@@ -18,6 +18,7 @@ interface IAuthenticationProps {
     expireAt: Date;
 }
 export type IUser = {
+    [x: string]: any;
     _id: any;
     name: string;
     appId?: string;
@@ -40,9 +41,7 @@ export type IUser = {
     linkedInProfile?: string;
     githubProfile?: string;
     PortfolioWebsite?:string;
-    // tradeLicences?: string;
-    // proofOwnerId?: string;
-    // sallonPhoto?: string;
+
     isUpdate: boolean;
     verified: boolean;
     discount?: number;

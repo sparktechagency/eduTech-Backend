@@ -2,6 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import ApiError from "../../../../errors/ApiError";
 import { ILearningMaterial } from "./learning.interface";
 import { LearningMaterial } from "./learning.model";
+import { query } from 'express';
+import QueryBuilder from "../../../../shared/apiFeature";
 
 
 const createResourceFromDB = async (payload: ILearningMaterial) => {
@@ -24,12 +26,23 @@ const getResourceByIdFromDB = async (id: string) => {
     return result;
 };
 
-const getAllMentorResourcesFromDB = async () => {
-    const result = await LearningMaterial.find()
-        .populate('mentorId') 
-        .sort({ createdAt: -1 }); 
+//aaded search and sort functionality
+const getAllMentorResourcesFromDB = async (query: Record<string, any>) => {
+   const result = new QueryBuilder(LearningMaterial.find(), query)
+    .search(['title', 'description', 'type'])
+    .filter()
+    .sort()
+    .paginate();
 
-    return result;
+    const resources = await result.queryModel
+        .populate('mentorId') 
+        // .populate('userGroup');
+    const pagination = await result.getPaginationInfo();
+
+    return { 
+        resources,
+        pagination 
+    };       
 };
 
 const updateResourceFromDB = async (id: string, payload: ILearningMaterial) => {

@@ -45,7 +45,7 @@ const apiRoutes = [
     { path: "/learning", route: LearningMaterialRoutes },
     { path: "/mentor/woops", route: MentorWoopRoutes },
     { path: "/student-admin", route: StudentAdminPartRoutes },
-    { path: "/student-admin/attendence", route: AttendenceRoutes },
+    { path: "/student-attendance", route: AttendenceRoutes },
     { path: "/admin-mentor", route: adminMentorRoutes },
     { path: "/admin-teacher", route: adminTeacherRoutes },
     { path: "/admin-event", route: EventRoutes },

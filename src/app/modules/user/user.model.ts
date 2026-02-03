@@ -205,7 +205,7 @@ userSchema.statics.isMatchPassword = async (
   return await bcrypt.compare(password, hashPassword);
 };
 
-// Updated pre-save middleware section only
+// Updated pre-save middleware
 userSchema.pre("save", async function (next) {
   const user = this as IUser;
 
@@ -230,38 +230,31 @@ userSchema.pre("save", async function (next) {
     }
   }
 
-
   if (user.role === USER_ROLES.MENTOR || user.role === USER_ROLES.STUDENT) {
     if (!user.accountInformation) {
       user.accountInformation = {
         status: false,
+        accountId: "",          
+        externalAccountId: "",
+        accountUrl: "",
+        currency: ""
       };
     }
-    if (user.discount === undefined) {
-      user.discount = 0;
-    }
-
-    if (!user.about) {
-      user.about = "";
-    }
-
-    // if role is PROVIDER the isSubscribe initially set as false
-    if (user.isSubscribed === undefined) {
-      user.isSubscribed = false;
-    }
+    if (user.discount === undefined) user.discount = 0;
+    if (!user.about) user.about = "";
+    if (user.isSubscribed === undefined) user.isSubscribed = false;
   }
 
-  // Apply isUpdate logic to all users (not just PROVIDER)
-  // const hasTradelicences = user.tradeLicences && user.tradeLicences.trim() !== '';
-  // const hasProofOwnerId = user.proofOwnerId && user.proofOwnerId.trim() !== '';
-  // const hasSallonPhoto = user.sallonPhoto && user.sallonPhoto.trim() !== '';
+  if (!user.isModified('password')) {
+      return next();
+  }
 
-  // Only set isUpdate to true when ALL three fields have values
-  // user.isUpdate = !!(hasTradelicences && hasProofOwnerId && hasSallonPhoto);
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_rounds),
-  );
+  if (user.password) {
+      user.password = await bcrypt.hash(
+        user.password,
+        Number(config.bcrypt_salt_rounds),
+      );
+  }
 
   next();
 });

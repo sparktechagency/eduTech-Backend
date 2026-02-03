@@ -5,7 +5,6 @@ const classAttendanceSchema = new Schema<IClassAttendance>({
     date: {
         type: Date,
         required: true,
-        default: Date.now
     },
     classId: {
         type: Schema.Types.ObjectId,
@@ -20,7 +19,7 @@ const classAttendanceSchema = new Schema<IClassAttendance>({
     records: [{
         studentId: {
             type: Schema.Types.ObjectId,
-            ref: 'StudentProfile', 
+            ref: 'StudentProfile',
             required: true
         },
         status: {
@@ -29,16 +28,12 @@ const classAttendanceSchema = new Schema<IClassAttendance>({
             default: 'present',
             required: true
         },
-        note: {
-            type: String,
-            trim: true
-        }
+        note: { type: String, trim: true, default: '' }
     }]
 }, {
     timestamps: true
 });
 
-// one attendance per batch per date
-classAttendanceSchema.index({ date: 1, batchId: 1 }, { unique: true });
+classAttendanceSchema.index({ date: 1, classId: 1 }, { unique: true });
 
 export const ClassAttendance = model<IClassAttendance>('ClassAttendance', classAttendanceSchema);

@@ -29,7 +29,11 @@ const eventSchema = new Schema<IEvent>({
         type: Schema.Types.ObjectId,
         ref: 'UserGroup',
         required: [true, "Associated user group is required"]
-    }
+    },
+    targetUser: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 }, {
     timestamps: true    
 })

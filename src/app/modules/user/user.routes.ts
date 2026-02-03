@@ -14,7 +14,7 @@ router.get(
 );
 
 router.patch('/update-location',
-    auth(USER_ROLES.PROVIDER, USER_ROLES.CUSTOMER),
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.STUDENT, USER_ROLES.TEACHER),
     UserController.updateLocation
   );
   
@@ -30,7 +30,7 @@ router
         UserController.createUser
     )
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.PROVIDER, USER_ROLES.CUSTOMER),
+        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR, USER_ROLES.STUDENT, USER_ROLES.TEACHER),
         fileUploadHandler(),
         UserController.updateProfile
     );

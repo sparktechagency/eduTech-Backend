@@ -32,7 +32,7 @@ const getResourceById = catchAsync(async (req, res) => {
 });
 
 const  getAllResources = catchAsync(async (req, res) => {
-    const resources = await LearningMaterialService.getAllMentorResourcesFromDB();
+    const resources = await LearningMaterialService.getAllMentorResourcesFromDB(req.query);
     res.status(200).json({
         success: true,
         data: resources,
