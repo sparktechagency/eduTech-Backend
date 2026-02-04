@@ -18,30 +18,16 @@ router.get('/get-admin',
     AdminController.getAdmin
 );
 
-router.get('/revenue-statistics',
+router.get('/total-users-by-role',
     auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-    AdminController.revenueStatistics
+    AdminController.getTotalUsersByRole
 );
 
-router.get('/user-statistics',
+router.get('/recent-activities',
     auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-    AdminController.userStatistics
+    AdminController.getRecentActivities
 );
 
-router.get('/count-summary',
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-    AdminController.countSummary
-);
-
-router.get('/user-list',
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-    AdminController.userList
-);
-
-router.get('/reservation-list',
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
-    AdminController.reservationList
-);
 
 router.delete('/:id',
     auth(USER_ROLES.SUPER_ADMIN),

@@ -2,6 +2,8 @@ import { IWeeklyReport } from "./report.interface";
 import { WeeklyReport } from './report.model';
 import { StatusCodes } from "http-status-codes";
 import ApiError from "../../../../errors/ApiError";
+import { query } from "winston";
+import QueryBuilder from "../../../../shared/apiFeature";
 const createWeeklyReport = async (payload: IWeeklyReport): Promise<any> => {
     const report = await WeeklyReport.create(payload);
     return report;
@@ -17,11 +19,16 @@ const getStudentReportsFromDB = async (studentId: string) => {
 };
 
 const getAllStudentReportsFromDB = async () => {
-    const result = await WeeklyReport.find()
-        .populate('studentId') 
+    const result = new QueryBuilder(WeeklyReport.find(), query)
+    .search(['studentId', 'weekStartDate', 'weekEndDate', 'isPresent', 'achievedHardOutcomes', 'softSkillImprovements', 'comments', 'goalSheet', 'objectives'])
+    .filter()
+    .sort()
+    .paginate();
+    const reports = await result.queryModel
+    .populate('studentId') 
         .sort({ weekStartDate: -1 }); 
 
-    return result;
+    return { reports, pagination: await result.getPaginationInfo() };
 };
 
 
