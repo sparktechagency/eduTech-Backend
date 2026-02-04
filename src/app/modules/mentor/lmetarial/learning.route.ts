@@ -34,4 +34,8 @@ router.route("/resource/:id")
     .get(
         mentorLearningMaterial.getResourceById
     );
+router.route("/filtered")
+    .get(
+        mentorLearningMaterial.getFilteredResources
+    );
 export const LearningMaterialRoutes = router;

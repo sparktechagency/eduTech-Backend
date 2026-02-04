@@ -4,6 +4,7 @@ import { ILearningMaterial } from "./learning.interface";
 import { LearningMaterial } from "./learning.model";
 import { query } from 'express';
 import QueryBuilder from "../../../../shared/apiFeature";
+import { User } from "../../user/user.model";
 
 
 const createResourceFromDB = async (payload: ILearningMaterial) => {
@@ -27,23 +28,42 @@ const getResourceByIdFromDB = async (id: string) => {
     return result;
 };
 
-//aaded search and sort functionality
 const getAllMentorResourcesFromDB = async (query: Record<string, any>) => {
+   const searchableFields = ['title', 'description', 'type', 'contentUrl'];
+
    const result = new QueryBuilder(LearningMaterial.find(), query)
-    .search(['title', 'description', 'type', 'contentUrl', 'targetAudience', 'targertGroup', 'markAsAssigned', 'createdBy'])
+    .search(searchableFields) 
     .filter()
     .sort()
     .paginate();
 
     const resources = await result.queryModel
         .populate('createdBy') 
-        // .populate('userGroup');
+        .populate('targertGroup')
+        .populate('markAsAssigned');
+        
     const pagination = await result.getPaginationInfo();
 
-    return { 
-        resources,
-        pagination 
-    };       
+    return { resources, pagination };       
+};
+
+const getFilteredResourcesFromDB = async (query: Record<string, any>) => {
+    const searchableFields = ['title', 'type', 'targeteAudience'];
+
+    const result = new QueryBuilder(LearningMaterial.find(), query)
+        .search(searchableFields)
+        .filter()
+        .sort()
+        .paginate();
+
+    const resources = await result.queryModel
+        .populate('targertGroup')
+        .populate('markAsAssigned')
+        .select('-createdBy'); 
+
+    const pagination = await result.getPaginationInfo();
+
+    return { resources, pagination };
 };
 
 const updateResourceFromDB = async (id: string, payload: ILearningMaterial) => {
@@ -75,5 +95,6 @@ export const LearningMaterialService = {
     getResourceByIdFromDB,
     getAllMentorResourcesFromDB,
     updateResourceFromDB,
-    deleteResourceFromDB
+    deleteResourceFromDB,
+    getFilteredResourcesFromDB
 };

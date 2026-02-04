@@ -29,17 +29,8 @@ const fileUploadHandler = () => {
                 case 'image':
                     uploadDir = path.join(baseUploadDir, 'images');
                 break;
-                case 'tradeLicences':
-                    uploadDir = path.join(baseUploadDir, 'tradeLicences');
-                break;
-                case 'proofOwnerId':
-                    uploadDir = path.join(baseUploadDir, 'proofOwnerId');
-                break;
-                case 'sallonPhoto':
-                    uploadDir = path.join(baseUploadDir, 'sallonPhoto');
-                break;
-                case 'attachment':
-                    uploadDir = path.join(baseUploadDir, 'attachments');
+                case 'file-assignment':
+                    uploadDir = path.join(baseUploadDir, 'student-assignments');
                 break;
                 default:
                     throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
@@ -66,11 +57,13 @@ const fileUploadHandler = () => {
     const filterFilter = (req: Request, file: any, cb: FileFilterCallback) => {
 
         // console.log("file handler",file)
-        if (file.fieldname === 'image' || file.fieldname === 'tradeLicences' || file.fieldname === 'proofOwnerId' || file.fieldname === 'sallonPhoto') {
+        if (file.fieldname === 'image' || file.fieldname === 'file-assignment') {
             if (
                 file.mimetype === 'image/jpeg' ||
                 file.mimetype === 'image/png' ||
-                file.mimetype === 'image/jpg'
+                file.mimetype === 'image/jpg' ||
+                file.mimetype === 'image/webp'||
+                file.mimetype === 'application/pdf'
             ) {
                 cb(null, true);
             } else {
@@ -102,9 +95,7 @@ const fileUploadHandler = () => {
     const upload = multer({ storage: storage, fileFilter: filterFilter})
     .fields([
         { name: 'image', maxCount: 30 },
-        { name: 'tradeLicences', maxCount: 15 },
-        { name: 'proofOwnerId', maxCount: 15 },
-        { name: 'sallonPhoto', maxCount: 15 },
+        { name: 'file-assignment', maxCount: 15 },
         { name: 'attachment', maxCount: 15 },
      ]);
     return upload;

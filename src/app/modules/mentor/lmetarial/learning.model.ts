@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import { ILearningMaterial } from "./learning.interface";
 import { ResourceType } from '../../../../enums/serviceType';
+import { USER_ROLES } from "../../../../enums/user";
 
 
 const learningMaterialSchema = new Schema<ILearningMaterial>({
@@ -14,7 +15,12 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
         required: true,
     },
     contentUrl: { type: String, required: false },
-    targetAudience: { type: Schema.Types.ObjectId, ref: 'UserGroup', required: false },
+    targeteAudience: {
+            type: String,
+            enum: Object.values(USER_ROLES),
+            default: USER_ROLES.STUDENT,
+            required: true
+        },
     targertGroup: { type: Schema.Types.ObjectId, ref: 'UserGroupTrack', required: false },
     markAsAssigned: { type: Boolean, required: false },
     

@@ -7,11 +7,11 @@ const router = express.Router();
 
 router.route("/")
     .post(
-        auth(USER_ROLES.CUSTOMER),
+        auth(USER_ROLES.STUDENT),
         BookmarkController.toggleBookmark
     )
     .get(
-        auth(USER_ROLES.CUSTOMER),
+        auth(USER_ROLES.STUDENT),
         BookmarkController.getBookmark
     );
 

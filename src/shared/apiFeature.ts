@@ -1,7 +1,6 @@
 import { FilterQuery } from "mongoose";
 
 class QueryBuilder {
-  [x: string]: any;
   queryModel: any;
   query: any;
 

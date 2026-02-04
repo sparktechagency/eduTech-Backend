@@ -39,6 +39,14 @@ const  getAllResources = catchAsync(async (req, res) => {
     });
 });
 
+const getFilteredResources = catchAsync(async (req, res) => {
+    const resources = await LearningMaterialService.getFilteredResourcesFromDB(req.query);
+    res.status(200).json({
+        success: true,
+        data: resources,
+    });
+});
+
 const updateResource = catchAsync(async (req, res) => {
     const id = req.params.id;
     const updateData = req.body;
@@ -65,5 +73,6 @@ export const mentorLearningMaterial = {
     getAllResources,
     getResourceById,
     updateResource,
-    deleteResource
+    deleteResource,
+    getFilteredResources
 };
