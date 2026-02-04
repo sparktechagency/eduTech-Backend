@@ -21,7 +21,7 @@ router.route("/")
 
 router.route("/:id")
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        // auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         EventController.getEventById
     )
     .patch(

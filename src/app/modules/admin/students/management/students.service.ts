@@ -83,6 +83,31 @@ const deleteStudentFromDB = async (id: string) => {
   return result;
 };
 
+const getmystatsFromDB = async (userId: string) => {
+  const result = await StudentProfile.findOne({ studentId: userId }) 
+    .populate('woopGoals')
+    .populate('mentorId')
+    .populate('classId');
+  
+  if (!result) {
+    console.log("No StudentProfile found for User ID:", userId);
+    throw new Error('Student profile not found for this user');
+  }
+
+  const profileId = result._id;
+  const submittedAssignmentsCount = await mongoose.model('AssignmentsSub')
+    .countDocuments({ studentId: profileId });
+
+  const countindividual = {
+    totalSubmittedAssignments: submittedAssignmentsCount,
+    totalClasses: result.classId ? (result.classId as any).totalClasses || 0 : 0,
+    mentorName: result.mentorId ? (result.mentorId as any).name || '' : '',
+    totalGoals: result.woopGoals?.length || 0,
+  }
+  
+  return countindividual;
+}
+
 export const StudentService = {
   createStudentIntoDB,
   getAllStudentsFromDB,
@@ -90,5 +115,5 @@ export const StudentService = {
   updateStudentInDB,
   addReviewToStudent,
   deleteStudentFromDB,
-    // oopsGoalsFromDB
+    getmystatsFromDB,
 };

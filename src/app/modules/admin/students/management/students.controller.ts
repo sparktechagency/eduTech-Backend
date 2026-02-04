@@ -60,6 +60,18 @@ const addReview = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getmystats = catchAsync(async (req: Request, res: Response) => {
+    const studentId = req.params.studentId;
+    const result = await StudentService.getmystatsFromDB(studentId);
+  
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Student stats fetched successfully',
+        data: result
+    });
+});
+
 // const oopsGoals = catchAsync(async (req: Request, res: Response) => {
 //     const studentId = req.body.studentId;
 //     const goalData = req.body.goalData; 
@@ -92,4 +104,5 @@ export const StudentController = {
   addReview,
   deleteStudent,
 //   oopsGoals
+  getmystats,
 };

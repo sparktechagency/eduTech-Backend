@@ -6,6 +6,7 @@ import auth from "../../../../middlewares/auth";
 
 const router = express.Router();
 
+
 router.route("/")
     .post(
         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
@@ -15,7 +16,11 @@ router.route("/")
         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         StudentController.getAllStudents
     );
-
+router.route("/std-stats")
+    .get(
+        auth(USER_ROLES.STUDENT, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        StudentController.getmystats
+    );
 router.route("/:id")
     .get(
         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
@@ -39,5 +44,6 @@ router.route("/review/:id")
 //         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
 //         StudentController.oopsGoals
 //     );
+
 
 export const StudentAdminPartRoutes = router;
