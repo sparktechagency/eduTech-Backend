@@ -5,7 +5,7 @@ import { LearningMaterialService } from "./learning.service";
 const createResource = catchAsync(async (req, res) => {
     const result = req.body;
     const userId = req.user.id;
-    result.mentorId = userId;
+    result.createdBy = userId;
     const newResource = await LearningMaterialService.createResourceFromDB(result);
     res.status(201).json({
         success: true,
@@ -13,9 +13,9 @@ const createResource = catchAsync(async (req, res) => {
     });
 });
 
-const getMentorResources = catchAsync(async (req, res) => {
+const getCreatedByResources = catchAsync(async (req, res) => {
     const id = req.user.id;
-    const resources = await LearningMaterialService.getMentorResourcesFromDB(id);
+    const resources = await LearningMaterialService.getCreatedByResourcesFromDB(id);
     res.status(200).json({
         success: true,
         data: resources,
@@ -60,7 +60,7 @@ const deleteResource = catchAsync(async (req, res) => {
 
 export const mentorLearningMaterial = {
     createResource,
-    getMentorResources,
+    getCreatedByResources,
     getAllResources,
     getResourceById,
     updateResource,

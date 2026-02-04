@@ -4,15 +4,19 @@ import { ResourceType } from '../../../../enums/serviceType';
 
 
 const learningMaterialSchema = new Schema<ILearningMaterial>({
-    mentorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    Category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    
     title: { type: String, required: true },
-type: {
+
+    type: {
         type: String, 
         enum: Object.values(ResourceType),
         required: true,
     },
-    link: { type: String, required: true },
+    contentUrl: { type: String, required: false },
+    targetAudience: { type: Schema.Types.ObjectId, ref: 'UserGroup', required: false },
+    targertGroup: { type: Schema.Types.ObjectId, ref: 'UserGroupTrack', required: false },
+    markAsAssigned: { type: Boolean, required: false },
     
 }, { timestamps: true });
 

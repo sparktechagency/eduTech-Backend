@@ -26,7 +26,6 @@ const getDayRange = (dateStr: string | Date) => {
 
 // 1. CREATE/UPDATE BATCH (For the "Save Attendance" button)
 const saveBatchAttendanceInDB = async (payload: IClassAttendance) => {
-    // ১. ডেট রেঞ্জ বের করা
     const targetDate = new Date(payload.date);
     const start = new Date(targetDate);
     start.setUTCHours(0, 0, 0, 0);
@@ -232,9 +231,28 @@ const getStudentAttendanceStats = async (classId: string, query: Record<string, 
     };
 };
 
+//update specific attendeance recordsBy attendeance id
+const updateallAttendanceRecordsFromDB = async (attendanceId: string, records: any[]) => {
+    const result = await ClassAttendance.findByIdAndUpdate(
+        attendanceId,
+        {
+            $set: {
+                records: records
+            }
+        },
+        { new: true, runValidators: true }
+    );
+    if (!result) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "Attendance record not found");
+    }
+
+    return result;
+}
+
 export const AttendanceService = {
     saveBatchAttendanceInDB,
     updateSingleStudentStatus,
     getAttendanceByDateAndClass,
-    getStudentAttendanceStats
+    getStudentAttendanceStats,
+    updateallAttendanceRecordsFromDB,
 };

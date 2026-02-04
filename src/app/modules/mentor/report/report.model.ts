@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { IWeeklyReport } from "./report.interface";
 
 const weeklySchema = new Schema<IWeeklyReport>({
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     studentId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     weekStartDate: { type: Date, required: true },
     weekEndDate: { type: Date, required: true },

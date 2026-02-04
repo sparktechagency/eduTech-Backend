@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IWeeklyReport extends Document {
+    createdBy: mongoose.Types.ObjectId;
     studentId: mongoose.Types.ObjectId;
     weekStartDate: Date;
     weekEndDate: Date;

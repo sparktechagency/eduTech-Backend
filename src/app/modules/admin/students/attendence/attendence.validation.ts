@@ -6,9 +6,7 @@ const attendenceZodSchema = {
         date: z.string({
             required_error: 'Date is required',
         }),
-        batchId: z.string({
-            required_error: 'Batch ID is required',
-        }),
+
         takenBy: z.string({
             required_error: 'Taken By (Admin ID) is required',
         }),

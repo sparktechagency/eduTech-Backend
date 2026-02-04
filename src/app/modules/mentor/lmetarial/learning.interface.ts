@@ -4,11 +4,14 @@ import { ResourceType } from "../../../../enums/serviceType";
 
 
 export interface ILearningMaterial extends Document {
-    mentorId: Types.ObjectId;
+    createdBy: Types.ObjectId;
     title: string;
+    description?: string;
     type: ResourceType;
-    Category: Types.ObjectId;
-    link: string;
+    contentUrl: string;
+    targetAudience?: Types.ObjectId;
+    targertGroup?: Types.ObjectId;
+    markAsAssigned?: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

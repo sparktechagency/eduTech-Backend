@@ -69,9 +69,23 @@ const getAttendanceStats = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const updateSpecificRecord = catchAsync(async (req: Request, res: Response) => {    
+    const result = await AttendanceService.updateallAttendanceRecordsFromDB( 
+        req.params.id,
+        req.body);
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Attendance updated successfully',
+        data: result,
+    });
+});
+
 export const AttendanceController = {
     saveBatchAttendance,
     updateStudentStatus,
     getAttendance,
-    getAttendanceStats
+    getAttendanceStats,
+    updateSpecificRecord
 };

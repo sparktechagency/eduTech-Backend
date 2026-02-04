@@ -28,4 +28,10 @@ router.get(
     AttendanceController.getAttendanceStats
 );
 
+router.patch(
+    "/record/:id",
+    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+    AttendanceController.updateSpecificRecord
+);
+
 export const AttendenceRoutes = router;

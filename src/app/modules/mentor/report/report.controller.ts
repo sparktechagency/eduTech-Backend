@@ -5,6 +5,7 @@ import { WeeklyReportService } from './report.service';
 
 const createWeeklyReport = catchAsync(async (req: Request, res: Response) => {
     const reportData = req.body;
+    reportData.createdBy = req.user.id;
     const newReport = await WeeklyReportService.createWeeklyReport(reportData);
     res.status(201).json({
         success: true,
@@ -13,8 +14,8 @@ const createWeeklyReport = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getStudentReports = catchAsync(async (req: Request, res: Response) => {
-    const studentId = req.params.studentId;
-    const reports = await WeeklyReportService.getStudentReportsFromDB(studentId);
+    const studentOrCreatedBy = req.params.studentId;
+    const reports = await WeeklyReportService.getStudentReportsFromDB(studentOrCreatedBy);
     res.status(200).json({
         success: true,
         data: reports,

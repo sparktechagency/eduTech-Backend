@@ -19,7 +19,7 @@ router.route("/")
 router.route("/:id")
     .get(
         auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
-        mentorLearningMaterial.getMentorResources
+        mentorLearningMaterial.getCreatedByResources
     )
     .patch(
         auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),

@@ -11,9 +11,10 @@ const createResourceFromDB = async (payload: ILearningMaterial) => {
     return resource;
 }
 
-const getMentorResourcesFromDB = async (mentorId: string) => {
-    const result = await LearningMaterial.find({ mentorId })
-        .populate('mentorId') 
+
+const getCreatedByResourcesFromDB = async (createdBy: string) => {
+    const result = await LearningMaterial.find({ createdBy })
+        .populate('createdBy') 
         .sort({ createdAt: -1 }); 
 
     return result;
@@ -21,7 +22,7 @@ const getMentorResourcesFromDB = async (mentorId: string) => {
 
 const getResourceByIdFromDB = async (id: string) => {
     const result = await LearningMaterial.findById(id)
-        .populate('mentorId'); 
+        .populate('createdBy'); 
 
     return result;
 };
@@ -29,13 +30,13 @@ const getResourceByIdFromDB = async (id: string) => {
 //aaded search and sort functionality
 const getAllMentorResourcesFromDB = async (query: Record<string, any>) => {
    const result = new QueryBuilder(LearningMaterial.find(), query)
-    .search(['title', 'description', 'type'])
+    .search(['title', 'description', 'type', 'contentUrl', 'targetAudience', 'targertGroup', 'markAsAssigned', 'createdBy'])
     .filter()
     .sort()
     .paginate();
 
     const resources = await result.queryModel
-        .populate('mentorId') 
+        .populate('createdBy') 
         // .populate('userGroup');
     const pagination = await result.getPaginationInfo();
 
@@ -70,7 +71,7 @@ const deleteResourceFromDB = async (id: string) => {
 
 export const LearningMaterialService = {
     createResourceFromDB,
-    getMentorResourcesFromDB,
+    getCreatedByResourcesFromDB,
     getResourceByIdFromDB,
     getAllMentorResourcesFromDB,
     updateResourceFromDB,
