@@ -10,6 +10,8 @@ export type IAssignment = {
   dueDate: Date;
   totalPoint: number;
   attachment?: string;
+  submitAssignment?: Types.ObjectId;
+  status: string;
   createdAt?: Date;
   updatedAt?: Date;
   _id?: string;

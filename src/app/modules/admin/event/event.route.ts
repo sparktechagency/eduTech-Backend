@@ -15,7 +15,7 @@ router.route("/")
         EventController.createEvent
     )
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        // auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         EventController.getAllEvents
     );
 

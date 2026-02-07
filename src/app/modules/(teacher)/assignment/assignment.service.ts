@@ -40,7 +40,10 @@ const createAssignmentToDB = async (payload: IAssignment) => {
 };
 
 const getAllAssignmentsFromDB = async (query: Record<string, any>) => {
-  const result = new QueryBuilder(Assignment.find().populate('userGroup').populate('userGroupTrack'), query)
+  const result = new QueryBuilder(Assignment.find()
+  .populate('userGroup')
+  .populate('userGroupTrack')
+  .populate('submitAssignment'), query)
     .search(['title', 'description'])
     .filter()
     .sort()

@@ -8,7 +8,19 @@ import config from "../../../config";
 
 const userSchema = new Schema<IUser, UserModal>(
   {
-    name: {
+    firstName: {
+      type: String,
+      required: false,
+    },
+    lastName: {
+      type: String,
+      required: false,
+    },
+    contactNumber: {
+      type: String,
+      required: false,
+    },
+    vNumber: {
       type: String,
       required: false,
     },
@@ -43,6 +55,12 @@ const userSchema = new Schema<IUser, UserModal>(
       select: 0, // Password is not required for OTP-based login
     },
 
+    confirmPassword: {
+      type: String,
+      required: false,
+      select: 0,
+    },
+
     location: {
       type: {
         type: String,
@@ -62,6 +80,16 @@ const userSchema = new Schema<IUser, UserModal>(
     },
     professionalTitle: {
       type: String,
+      required: false,
+    },
+ 
+
+    highestEducation: {
+      type: String,
+      required: false,
+    },
+    havealaptop: {
+      type: Boolean,
       required: false,
     },
     company: {
@@ -91,6 +119,19 @@ const userSchema = new Schema<IUser, UserModal>(
     PortfolioWebsite: {
       type: String,
       required: false,
+    },
+    motivationLearning: {
+      type: String,
+      required: false,
+    },
+    note: {
+      type: String,
+      required: false,
+    },
+  careerDirections: {
+        type: [String],
+        required: [true, "Career directions are required"],
+        default: []
     },
     isUpdate: {
       type: Boolean,
@@ -133,6 +174,23 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       enum: ["Male", "Female", "Children", "Others"],
       required: false,
+    },
+    woopGoals: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "WoopGoal",
+      },
+    ],
+    mentorId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+
+    classId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Class', 
+        requiured: false
     },
 
     authentication: {

@@ -18,11 +18,6 @@ const AssignmentsSubSchema = new Schema<IAssignmentsSub>({
         type: String,
         required: [true, "Submitted file URL is required"]
     },
-    status: {
-        type: String,
-        enum: ['submitted', 'graded', 'late', 'missing'],
-        default: 'submitted'
-    }
 }, {
     timestamps: true
 });

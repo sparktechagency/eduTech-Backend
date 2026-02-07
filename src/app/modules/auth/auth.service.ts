@@ -104,7 +104,7 @@ const forgetPasswordToDB = async (email: string) => {
 
     //save to DB
     const authentication = {
-        otpCode: otp,
+        oneTimeCode: otp,
         expireAt: new Date(Date.now() + 3 * 60000)
     };
     await User.findOneAndUpdate({ email }, { $set: { authentication } });
@@ -321,11 +321,6 @@ const loginService = async (
      deviceType: string,
      role: USER_ROLES
    ) => {
-     // Validate role
-     const validRoles = [USER_ROLES.CUSTOMER, USER_ROLES.PROVIDER];
-     if (!validRoles.includes(role)) {
-       throw new AppError(`Invalid role. Must be either ${USER_ROLES.CUSTOMER} or ${USER_ROLES.PROVIDER}`, 400);
-     }
 
      const formattedNumber = formatPhoneNumber(mobileNumber);
 
@@ -431,7 +426,7 @@ const loginService = async (
        config.jwt.jwtRefreshExpiresIn as string
      );
 
-     return { message, userId, accessToken, refreshToken };
+     return { message, userId, accessToken, refreshToken, role: user.role };
    };
 
 const verifyLoginOTPService = async (mobileNumber: string, otpCode: string) => {

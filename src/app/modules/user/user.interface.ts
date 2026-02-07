@@ -3,6 +3,7 @@ import { USER_ROLES } from '../../../enums/user';
 import { IUserGroup } from '../user-group/user-group.interface';
 import { IUserGroupTrack } from '../user-group/user-group-track/user-group-track.interface';
 import { Portfolio } from '../portfolio/portfolio.model';
+import { IClass } from '../(teacher)/class/class.interface';
 
 interface IStripeAccountInfo {
     status?: boolean;
@@ -20,17 +21,26 @@ interface IAuthenticationProps {
 export type IUser = {
     [x: string]: any;
     _id: any;
-    name: string;
+    firstName: string;
+    lastName: string;
     appId?: string;
     role: USER_ROLES;
+    contactNumber?: string;
     mobileNumber?: string;
+    vNumber?: string;
     email?: string;
     professionalTitle?: string;
+    highestEducation?: string;
+    havealaptop?: boolean;
     company: string;
     jobTitle: string;
     preferedGroup: string;
     aviliableHours: string;
+    motivationLearning: string;
+    note: string;
+    careerDirections: string[];
     password: string;
+    confirmPassword?: string;
     isSubscribed?: boolean;
     location: {};
     address:string
@@ -41,7 +51,9 @@ export type IUser = {
     linkedInProfile?: string;
     githubProfile?: string;
     PortfolioWebsite?:string;
-
+    mentorId?: mongoose.Types.ObjectId | IUser;
+    woopGoals?: (mongoose.Types.ObjectId | any)[];
+    classId?: mongoose.Types.ObjectId | IClass;
     isUpdate: boolean;
     verified: boolean;
     discount?: number;

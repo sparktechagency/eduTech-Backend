@@ -13,7 +13,6 @@ router
     ClassController.createClass
   )
   .get(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
     ClassController.getAllClasses
   );
 

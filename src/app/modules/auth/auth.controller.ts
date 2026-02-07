@@ -42,10 +42,10 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
       throw new AppError("Mobile number is required", 400);
     }
 
-    const validRoles = [USER_ROLES.CUSTOMER, USER_ROLES.PROVIDER];
-    if (!role || !validRoles.includes(role as USER_ROLES)) {
-      throw new AppError(`Invalid role. Must be either ${USER_ROLES.CUSTOMER} or ${USER_ROLES.PROVIDER}`, 400);
-    }
+    // const validRoles = [USER_ROLES.CUSTOMER, USER_ROLES.PROVIDER];
+    // if (!role || !validRoles.includes(role as USER_ROLES)) {
+    //   throw new AppError(`Invalid role. Must be either ${USER_ROLES.CUSTOMER} or ${USER_ROLES.PROVIDER}`, 400);
+    // }
 
     const result = await AuthService.loginService(
       mobileNumber,

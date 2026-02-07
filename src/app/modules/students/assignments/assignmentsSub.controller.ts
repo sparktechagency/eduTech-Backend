@@ -3,6 +3,8 @@ import catchAsync from '../../../../shared/catchAsync';
 import sendResponse from '../../../../shared/sendResponse';
 import { AssignmentsSubService } from './assignmentsSub.service';
 import path from 'path';
+import { StatusCodes } from 'http-status-codes';
+import { Assignment } from '../../(teacher)/assignment/assignment.model';
 
 const submitAssignment = catchAsync(async (req: Request, res: Response) => {
     const { assignmentId } = req.params;
@@ -12,10 +14,10 @@ const submitAssignment = catchAsync(async (req: Request, res: Response) => {
     const fileData = files?.['file-assignment'] ? files['file-assignment'][0] : null;
     
     let fileUrl = '';
-    if (fileData?.path) {
-        fileUrl = path.relative(process.cwd(), fileData.path);
-    }
 
+    if (fileData) {
+        fileUrl = `/student-assignments/${fileData.filename}`;
+    }
     if (!studentId || !fileUrl) {
         throw new Error(`Required data missing. studentId: ${studentId}, file: ${fileUrl}`);
     }
@@ -29,10 +31,18 @@ const submitAssignment = catchAsync(async (req: Request, res: Response) => {
 
     const result = await AssignmentsSubService.submitAssignmentIntoDB(submissionData);
 
+    await Assignment.findByIdAndUpdate(
+        assignmentId,
+        { 
+            submitAssignment: result._id, 
+            status: 'COMPLETED'          
+        }
+    );
+
     sendResponse(res, {
         statusCode: 201,
         success: true,
-        message: 'Assignment submitted successfully',
+        message: 'Assignment submitted and linked successfully',
         data: result,
     });
 });
@@ -63,8 +73,34 @@ const getMySubmissions = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyAssignments = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id; 
+
+    const result = await AssignmentsSubService.getMyAssignmentsFromDB(userId);
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Relevant assignments fetched successfully based on your track',
+        data: result,
+    });
+});
+
+const getUpcomingEvents = catchAsync(async (req: Request, res: Response) => {
+    const result = await AssignmentsSubService.getupcomigEventsFromDB();
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Upcoming events fetched successfully',
+        data: result,
+    });
+});
+
 export const AssignmentsSubController = {
   submitAssignment,
   getAssignmentSubmissions,
   getMySubmissions,
+  getMyAssignments,
+  getUpcomingEvents
 };

@@ -8,10 +8,17 @@ import fileUploadHandler from '../../../middlewares/fileUploaderHandler';
 
 
 const router = express.Router();
+
+router.route("/upcoming-events")
+    .get(
+        auth(USER_ROLES.STUDENT),
+        AssignmentsSubController.getUpcomingEvents
+    );
+
 router.route("/my-submissions")
     .get(
         auth(USER_ROLES.STUDENT),
-        AssignmentsSubController.getMySubmissions //student view own submissions
+        AssignmentsSubController.getMySubmissions 
     );
 router.route("/:assignmentId")
   
@@ -23,7 +30,11 @@ router.route("/:assignmentId")
             auth(USER_ROLES.STUDENT),
             fileUploadHandler(),
             AssignmentsSubController.submitAssignment
-        )
-
+        );
+router.route("/")
+    .get(
+        auth(USER_ROLES.STUDENT),
+        AssignmentsSubController.getMyAssignments
+    );
 
 export const AssignmentSubRoutes = router;

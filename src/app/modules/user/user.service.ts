@@ -122,9 +122,29 @@ const updateLocationToDB = async (user: JwtPayload, payload: { longitude: number
   return result;
 };
 
+
+const updateprofileByIdToDB = async (
+  id: string,
+  payload: Partial<IUser>
+): Promise<Partial<IUser | null>> => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
+
+const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>> => {
+  const { id } = user;
+  const existingUser = await User.isExistUserById(id);
+  if (!existingUser) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
+  return existingUser;
+};
+
 export const UserService = {
   createUserToDB,
   updateProfileToDB,
   createAdminToDB,
-  updateLocationToDB
+  updateLocationToDB,
+  getProfileFromDB,
+  updateprofileByIdToDB
 };

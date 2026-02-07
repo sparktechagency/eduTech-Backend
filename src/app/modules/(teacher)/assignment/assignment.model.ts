@@ -1,20 +1,27 @@
 import { model, Schema } from 'mongoose';
 import { AssignmentModel, IAssignment } from './assignment.interface';
+import { object } from 'zod';
 
 const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
   {
     teacher: {
       type: Schema.Types.ObjectId,
-      ref: 'Teacher',
+      ref: 'User',
       required: true,
     },
+
+    submitAssignment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AssignmentsSub',
+    },
+
     title: {
       type: String,
       required: true,
     },
     published: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     description: {
       type: String,
@@ -43,9 +50,14 @@ const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
     attachment: {
       type: String
     },
+    status: {
+      type: String,
+      enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED'],
+      default: 'PENDING',
+    },
   
   },
   { timestamps: true }
 );
-
+assignmentSchema.index({ userGroup: 1, userGroupTrack: 1 });
 export const Assignment = model<IAssignment, AssignmentModel>('Assignment', assignmentSchema);

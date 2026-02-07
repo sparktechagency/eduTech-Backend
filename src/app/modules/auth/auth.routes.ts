@@ -52,7 +52,7 @@ router.post(
 
 router.post(
     '/change-password',
-    auth(USER_ROLES.ADMIN, USER_ROLES.PROVIDER, USER_ROLES.CUSTOMER, USER_ROLES.SUPER_ADMIN),
+    auth(USER_ROLES.ADMIN, USER_ROLES.STUDENT, USER_ROLES.TEACHER,  USER_ROLES.SUPER_ADMIN),
     validateRequest(AuthValidation.createChangePasswordZodSchema),
     AuthController.changePassword
 );
@@ -68,7 +68,7 @@ router.post(
 );
 router.delete(
     '/delete-account',
-    auth(USER_ROLES.ADMIN, USER_ROLES.PROVIDER, USER_ROLES.CUSTOMER, USER_ROLES.SUPER_ADMIN),
+    auth(USER_ROLES.ADMIN, USER_ROLES.STUDENT, USER_ROLES.TEACHER, USER_ROLES.SUPER_ADMIN),
     AuthController.deleteUser
 );
 

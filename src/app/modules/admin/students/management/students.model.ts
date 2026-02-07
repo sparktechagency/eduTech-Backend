@@ -1,5 +1,6 @@
 import { Schema, model, Query, FilterQuery } from "mongoose";
 import { IStudentProfile } from "./students.interface";
+import { object } from "zod";
 
 const studentProfileSchema = new Schema<IStudentProfile>({
     userId: {
@@ -28,8 +29,9 @@ const studentProfileSchema = new Schema<IStudentProfile>({
         type: Number
     },
     group: {
-        type: String,
-        trim: true
+       type: Schema.Types.ObjectId,
+       ref: 'UserGroup',
+         required: false
     },
     track: {
         type: String,

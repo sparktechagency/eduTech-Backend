@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { ClassModel, IClass } from './class.interface';
+import { boolean } from 'zod';
 
 const classSchema = new Schema<IClass, ClassModel>(
   {
@@ -27,6 +28,10 @@ const classSchema = new Schema<IClass, ClassModel>(
     virtualClass: {
       type: Boolean,
       default: false,
+    },
+    status: {
+      type: Boolean, 
+      default: true,
     },
     published: {
       type: Boolean,

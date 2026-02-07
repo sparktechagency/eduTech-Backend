@@ -32,6 +32,9 @@ const fileUploadHandler = () => {
                 case 'file-assignment':
                     uploadDir = path.join(baseUploadDir, 'student-assignments');
                 break;
+                case 'attachment':
+                    uploadDir = path.join(baseUploadDir, 'attachments');
+                break;
                 default:
                     throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
             }
@@ -57,25 +60,18 @@ const fileUploadHandler = () => {
     const filterFilter = (req: Request, file: any, cb: FileFilterCallback) => {
 
         // console.log("file handler",file)
-        if (file.fieldname === 'image' || file.fieldname === 'file-assignment') {
+        if (file.fieldname === 'image' || file.fieldname === 'file-assignment' || file.fieldname === 'attachment') {
             if (
                 file.mimetype === 'image/jpeg' ||
                 file.mimetype === 'image/png' ||
                 file.mimetype === 'image/jpg' ||
                 file.mimetype === 'image/webp'||
-                file.mimetype === 'application/pdf'
-            ) {
-                cb(null, true);
-            } else {
-                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .jpeg, .png, .jpg file supported'))
-            }
-        }
-        else if (file.fieldname === 'attachment') {
-            if (
                 file.mimetype === 'application/pdf' ||
+                file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+                file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                file.mimetype === 'application/vnd.oasis.opendocument.presentation' || file.mimetype === 'application/vnd.oasis.opendocument.spreadsheet' || file.mimetype === 'application/vnd.oasis.opendocument.text' ||
                 file.mimetype === 'text/html' ||
                 file.mimetype === 'text/css' ||
-                file.mimetype === 'application/javascript' ||
                 file.mimetype === 'text/javascript' ||
                 file.mimetype === 'text/plain' ||
                 file.mimetype === 'application/typescript' ||
@@ -84,9 +80,26 @@ const fileUploadHandler = () => {
             ) {
                 cb(null, true);
             } else {
-                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .pdf, .html, .css, .js, .ts, .txt file supported'))
+                cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .jpeg, .png, .jpg file supported'))
             }
         }
+        // else if (file.fieldname === 'attachment') {
+        //     if (
+        //         file.mimetype === 'application/pdf' ||
+        //         file.mimetype === 'text/html' ||
+        //         file.mimetype === 'text/css' ||
+        //         file.mimetype === 'application/javascript' ||
+        //         file.mimetype === 'text/javascript' ||
+        //         file.mimetype === 'text/plain' ||
+        //         file.mimetype === 'application/typescript' ||
+        //         file.mimetype === 'text/typescript'
+
+        //     ) {
+        //         cb(null, true);
+        //     } else {
+        //         cb(new ApiError(StatusCodes.BAD_REQUEST, 'Only .pdf, .html, .css, .js, .ts, .txt file supported'))
+        //     }
+        // }
         else {
             cb(new ApiError(StatusCodes.BAD_REQUEST, 'This file is not supported'))
         }

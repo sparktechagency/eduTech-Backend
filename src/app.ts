@@ -6,6 +6,7 @@ import router from '../src/app/routes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import handleStripeWebhook from "./webhook/handleStripeWebhook";
 import { requestLogger } from "./shared/response.time.logger";
+import path from "path";
 const app = express();
 //debug
 app.use(requestLogger());
@@ -27,8 +28,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//file retrieve
-app.use('/uploads', express.static('uploads'))
+
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
+    etag: false, 
+    lastModified: false,
+    setHeaders: (res) => {
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    }
+}));
 
 //router
 app.use('/api/v1', router);

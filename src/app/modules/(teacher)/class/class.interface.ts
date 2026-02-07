@@ -9,6 +9,7 @@ export type IClass = {
   location: string;
   virtualClass: boolean;
   published: boolean;
+  status: boolean;
   userGroup: Types.ObjectId[];
   userGroupTrack: Types.ObjectId;
   createdAt?: Date;

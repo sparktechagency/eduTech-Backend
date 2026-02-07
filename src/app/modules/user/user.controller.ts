@@ -32,7 +32,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response, next: NextFun
 // retrieved user profile
 const getUserProfile = catchAsync(async (req: Request, res: Response) => {
     const user = req.user;
-    const result = await UserService.getUserProfileFromDB(user);
+    const result = await UserService.getProfileFromDB(user);
 
     sendResponse(res, {
         success: true,
@@ -53,22 +53,9 @@ const updateProfile = catchAsync(async (req: Request, res: Response, next: NextF
         profile = `/images/${req.files.image[0].filename}`;
     }
     
-    if (req.files && 'tradeLicences' in req.files && req.files.tradeLicences[0]) {
-    tradeLicences = `/tradeLicences/${req.files.tradeLicences[0].filename}`;
-    }
-
-    if (req.files && 'proofOwnerId' in req.files && req.files.proofOwnerId[0]) {
-        proofOwnerId = `/proofOwnerIds/${req.files.proofOwnerId[0].filename}`
-    }
-    if (req.files && 'sallonPhoto' in req.files && req.files.sallonPhoto[0]) {
-        sallonPhoto = `/sallonPhotos/${req.files.sallonPhoto[0].filename}`
-     }
 
     const data = {
         profile,
-        tradeLicences,
-        proofOwnerId,
-        sallonPhoto,
         ...req.body,
     };
     const result = await UserService.updateProfileToDB(user, data);
@@ -98,10 +85,24 @@ const updateLocation = catchAsync(async (req: Request, res: Response, next: Next
     });
 });
 
+const updateprofileById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { ...payload } = req.body;
+    const result = await UserService.updateprofileByIdToDB(id, payload);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Profile updated successfully',
+        data: result
+    });
+});
+
 export const UserController = {
     createUser,
     createAdmin,
     getUserProfile,
     updateProfile,
-    updateLocation
+    updateLocation,
+    updateprofileById
 };
