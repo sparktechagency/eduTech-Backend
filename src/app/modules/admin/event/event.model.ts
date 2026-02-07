@@ -12,6 +12,10 @@ const eventSchema = new Schema<IEvent>({
         type: String,
         trim: true
     },
+    image: {
+        type: String,
+        trim: true
+    },
     date: {
         type: Date,
         required: [true, "Event date is required"]
@@ -32,8 +36,12 @@ const eventSchema = new Schema<IEvent>({
     },
     targetUser: [{
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'UserGroupTrack'
     }]
+    // targetUser: {
+    //     type: [Schema.Types.ObjectId],
+    //     ref: 'User'
+    // }
 }, {
     timestamps: true    
 })

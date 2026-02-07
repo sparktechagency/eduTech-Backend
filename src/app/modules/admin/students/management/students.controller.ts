@@ -72,19 +72,6 @@ const getmystats = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-// const oopsGoals = catchAsync(async (req: Request, res: Response) => {
-//     const studentId = req.body.studentId;
-//     const goalData = req.body.goalData; 
-//     const result = await StudentService.oopsGoalsFromDB(studentId, goalData);
-  
-//     sendResponse(res, {
-//         statusCode: httpStatus.OK,
-//         success: true,
-//         message: 'Oops Goals Created Successfully',
-//         data: result
-//     });
-// });
-
 const deleteStudent = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await StudentService.deleteStudentFromDB(id);
@@ -92,6 +79,20 @@ const deleteStudent = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student deleted successfully',
+    data: result,
+  });
+});
+
+// saveOnboardingAnswers
+const saveOnboardingAnswers = catchAsync(async (req: Request, res: Response) => {
+  const studentId = req.user.id; 
+  const answers = req.body; 
+  const result = await StudentService.saveOnboardingAnswersFromDB(studentId, answers);
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Onboarding answers saved successfully',
     data: result,
   });
 });
@@ -105,4 +106,5 @@ export const StudentController = {
   deleteStudent,
 //   oopsGoals
   getmystats,
+  saveOnboardingAnswers
 };

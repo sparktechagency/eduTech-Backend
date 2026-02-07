@@ -4,6 +4,7 @@ import { USER_ROLES } from '../../../../enums/user';
 import validateRequest from '../../../middlewares/validateRequest';
 import { EventValidation } from './event.validation';
 import { EventController } from './event.controller';
+import fileUploadHandler from '../../../middlewares/fileUploaderHandler';
 
 
 const router = express.Router();
@@ -11,6 +12,7 @@ const router = express.Router();
 router.route("/")
     .post(
         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        fileUploadHandler(),
         validateRequest(EventValidation.createEventValidationZodSchema),
         EventController.createEvent
     )

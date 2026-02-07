@@ -108,6 +108,16 @@ const getmystatsFromDB = async (userId: string) => {
   return countindividual;
 }
 
+// saveOnboardingAnswers
+const saveOnboardingAnswersFromDB = async (studentId: string, answers: Record<string, any>) => {
+  const result = await StudentProfile.findByIdAndUpdate(
+    studentId,
+    { onboardingAnswers: answers },
+    { new: true, runValidators: true }
+  );
+  return result;
+};
+
 export const StudentService = {
   createStudentIntoDB,
   getAllStudentsFromDB,
@@ -116,4 +126,5 @@ export const StudentService = {
   addReviewToStudent,
   deleteStudentFromDB,
     getmystatsFromDB,
+    saveOnboardingAnswersFromDB
 };

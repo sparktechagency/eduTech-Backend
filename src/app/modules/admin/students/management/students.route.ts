@@ -36,8 +36,13 @@ router.route("/:id")
     );
 router.route("/review/:id")
     .post(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
         StudentController.addReview
+    );
+router.route("/onboarding-answers")
+    .patch(
+        auth(USER_ROLES.STUDENT, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        StudentController.saveOnboardingAnswers
     );
 // router.route("/oops-goals")
 //     .patch(

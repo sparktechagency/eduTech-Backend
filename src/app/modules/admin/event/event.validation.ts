@@ -17,6 +17,11 @@ const createEventValidationZodSchema = z.object({
         group: z.string({
             required_error: 'Group ID is required',
         }),
+        targetUser: z.array(
+            z.string()
+                .regex(/^[0-9a-fA-F]{24}$/i)
+                .refine(val => val.length === 24, { message: "ObjectId must be exactly 24 hex characters" })
+        ).optional(),
     }),
 });
 

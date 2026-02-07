@@ -33,6 +33,7 @@ import { AssignmentRoutes } from '../modules/(teacher)/assignment/assignment.rou
 import { RecentActivityRoutes } from '../modules/(teacher)/recentActivities/recentActivity.route';
 import { AssignmentSubRoutes } from '../modules/students/assignments/assignmentSub.route';
 import { CoordinatorRoutes } from '../modules/mentor-co-ordinator/coordinator.route';
+import { AdminOnboardingRoutes } from '../modules/admin/onboarding/onboarding.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -53,6 +54,7 @@ const apiRoutes = [
     { path: "/admin-event", route: EventRoutes },
     { path: "/submission-assignment", route: AssignmentSubRoutes },
     { path: "/coordinator", route: CoordinatorRoutes },
+    { path: "/onboarding", route: AdminOnboardingRoutes },
     { path: "/rule", route: RuleRoutes },
     { path: "/faq", route: FaqRoutes },
     { path: "/chat", route: ChatRoutes },

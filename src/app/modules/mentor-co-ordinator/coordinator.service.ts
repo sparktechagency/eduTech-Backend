@@ -7,7 +7,6 @@ import { UserGroup } from "../user-group/user-group.model";
 import { User } from "../user/user.model";
 import { Class } from "../(teacher)/class/class.model";
 
-//get total number of mentors, students, learningMaterials, groups, tracks,
 const getDashboardStats = async () => {
     const totalMentors = await User.countDocuments({ role: USER_ROLES.MENTOR });
     const totalStudents = await User.countDocuments({ role: USER_ROLES.STUDENT });

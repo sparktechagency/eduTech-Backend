@@ -22,8 +22,8 @@ export interface IStudentProfile extends Document {
     classId?: Types.ObjectId; 
     department?: string;
     rollNumber?: number;
-    group?: string;    // like: "Skill Path", "Expedition", "beginners"
-    track?: string;      // like: "Fullstack", "Data" (Optional)
+    group?: string;
+    track?: string;     
     
     mentorId?: Types.ObjectId;
     status: IStudentStatus; 
