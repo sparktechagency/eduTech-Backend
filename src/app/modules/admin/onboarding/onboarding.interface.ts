@@ -1,10 +1,6 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export interface IOnboarding {
-  user: Types.ObjectId; 
-  computerComfort: string; 
-  hardestToLearn: string[];
-  proudMoment: string; 
-  interests: string[]; 
-  successVision: string; 
+  user: Types.ObjectId;
+  [key: string]: any; 
 }

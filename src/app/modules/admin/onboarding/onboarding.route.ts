@@ -10,7 +10,7 @@ const router = express.Router();
 router.route("/")
     .post(
         auth(USER_ROLES.STUDENT, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
-        OnboardingController.createOnboarding
+        OnboardingController.completeOnboarding
     )
     .get(
         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.STUDENT, USER_ROLES.MENTOR),

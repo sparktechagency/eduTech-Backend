@@ -1,18 +1,20 @@
 import { StatusCodes } from "http-status-codes";
 import ApiError from "../../../../errors/ApiError";
-import { Onboarding } from "./onboarding.model";
 import { get } from "mongoose";
-
-
-const createOnBoardingFromDB = async (userId: string, data: any) => {
-    const existingOnboarding = await Onboarding.findOne({ user: userId });
-    if (existingOnboarding) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Onboarding already exists for this user');
+import { IOnboarding } from "./onboarding.interface";
+import { Onboarding } from "./onboarding.model";
+const saveOnboardingToDB = async (payload: Partial<IOnboarding>) => {
+  const result = await Onboarding.findOneAndUpdate(
+    { user: payload.user },
+    payload,
+    {
+      new: true,
+      upsert: true, 
+      runValidators: true,
     }
-    const onboardingData = { user: userId, ...data };
-    const result = await Onboarding.create(onboardingData);
-    return result;
-}
+  );
+  return result;
+};
 
 const updateOnBoardingFromDB = async (userId: string, data: any) => {
     const result = await Onboarding.findOneAndUpdate(
@@ -25,6 +27,7 @@ const updateOnBoardingFromDB = async (userId: string, data: any) => {
     }
     return result;
 }
+
 const getOnBoardingFromDB = async (userId: string) => {
     const result = await Onboarding.findOne({ user: userId });
     if (!result) {
@@ -42,7 +45,7 @@ const getByIdFromDB = async (id: string) => {
 }
 
 export const OnboardingService = {
-    createOnBoardingFromDB,
+    saveOnboardingToDB,
     updateOnBoardingFromDB,
     getOnBoardingFromDB,
     getByIdFromDB
