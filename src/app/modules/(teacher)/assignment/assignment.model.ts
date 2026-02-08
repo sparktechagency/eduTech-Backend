@@ -1,6 +1,5 @@
 import { model, Schema } from 'mongoose';
 import { AssignmentModel, IAssignment } from './assignment.interface';
-import { object } from 'zod';
 
 const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
   {
