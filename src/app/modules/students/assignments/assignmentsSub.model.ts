@@ -11,7 +11,7 @@ const AssignmentsSubSchema = new Schema<IAssignmentsSub>({
     },
     studentId: {
         type: Schema.Types.ObjectId,
-        ref: 'StudentProfile',
+        ref: 'User',
         required: [true, "Student ID is required"]
     },
     fileAssignment: {

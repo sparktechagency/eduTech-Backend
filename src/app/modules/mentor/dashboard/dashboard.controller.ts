@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../../shared/catchAsync';
 import { mentorDashboardService } from './dashboard.service';
+import { get } from 'mongoose';
 
 
 const getMentorDashboardData = catchAsync(async (req: Request, res: Response) => {
@@ -21,7 +22,17 @@ const getUpcomingSessions = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getMentorStudentrdWoops = catchAsync(async (req: Request, res: Response) => {
+    const mentorId = req.user?.id;
+    const studentWoops = await mentorDashboardService.getMentorStudentrdWoops(mentorId);
+    res.status(200).json({
+        success: true,
+        data: studentWoops,
+    });
+});
+
 export const mentorDashboardController = {
     getMentorDashboardData,
     getUpcomingSessions,
+    getMentorStudentrdWoops
 };

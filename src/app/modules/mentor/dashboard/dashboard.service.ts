@@ -6,6 +6,7 @@ import { IUser } from "../../user/user.interface";
 import { Types } from "mongoose";
 import { Event } from "../../admin/event/event.model";
 import { WoopGoal } from "../woops/woops.model";
+import { Assignment } from "../../(teacher)/assignment/assignment.model";
 
 type DashboardData = {
     assignedStudents: (IUser | Types.ObjectId)[] | undefined;
@@ -88,7 +89,67 @@ const getMentorDashboardWoops = async (mentorId: string) => {
     };
 };
 
+const getMentorStudentrdWoops = async (mentorId: string) => {
+    const mentor = await User.findById(mentorId)
+        .populate({ path: 'woopGoals', select: 'title description progress nextSessionDate' });
+
+    if (!mentor || mentor.role !== USER_ROLES.MENTOR) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Mentor not found');
+    }
+
+    const event = await Event.findOne({ date: { $gte: new Date() } })
+        .populate('group')
+        .populate('targetUser');
+
+    const woopsGoals = await WoopGoal.findOne().lean();
+
+    const assignment = await Assignment.findOne().lean()
+        .populate('submitAssignment', 'studentId fileAssignment')
+        // .populate('Assignment', 'title description dueDate userGroup userGroupTrack totalPoint attachment status teacher');
+
+    return {
+        event: event
+            ? {
+                title: event.title,
+                description: event.description,
+                date: event.date,
+                location: event.location,
+                type: event.type,
+                group: event.group,
+                targetUser: event.targetUser,
+            }
+            : null,
+
+        woopsGoals: woopsGoals
+            ? {
+                goalIndex: woopsGoals.goalIndex,
+                title: woopsGoals.goalTitle,
+                description: woopsGoals.goalDescription,
+                wish: woopsGoals.wish,
+                outcome: woopsGoals.outcome,
+                obstacle: woopsGoals.obstacle,
+                plan: woopsGoals.plan,
+            }
+            : null,
+        assignment: assignment
+            ? {
+                teacher: assignment.teacher,
+                submitAssignment: assignment.submitAssignment,
+                title: assignment.title,
+                description: assignment.description,
+                dueDate: assignment.dueDate,
+                userGroup: assignment.userGroup,
+                userGroupTrack: assignment.userGroupTrack,
+                totalPoint: assignment.totalPoint,
+                attachment: assignment.attachment,
+                status: assignment.status,
+                }
+            : null,
+    };
+};
+
 export const mentorDashboardService = {
     getMentorDashboardWoops,
-    getMentorDashboardDataFromDB
+    getMentorDashboardDataFromDB,
+    getMentorStudentrdWoops
 };

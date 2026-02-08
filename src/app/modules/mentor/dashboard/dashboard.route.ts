@@ -11,11 +11,18 @@ router.get(
     auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
     mentorDashboardController.getMentorDashboardData
 );
+router.get(
+    '/student',
+    auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+    mentorDashboardController.getMentorStudentrdWoops
+);
 
 router.get(
     '/upcoming',
     auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
     mentorDashboardController.getUpcomingSessions
 );
+
+
 
 export const mentorDashboardRoutes = router;
