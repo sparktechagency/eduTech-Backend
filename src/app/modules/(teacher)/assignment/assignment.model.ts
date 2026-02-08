@@ -18,14 +18,17 @@ const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
       type: String,
       required: true,
     },
+
     published: {
       type: Boolean,
       default: true,
     },
+
     description: {
       type: String,
       required: true,
     },
+
     userGroup: [
       {
         type: Schema.Types.ObjectId,
@@ -33,22 +36,27 @@ const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
         required: true,
       },
     ],
+
     userGroupTrack: {
       type: Schema.Types.ObjectId,
       ref: 'UserGroupTrack',
       required: true,
     },
+
     dueDate: {
       type: Date,
       required: true,
     },
+
     totalPoint: {
       type: Number,
       default: 100,
     },
+
     attachment: {
       type: String
     },
+    
     status: {
       type: String,
       enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED'],
