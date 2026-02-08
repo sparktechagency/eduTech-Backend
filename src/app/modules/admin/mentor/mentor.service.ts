@@ -89,13 +89,15 @@ const bulkImportMentors = async (fileBuffer: Buffer) => {
 
 const getAllMentorsFromDB = async () => {
     const mentors = await User.find({ role: USER_ROLES.MENTOR })
-    .populate('userGroup');
+    .populate('userGroup')
+    .populate('assignedStudents');
     return mentors;
 };
 
 const getMentorById = async (id: string) => {
     const mentor = await User.findById(id)
-    .populate('userGroup');
+    .populate('userGroup')
+    .populate('assignedStudents', 'name email profile contact location');
     if (!mentor || mentor.role !== USER_ROLES.MENTOR) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Mentor not found');
     }

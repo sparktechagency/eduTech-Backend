@@ -27,6 +27,7 @@ export type IUser = {
     role: USER_ROLES;
     contactNumber?: string;
     mobileNumber?: string;
+    assignedStudents?: (mongoose.Types.ObjectId | IUser)[];
     vNumber?: string;
     email?: string;
     professionalTitle?: string;
@@ -41,7 +42,6 @@ export type IUser = {
     careerDirections: string[];
     password: string;
     confirmPassword?: string;
-    isSubscribed?: boolean;
     location: {};
     address:string
     about:string

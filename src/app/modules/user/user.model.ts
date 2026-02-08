@@ -142,9 +142,6 @@ const userSchema = new Schema<IUser, UserModal>(
       default: false,
     },
 
-    isSubscribed: {
-      type: Boolean,
-    },
 
     about: {
       type: String,
@@ -192,7 +189,12 @@ const userSchema = new Schema<IUser, UserModal>(
         ref: 'Class', 
         requiured: false
     },
-
+    assignedStudents: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        }
+    ],
     authentication: {
       type: {
         isResetPassword: {
