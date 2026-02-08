@@ -1,0 +1,35 @@
+name: Update README
+
+on:
+  schedule:
+    # Runs every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Update README with recent activity
+        uses: jamesgeorge007/github-activity-readme@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          COMMIT_MSG: '⚡ Update README with recent activity'
+          MAX_LINES: 5
+
+  update-quote:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Update Quote
+        uses: siddharth2016/update-readme-with-quote@main
+        with:
+          COMMIT_MESSAGE: '📝 Update quote'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
