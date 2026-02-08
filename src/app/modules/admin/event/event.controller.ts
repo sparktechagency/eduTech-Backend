@@ -3,52 +3,53 @@ import sendResponse from "../../../../shared/sendResponse";
 import { IEvent } from "./event.interface";
 import { EventService } from "./event.service";
 import httpStatus from "http-status-codes";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 
-// const createEvent = catchAsync(async (req, res) => {
-//     const result = await EventService.createEventFromDB(req.body);
+const createEvent = catchAsync(async (req: Request, res: Response) => {
+  const files = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+  };
 
-//     sendResponse(res, {
-//         statusCode: httpStatus.OK,
-//         success: true,
-//         message: 'Event created successfully',
-//         data: result,
-//     });
-// });
-const createEvent = catchAsync(async (req, res) => {
-    let payload = { ...req.body };
+  let imagePath: string | undefined;
 
-    if (payload.targetUser) {
-        if (typeof payload.targetUser === 'string') {
+  if (files?.image && files.image.length > 0) {
+    imagePath = `/images/${files.image[0].filename}`;
+  }
 
-            try {
-                const parsed = JSON.parse(payload.targetUser);
-                payload.targetUser = Array.isArray(parsed) ? parsed : [parsed];
-            } catch (e) {
-                payload.targetUser = (payload.targetUser as string)
-                    .split(',')
-                    .map((id: string) => id.trim())
-                    .filter((id: string) => id);
-            }
-        } else if (!Array.isArray(payload.targetUser)) {
-            payload.targetUser = [payload.targetUser];
-        }
-    } else {
-        payload.targetUser = [];
-    }
+  const {
+    title,
+    description,
+    date,
+    location,
+    type,
+    group,
+    targetUser,
+  } = req.body;
 
-    if (req.files && typeof req.files === 'object' && !Array.isArray(req.files) && req.files['image']?.length > 0) {
-        const imageFile = req.files['image'][0];
-        payload.image = `/uploads/images/${imageFile.filename}`;
-    } else {
-    }
-    const result = await EventService.createEventFromDB(payload);
+  let parsedTargetUser = targetUser;
+  if (typeof targetUser === "string") {
+    parsedTargetUser = JSON.parse(targetUser);
+  }
 
-    sendResponse(res, {
-        statusCode: httpStatus.CREATED,
-        success: true,
-        message: 'Event created successfully',
-        data: result,
-    });
+  const eventData = {
+    title,
+    description,
+    date,
+    location,
+    type,
+    group,
+    targetUser: parsedTargetUser,
+    image: imagePath,
+  };
+
+  const result = await EventService.createEventFromDB(eventData);
+
+  res.status(StatusCodes.CREATED).json({
+    success: true,
+    message: "Event created successfully",
+    data: result,
+  });
 });
 
 const getAllEvents = catchAsync(async (req, res) => {

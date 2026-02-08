@@ -13,7 +13,7 @@ router.route("/")
     .post(
         auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
         fileUploadHandler(),
-        validateRequest(EventValidation.createEventValidationZodSchema),
+        // validateRequest(EventValidation.createEventValidationZodSchema),
         EventController.createEvent
     )
     .get(

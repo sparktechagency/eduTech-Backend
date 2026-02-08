@@ -1,18 +1,22 @@
 import { IEvent } from "./event.interface";
 import { Event } from "./event.model";
 
-const createEventFromDB = async (payload:IEvent) => {
-    const result = await Event.create(payload);
-    return result;
-}
+const createEventFromDB = async (payload: Partial<IEvent>) => {
+  const event = await Event.create(payload);
+  return event;
+};
 
 const getAllEventsFromDB = async () => {
-    const result = await Event.find();
+    const result = await Event.find()
+    .populate("group")
+    .populate("targetUser");
     return result;
 }
 
 const getEventByIdFromDB = async (id:string) => {
-    const result = await Event.findById(id);
+    const result = await Event.findById(id)
+    .populate("group")
+    .populate("targetUser");
     return result;
 }
 

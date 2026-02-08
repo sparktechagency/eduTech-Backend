@@ -131,15 +131,16 @@ const updateprofileByIdToDB = async (
   return result;
 };
 
+
+
 const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>> => {
   const { id } = user;
   const existingUser = await User.findById(id)
-    .populate('mentorId', 'firstName lastName email profile contact location');
+    .populate('mentorId', 'firstName lastName email profile contact location')
 
   if (!existingUser) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }
-  
   return existingUser;
 };
 export const UserService = {
