@@ -7,6 +7,8 @@ import { Types } from "mongoose";
 import { Event } from "../../admin/event/event.model";
 import { WoopGoal } from "../woops/woops.model";
 import { Assignment } from "../../(teacher)/assignment/assignment.model";
+import { WeeklyReport } from '../report/report.model';
+import { TimeTrack } from "../timeTrack/time.model";
 
 type DashboardData = {
     assignedStudents: (IUser | Types.ObjectId)[] | undefined;
@@ -14,19 +16,41 @@ type DashboardData = {
     totalAssignedStudents: number;
     totalWoopGoals: number;
     averageProgress: number;
+    weeklyReports: number;
+    totalHours: number
 };
 
 const getMentorDashboardDataFromDB = async (
   mentorId: string
 ): Promise<DashboardData> => {
-
   const mentor = await User.findById(mentorId)
     .populate('assignedStudents', 'firstName lastName email profile contactNumber location')
-    .populate('woopGoals', 'title description progress nextSessionDate');
+    .populate('woopGoals', 'title description progress nextSessionDate')
+    .lean();
 
   if (!mentor || mentor.role !== USER_ROLES.MENTOR) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Mentor not found');
   }
+
+  const weeklyReports = await WeeklyReport.countDocuments({ createdBy: mentorId });
+  const timeStats = await TimeTrack.aggregate([
+    { 
+      $match: { mentorId: new Types.ObjectId(mentorId) } 
+    },
+    {
+      $group: {
+        _id: null,
+        totalHours: {
+          $sum: {
+            $divide: [
+              { $subtract: ["$endTime", "$startTime"] },
+              3600000 
+            ]
+          }
+        }
+      }
+    }
+  ]);
 
   const assignedStudents = mentor.assignedStudents || [];
   const woopGoals = mentor.woopGoals || [];
@@ -44,10 +68,11 @@ const getMentorDashboardDataFromDB = async (
     woopGoals,
     totalAssignedStudents,
     totalWoopGoals,
-    averageProgress,
+    averageProgress: Math.round(averageProgress * 100) / 100, 
+    weeklyReports,
+    totalHours: timeStats.length > 0 ? Math.round(timeStats[0].totalHours * 10) / 10 : 0 
   };
 };
-
 const getMentorDashboardWoops = async (mentorId: string) => {
     const mentor = await User.findById(mentorId)
         .populate({ path: 'woopGoals', select: 'title description progress nextSessionDate' });
