@@ -24,4 +24,8 @@ router
     .post(auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN), RuleController.createTermsAndCondition)
     .get(RuleController.getTermsAndCondition);
 
+router
+    .route('/faq')
+    .post(auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN), RuleController.createFaq)
+    .get(RuleController.getFaq);
 export const RuleRoutes = router;

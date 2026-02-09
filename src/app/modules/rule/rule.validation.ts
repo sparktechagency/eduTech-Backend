@@ -34,6 +34,20 @@ const updaterAboutZodSchema = z.object({
   }),
 })
 
+const createFaqZodSchema = z.object({
+  body: z.object({
+    question: z.string({ required_error: 'Question is required' }),
+    answer: z.string({ required_error: 'Answer is required' }),
+  }),
+})
+
+const updateFaqZodSchema = z.object({
+  body: z.object({
+    question: z.string().optional(),
+    answer: z.string().optional(),
+  }),
+})
+
 export const RuleValidation = {
   createPrivacyPolicyZodSchema,
   updatePrivacyPolicyZodSchema,
@@ -41,4 +55,6 @@ export const RuleValidation = {
   updaterAboutZodSchema,
   createTermsAndConditionZodSchema,
   updateTermsAndConditionZodSchema,
+  createFaqZodSchema,
+  updateFaqZodSchema,
 }

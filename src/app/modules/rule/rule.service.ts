@@ -79,6 +79,21 @@ const getAboutFromDB = async () => {
     }
     return result
 }
+
+const createFaqToDB = async (payload: IRule) => {
+
+    const result = await Rule.create({ ...payload, type: 'faq' })
+    const message = "FAQ created successfully"
+    return { message, result }
+}
+
+const getFaqFromDB = async () => {
+    const result = await Rule.findOne({ type: 'faq' })
+    if (!result) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Faq doesn't exist!")
+    }
+    return result
+}
   
 export const RuleService = {
     createPrivacyPolicyToDB,
@@ -86,5 +101,7 @@ export const RuleService = {
     createTermsAndConditionToDB,
     getTermsAndConditionFromDB,
     createAboutToDB,
-    getAboutFromDB
+    getAboutFromDB,
+    createFaqToDB,
+    getFaqFromDB
 }  

@@ -78,11 +78,36 @@ const getAbout = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const createFaq = catchAsync(async (req: Request, res: Response) => {
+    const { ...faqData } = req.body
+    const result = await RuleService.createFaqToDB(faqData)
+  
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Faq created successfully',
+        data: result
+    })
+})
+
+const getFaq = catchAsync(async (req: Request, res: Response) => {
+    const result = await RuleService.getFaqFromDB()
+  
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Faq retrieved successfully',
+        data: result
+    })
+})
+
 export const RuleController = {
     createPrivacyPolicy,
     getPrivacyPolicy,
     createTermsAndCondition,
     getTermsAndCondition,
     createAbout,
-    getAbout
+    getAbout,
+    createFaq,
+    getFaq
 }  

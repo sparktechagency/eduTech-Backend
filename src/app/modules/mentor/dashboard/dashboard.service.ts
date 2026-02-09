@@ -151,5 +151,5 @@ const getMentorStudentrdWoops = async (mentorId: string) => {
 export const mentorDashboardService = {
     getMentorDashboardWoops,
     getMentorDashboardDataFromDB,
-    getMentorStudentrdWoops
+    getMentorStudentrdWoops,
 };

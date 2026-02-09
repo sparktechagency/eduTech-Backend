@@ -7,7 +7,7 @@ import { mentorDashboardController } from './dashboard.controller';
 const router = Router();
 
 router.get(
-    '',
+    '/',
     auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
     mentorDashboardController.getMentorDashboardData
 );

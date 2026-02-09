@@ -60,6 +60,7 @@ const getAssignmentByIdFromDB = async (id: string) => {
   }
   return result;
 };
+
 const updateAssignmentToDB = async (id: string, payload: Partial<IAssignment>) => {
 
   if(payload.totalPoint){
