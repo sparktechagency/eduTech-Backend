@@ -73,6 +73,7 @@ const getMentorDashboardDataFromDB = async (
     totalHours: timeStats.length > 0 ? Math.round(timeStats[0].totalHours * 10) / 10 : 0 
   };
 };
+
 const getMentorDashboardWoops = async (mentorId: string) => {
     const mentor = await User.findById(mentorId)
         .populate({ path: 'woopGoals', select: 'title description progress nextSessionDate' });

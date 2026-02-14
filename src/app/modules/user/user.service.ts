@@ -131,8 +131,6 @@ const updateprofileByIdToDB = async (
   return result;
 };
 
-
-
 const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>> => {
   const { id } = user;
   const existingUser = await User.findById(id)
@@ -143,11 +141,20 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
   }
   return existingUser;
 };
+
+const getStudentsFromDB = async (mentorId: string) => {
+  const result = await User.find({ mentorId, role: USER_ROLES.STUDENT })
+    .select('name email profile contact location');
+  
+  return result;
+};
+
 export const UserService = {
   createUserToDB,
   updateProfileToDB,
   createAdminToDB,
   updateLocationToDB,
   getProfileFromDB,
-  updateprofileByIdToDB
+  updateprofileByIdToDB,
+  getStudentsFromDB
 };

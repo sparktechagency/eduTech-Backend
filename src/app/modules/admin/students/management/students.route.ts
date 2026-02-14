@@ -13,7 +13,7 @@ router.route("/")
         StudentController.createStudent
     )
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
         StudentController.getAllStudents
     );
 router.route("/std-stats")

@@ -8,6 +8,10 @@ export interface IWeeklyReport extends Document {
     isPresent: boolean;
     achievedHardOutcomes: string[];
     softSkillImprovements: string[];
+    whatDidYouWorkOnThisWeek?: string;
+    whatProgressDidTheStudentMake?: string;
+    highLightAchivementsAndImprove?: string;
+    planForNextWeek?: string;
     comments?: string;
     goalSheet: {
         skillName: string;

@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { UserService } from './user.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
+import { get } from 'mongoose';
 
 // register user
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -98,11 +99,24 @@ const updateprofileById = catchAsync(async (req: Request, res: Response, next: N
     });
 });
 
+const getStudents = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const mentorId = req.user.id;
+    const result = await UserService.getStudentsFromDB(mentorId);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Students data retrieved successfully',
+        data: result
+    });
+});
+
 export const UserController = {
     createUser,
     createAdmin,
     getUserProfile,
     updateProfile,
     updateLocation,
-    updateprofileById
+    updateprofileById,
+    getStudents
 };
