@@ -2,9 +2,10 @@ name: Update README
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # প্রতি ৬ ঘণ্টায় একবার
+    - cron: '0 */6 * * *' # Runs every 6 hours
   workflow_dispatch:
 
+# ১. পারমিশন ফিক্স (Organization Repo-র জন্য এটি বাধ্যতামূলক)
 permissions:
   contents: write
 
@@ -23,16 +24,64 @@ jobs:
           MAX_LINES: 5
 
   update-quote:
-    needs: update-readme 
+    needs: update-readme
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       
-      - name: Update Quote
-        uses: siddharth2016/update-readme-with-quote@main
+      # ২. Python সেটআপ করা
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          COMMIT_MESSAGE: '📝 Update quote'
-        env:
+          python-version: '3.x'
+
+      # ৩. ডিলিট হয়ে যাওয়া অ্যাকশনের বদলে কাস্টম স্ক্রিপ্ট ব্যবহার
+      - name: Update Quote with Python
+        env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # প্রয়োজনীয় লাইব্রেরি ইনস্টল
+          pip install requests
+
+          # পাইথন স্ক্রিপ্ট চালানো
+          python -c "
+          import requests
+          import re
+          import os
+
+          try:
+              response = requests.get('https://api.quotable.io/random?maxLength=50')
+              if response.status_code == 200:
+                  data = response.json()
+                  quote = f\"{data['content']} - {data['author']}\"
+                  print(f'Got quote: {quote}')
+                  
+                  # README ফাইল আপডেট করা
+                  with open('README.md', 'r') as f:
+                      content = f.read()
+                  
+                  # Regex used to replace the existing quote (if any) with the new one
+                  new_content = re.sub(
+                      r'.*',
+                      f'\n{quote}\n',
+                      content,
+                      flags=re.DOTALL
+                  )
+                  
+                  with open('README.md', 'w') as f:
+                      f.write(new_content)
+              else:
+                  print('Failed to fetch quote')
+          except Exception as e:
+              print(f'Error: {e}')
+          "
+
+      # ৪. commit and push
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          # যদি কোনো পরিবর্তন না থাকে তবে এরর দিবে না
+          git commit -m "📝 Update quote" || exit 0
+          git push
