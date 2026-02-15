@@ -18,6 +18,11 @@ const WoopGoalSchema = new Schema<IWoopGoal>(
             ref: 'Goal',
         },
 
+        woop: {
+            type: WoopSectionSchema,
+            required: false,
+        },
+
         wish: {
             type: WoopSectionSchema,
             required: false,
@@ -45,7 +50,7 @@ const WoopGoalSchema = new Schema<IWoopGoal>(
         },
         isCompleted: {
             type: Boolean,
-            default: false,
+            default: true,
         },
     },
     {

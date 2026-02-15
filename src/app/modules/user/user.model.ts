@@ -128,6 +128,24 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
+    // review: [
+    //   {
+    //     teacherNote: {
+    //       type: String,
+    //       required: false,
+    //     },
+    //     teacherId: {
+    //       type: Schema.Types.ObjectId,
+    //       ref: "User",
+    //       required: false,
+    //     },
+    //     rating: {
+    //       type: Number,
+    //       required: false,
+    //     },
+    //   },
+    // ],
+
   careerDirections: {
         type: [String],
         required: [true, "Career directions are required"],
