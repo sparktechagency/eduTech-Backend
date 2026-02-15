@@ -9,7 +9,11 @@ const router = express.Router();
 
 router.route("/")
     .post(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         validateRequest(GoalValidation.createZodSchema),
         goalController.createGoal
     )
@@ -19,16 +23,28 @@ router.route("/")
 
 router.route("/:id")
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         goalController.getGoalById
     )
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         validateRequest(GoalValidation.updateZodSchema),
         goalController.updateGoal
     )
     .delete(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         goalController.deleteGoal
     );
 

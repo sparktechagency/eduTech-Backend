@@ -11,7 +11,10 @@ const router = express.Router();
 
 router.route("/")
     .post(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN
+        ),
         fileUploadHandler(),
         // validateRequest(EventValidation.createEventValidationZodSchema),
         EventController.createEvent
@@ -27,12 +30,18 @@ router.route("/:id")
         EventController.getEventById
     )
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN
+        ),
         validateRequest(EventValidation.updateEventValidationZodSchema),
         EventController.updateEventById
     )
     .delete(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN
+        ),
         EventController.deleteEventById
     );
 

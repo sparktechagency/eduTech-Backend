@@ -9,12 +9,26 @@ const router = express.Router();
 
 router.get(
     '/profile',
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.STUDENT, USER_ROLES.TEACHER),
+    auth(
+        USER_ROLES.ADMIN,
+        USER_ROLES.SUPER_ADMIN,
+        USER_ROLES.COORDINATOR,
+        USER_ROLES.MENTOR,
+        USER_ROLES.STUDENT,
+        USER_ROLES.TEACHER
+    ),
     UserController.getUserProfile
 );
 
 router.patch('/update-location',
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.STUDENT, USER_ROLES.TEACHER),
+    auth(
+        USER_ROLES.ADMIN,
+        USER_ROLES.SUPER_ADMIN,
+        USER_ROLES.COORDINATOR,
+        USER_ROLES.MENTOR,
+        USER_ROLES.STUDENT,
+        USER_ROLES.TEACHER
+    ),
     UserController.updateLocation
   );
   
@@ -30,7 +44,13 @@ router
         UserController.createUser
     )
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR, USER_ROLES.STUDENT, USER_ROLES.TEACHER),
+        auth(
+            USER_ROLES.ADMIN,
+            USER_ROLES.SUPER_ADMIN,
+            USER_ROLES.MENTOR,
+            USER_ROLES.STUDENT,
+            USER_ROLES.TEACHER
+        ),
         fileUploadHandler(),
         UserController.updateProfile
     );
@@ -38,12 +58,21 @@ router
 router
     .route('/:id')
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR, USER_ROLES.TEACHER),
+        auth(
+            USER_ROLES.ADMIN,
+            USER_ROLES.SUPER_ADMIN,
+            USER_ROLES.MENTOR,
+            USER_ROLES.TEACHER
+        ),
         UserController.updateprofileById
     );
 router.get(
     '/students',
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+    auth(
+        USER_ROLES.ADMIN,
+        USER_ROLES.SUPER_ADMIN,
+        USER_ROLES.MENTOR
+    ),
     UserController.getStudents
 );
 

@@ -8,29 +8,42 @@ const router = express.Router();
 
 router.post(
     '/create-admin',
-    auth(USER_ROLES.SUPER_ADMIN),
+    auth(
+
+        USER_ROLES.SUPER_ADMIN
+    ),
     validateRequest(AdminValidation.createAdminZodSchema),
     AdminController.createAdmin
 );
 
 router.get('/get-admin',
-    auth(USER_ROLES.SUPER_ADMIN),
+    auth(
+        USER_ROLES.SUPER_ADMIN
+    ),
     AdminController.getAdmin
 );
 
 router.get('/total-users-by-role',
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    auth(
+        USER_ROLES.SUPER_ADMIN, 
+        USER_ROLES.ADMIN
+    ),
     AdminController.getTotalUsersByRole
 );
 
 router.get('/recent-activities',
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    auth(
+        USER_ROLES.SUPER_ADMIN, 
+        USER_ROLES.ADMIN
+    ),
     AdminController.getRecentActivities
 );
 
 
 router.delete('/:id',
-    auth(USER_ROLES.SUPER_ADMIN),
+    auth(
+        USER_ROLES.SUPER_ADMIN
+    ),
     AdminController.deleteAdmin
 );
 

@@ -9,39 +9,70 @@ const router = express.Router();
 
 router.route("/")
     .post(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN
+        ),
         StudentController.createStudent
     )
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         StudentController.getAllStudents
     );
 router.route("/std-stats")
     .get(
-        auth(USER_ROLES.STUDENT, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.STUDENT, 
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         StudentController.getmystats
     );
 router.route("/:id")
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         StudentController.getSingleStudent
     )
     .patch(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN
+        ),
         StudentController.updateStudent
     )
     .delete(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN
+        ),
         StudentController.deleteStudent
     );
 router.route("/review/:id")
     .post(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         StudentController.addReview
     );
 router.route("/onboarding-answers")
     .patch(
-        auth(USER_ROLES.STUDENT, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.STUDENT, 
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         StudentController.saveOnboardingAnswers
     );
 // router.route("/oops-goals")

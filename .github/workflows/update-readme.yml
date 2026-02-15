@@ -2,14 +2,15 @@ name: Update README
 
 on:
   schedule:
-    # Runs every 6 hours
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *' # প্রতি ৬ ঘণ্টায় একবার
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
-    
     steps:
       - uses: actions/checkout@v3
       
@@ -22,10 +23,12 @@ jobs:
           MAX_LINES: 5
 
   update-quote:
+    needs: update-readme 
     runs-on: ubuntu-latest
-    
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       
       - name: Update Quote
         uses: siddharth2016/update-readme-with-quote@main

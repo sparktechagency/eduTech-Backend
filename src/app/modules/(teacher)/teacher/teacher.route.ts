@@ -7,13 +7,21 @@ const router = express.Router();
 
 router.get(
   '/my-students',
-  auth(USER_ROLES.TEACHER, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  auth(
+    USER_ROLES.TEACHER, 
+    USER_ROLES.ADMIN, 
+    USER_ROLES.SUPER_ADMIN
+  ),
   TeacherController.getAllMyStudent
 );
 
 router.get(
   '/overview',
-  auth(USER_ROLES.TEACHER, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+  auth(
+    USER_ROLES.TEACHER, 
+    USER_ROLES.ADMIN, 
+    USER_ROLES.SUPER_ADMIN
+  ),
   TeacherController.getOverview
 );
 

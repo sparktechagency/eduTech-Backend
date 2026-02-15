@@ -36,11 +36,18 @@ router
   )
   .patch(
     fileUploadHandler(),
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    auth(
+      USER_ROLES.ADMIN,
+      USER_ROLES.SUPER_ADMIN,
+      USER_ROLES.TEACHER),
     AssignmentController.updateAssignment,
   )
   .delete(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    auth(
+      USER_ROLES.ADMIN,
+      USER_ROLES.SUPER_ADMIN,
+      USER_ROLES.TEACHER
+    ),
     AssignmentController.deleteAssignment,
   );
 

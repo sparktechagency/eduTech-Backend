@@ -9,13 +9,21 @@ const router = express.Router();
 // 1. Specific Routes FIRST
 router.patch(
     "/update-student-status",
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+    auth(
+        USER_ROLES.ADMIN, 
+        USER_ROLES.SUPER_ADMIN, 
+        USER_ROLES.MENTOR
+    ),
     AttendanceController.updateStudentStatus
 );
 
 router.route("/")
     .post(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         AttendanceController.saveBatchAttendance
     )
     .get(
@@ -30,7 +38,11 @@ router.get(
 
 router.patch(
     "/record/:id",
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+    auth(
+        USER_ROLES.ADMIN, 
+        USER_ROLES.SUPER_ADMIN,
+         USER_ROLES.MENTOR
+        ),
     AttendanceController.updateSpecificRecord
 );
 

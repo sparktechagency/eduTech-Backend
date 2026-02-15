@@ -9,7 +9,10 @@ const router = express.Router()
 
 router.route("/")
     .post(
-        auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+        auth(
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.ADMIN
+        ),
         fileUploadHandler(),
         async (req: Request, res: Response, next: NextFunction) => {
             try {
@@ -37,7 +40,10 @@ router.route("/")
 
 
 router.get("/PROVIDER",
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    auth(
+        USER_ROLES.SUPER_ADMIN, 
+        USER_ROLES.ADMIN
+    ),
     CategoryController.getCategoryForPROVIDER
 )
 
@@ -46,7 +52,10 @@ router.get("/idBySubCategory/:id",
 )
 
 router.get("/admin-category",
-    auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+    auth(
+        USER_ROLES.SUPER_ADMIN,
+         USER_ROLES.ADMIN
+        ),
     CategoryController.adminGetCategories
 )
 
@@ -74,7 +83,10 @@ router.route("/:id")
         CategoryController.updateCategory,
     )
     .delete(
-        auth(USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN),
+        auth(
+            USER_ROLES.SUPER_ADMIN,
+             USER_ROLES.ADMIN
+            ),
         CategoryController.deleteCategory,
     );
 

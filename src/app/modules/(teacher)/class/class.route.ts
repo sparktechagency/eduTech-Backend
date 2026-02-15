@@ -9,7 +9,11 @@ const router = express.Router();
 router
   .route('/')
   .post(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    auth(
+      USER_ROLES.ADMIN, 
+      USER_ROLES.SUPER_ADMIN, 
+      USER_ROLES.TEACHER
+    ),
     ClassController.createClass
   )
   .get(
@@ -19,15 +23,28 @@ router
 router
   .route('/:id')
   .get(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
+    auth(
+      USER_ROLES.ADMIN, 
+      USER_ROLES.SUPER_ADMIN, 
+      USER_ROLES.TEACHER, 
+      USER_ROLES.STUDENT
+    ),
     ClassController.getClassById
   )
   .patch(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    auth(
+      USER_ROLES.ADMIN, 
+      USER_ROLES.SUPER_ADMIN, 
+      USER_ROLES.TEACHER
+    ),
     ClassController.updateClass
   )
   .delete(
-    auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+    auth(
+      USER_ROLES.ADMIN, 
+      USER_ROLES.SUPER_ADMIN, 
+      USER_ROLES.TEACHER
+    ),
     ClassController.deleteClass
   );
 

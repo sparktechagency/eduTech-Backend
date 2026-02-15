@@ -9,17 +9,32 @@ import { OnboardingController } from './onboarding.controller';
 const router = express.Router();
 router.route("/")
     .post(
-        auth(USER_ROLES.STUDENT, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.STUDENT, 
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         OnboardingController.completeOnboarding
     )
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.STUDENT, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.STUDENT, 
+            USER_ROLES.MENTOR
+        ),
         OnboardingController.getOnboarding
     );
 
 router.route("/:id")
     .get(
-        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.STUDENT, USER_ROLES.MENTOR),
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.STUDENT, 
+            USER_ROLES.MENTOR
+        ),
         OnboardingController.getOnboardingById
     )
     // .patch(
