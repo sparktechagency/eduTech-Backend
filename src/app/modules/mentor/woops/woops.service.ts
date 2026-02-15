@@ -12,7 +12,8 @@ const createwoopFromDB = async (payload: IWoopGoal) => {
 
 const getUserWoopsFromDB = async (userId: string) => {
     const result = await WoopGoal.find({ userId })
-        .populate('userId') 
+        .populate('userId')
+        .populate('goal')
         .sort({ createdAt: -1 }); 
 
     return result;
@@ -20,14 +21,21 @@ const getUserWoopsFromDB = async (userId: string) => {
 
 const getWoopByIdFromDB = async (id: string) => {
     const result = await WoopGoal.findById(id)
-        .populate('userId'); 
+        .populate('userId')
+        .populate('goal')
+        .sort({ createdAt: -1 });
+
+    if (!result) {
+        throw new Error('WOOP goal not found');
+    }
 
     return result;
 };
 
 const getAllUserWoopsFromDB = async () => {
     const result = await WoopGoal.find()
-        .populate('userId') 
+        .populate('userId')
+        .populate('goal')
         .sort({ createdAt: -1 }); 
 
     return result;
@@ -36,7 +44,8 @@ const getAllUserWoopsFromDB = async () => {
 const getWoopsIdsFromDB = async (ids: string[]) => {
     const objectIds = ids.map(id => id.trim());
     const result = await WoopGoal.find({ _id: { $in: objectIds } })
-        .populate('userId') 
+        .populate('userId')
+        .populate('goal')
         .sort({ createdAt: -1 }); 
 
     return result;

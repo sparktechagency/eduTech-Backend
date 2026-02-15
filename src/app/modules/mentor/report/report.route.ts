@@ -19,7 +19,10 @@ router.route("/")
         mentorWeeklyReport.getAllReports
     );
 
-
+router.route("/student/:studentId")
+    .get(
+        mentorWeeklyReport.getReportByStudentIdAndWeekRange
+    );
 
 router.route("/:id")
     .get(
@@ -34,5 +37,7 @@ router.route("/:id")
         auth(USER_ROLES.MENTOR),
         mentorWeeklyReport.deleteWeeklyReport
     );
+
+
 
 export const MentorReportRoutes = router;

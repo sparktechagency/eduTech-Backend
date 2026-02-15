@@ -1,53 +1,56 @@
 import { Schema, model } from "mongoose";
 import { IWoopGoal } from "./woops.interface";
+import WoopSectionSchema from "./woops.sub.model";
 
-const woopGoalSchema = new Schema<IWoopGoal>({
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+const WoopGoalSchema = new Schema<IWoopGoal>(
+    {
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        mentor: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        },
+       goal: {
+            type: Schema.Types.ObjectId,
+            ref: 'Goal',
+        },
+
+        wish: {
+            type: WoopSectionSchema,
+            required: false,
+        },
+        outcome: {
+            type: WoopSectionSchema,
+            required: false,
+        },
+        obstacle: {
+            type: WoopSectionSchema,
+            required: false,
+        },
+        plan: {
+            type: WoopSectionSchema,
+            required: false,
+        },
+       
+
+        progress: {
+            type: Number,
+            default: 0,
+        },
+        nextSessionDate: {
+            type: Date,
+        },
+        isCompleted: {
+            type: Boolean,
+            default: false,
+        },
     },
-    goalIndex: {
-        type: Number,
-        default: 1
-    },
-    
-    goalTitle: {
-        type: String,
-        required: [true, "Goal title is required"], 
-        trim: true
-    },
-    goalDescription: {
-        type: String,
-        trim: true 
-    },
-    wish: {
-        type: String,
-        required: [true, "Wish is required"],
-        trim: true
-    },
-    outcome: {
-        type: String,
-        required: [true, "Outcome is required"],
-        trim: true
-    },
-    obstacle: {
-        type: String,
-        required: [true, "Obstacle is required"],
-        trim: true
-    },
-    plan: {
-        type: String,
-        required: [true, "Plan is required"],
-        trim: true
-    },
-    isCompleted: {
-        type: Boolean,
-        default: false
+    {
+        timestamps: true,
     }
-}, {
-    timestamps: true,
-    collection: 'woop_goals'
-});
+);
 
-export const WoopGoal = model<IWoopGoal>('WoopGoal', woopGoalSchema);
+export const WoopGoal = model<IWoopGoal>('WoopGoal', WoopGoalSchema);

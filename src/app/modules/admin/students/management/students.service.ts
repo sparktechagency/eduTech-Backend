@@ -1,6 +1,7 @@
 import mongoose, { SortOrder } from 'mongoose';
 import { StudentProfile } from './students.model';
 import {  IStudentProfile, IStudentReview } from './students.interface';
+import { User } from '../../../user/user.model';
 
 const createStudentIntoDB = async (payload: IStudentProfile) => {
   const result = await StudentProfile.create(payload);
@@ -43,8 +44,8 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleStudentFromDB = async (id: string) => {
-  const result = await StudentProfile.findById(id)
-    .populate('userId')
+  const result = await User.findById(id)
+    // .populate('userId')
     .populate('mentorId')
     .populate('woopGoals');
   return result;

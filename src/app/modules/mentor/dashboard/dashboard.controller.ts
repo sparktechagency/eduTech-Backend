@@ -24,7 +24,8 @@ const getUpcomingSessions = catchAsync(async (req: Request, res: Response) => {
 
 const getMentorStudentrdWoops = catchAsync(async (req: Request, res: Response) => {
     const mentorId = req.user?.id;
-    const studentWoops = await mentorDashboardService.getMentorStudentrdWoops(mentorId);
+    const query = req.query;
+    const studentWoops = await mentorDashboardService.getMentorStudentrdWoops(mentorId, query);
     res.status(200).json({
         success: true,
         data: studentWoops,

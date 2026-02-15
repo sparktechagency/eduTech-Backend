@@ -49,10 +49,25 @@ const deleteWeeklyReport = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getReportByStudentIdAndWeekRange = catchAsync(async (req: Request, res: Response) => {
+    const studentId = req.params.studentId;
+    // const { startDate, endDate } = req.query;
+
+    const reports = await WeeklyReportService.getReportByStudentIdAndWeekRange(studentId);
+
+    res.status(200).json({
+        success: true,
+        data: reports,
+    });
+});
+
+
+
 export const mentorWeeklyReport = {
     createWeeklyReport,
     getStudentReports,
     getAllReports,
     deleteWeeklyReport,
     updateWeeklyReport,
+    getReportByStudentIdAndWeekRange,
 };

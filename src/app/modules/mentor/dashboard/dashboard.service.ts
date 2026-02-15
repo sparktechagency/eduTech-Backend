@@ -9,6 +9,7 @@ import { WoopGoal } from "../woops/woops.model";
 import { Assignment } from "../../(teacher)/assignment/assignment.model";
 import { WeeklyReport } from '../report/report.model';
 import { TimeTrack } from "../timeTrack/time.model";
+import { LearningMaterial } from "../lmetarial/learning.model";
 
 type DashboardData = {
     assignedStudents: (IUser | Types.ObjectId)[] | undefined;
@@ -103,9 +104,7 @@ const getMentorDashboardWoops = async (mentorId: string) => {
 
         woopsGoals: woopsGoals
             ? {
-                goalIndex: woopsGoals.goalIndex,
-                title: woopsGoals.goalTitle,
-                description: woopsGoals.goalDescription,
+                goal: woopsGoals.goal,
                 wish: woopsGoals.wish,
                 outcome: woopsGoals.outcome,
                 obstacle: woopsGoals.obstacle,
@@ -115,7 +114,11 @@ const getMentorDashboardWoops = async (mentorId: string) => {
     };
 };
 
-const getMentorStudentrdWoops = async (mentorId: string) => {
+
+const getMentorStudentrdWoops = async (mentorId: string, query: Record<string, unknown>) => {
+    
+    const { filter } = query; 
+
     const mentor = await User.findById(mentorId)
         .populate({ path: 'woopGoals', select: 'title description progress nextSessionDate' });
 
@@ -123,57 +126,85 @@ const getMentorStudentrdWoops = async (mentorId: string) => {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Mentor not found');
     }
 
-    const event = await Event.findOne({ date: { $gte: new Date() } })
-        .populate('group')
-        .populate('targetUser');
+    const responseData: any = {};
 
-    const woopsGoals = await WoopGoal.findOne().lean();
 
-    const assignment = await Assignment.findOne().lean()
-        .populate('submitAssignment', 'studentId fileAssignment')
-        // .populate('Assignment', 'title description dueDate userGroup userGroupTrack totalPoint attachment status teacher');
+    if (!filter || filter === 'event') {
+        const events = await Event.find({ date: { $gte: new Date() } })
+            .sort({ date: 1 }) 
+            .limit(3)
+            .populate('group')
+            .populate('targetUser')
+            .lean();
 
-    return {
-        event: event
-            ? {
-                title: event.title,
-                description: event.description,
-                date: event.date,
-                location: event.location,
-                type: event.type,
-                group: event.group,
-                targetUser: event.targetUser,
-            }
-            : null,
+        responseData.events = events.length > 0 ? events.map(event => ({
+            title: event.title,
+            description: event.description,
+            date: event.date,
+            location: event.location,
+            type: event.type,
+            group: event.group,
+            targetUser: event.targetUser,
+        })) : [];
+    }
 
-        woopsGoals: woopsGoals
-            ? {
-                goalIndex: woopsGoals.goalIndex,
-                title: woopsGoals.goalTitle,
-                description: woopsGoals.goalDescription,
-                wish: woopsGoals.wish,
-                outcome: woopsGoals.outcome,
-                obstacle: woopsGoals.obstacle,
-                plan: woopsGoals.plan,
-            }
-            : null,
-        assignment: assignment
-            ? {
-                teacher: assignment.teacher,
-                submitAssignment: assignment.submitAssignment,
-                title: assignment.title,
-                description: assignment.description,
-                dueDate: assignment.dueDate,
-                userGroup: assignment.userGroup,
-                userGroupTrack: assignment.userGroupTrack,
-                totalPoint: assignment.totalPoint,
-                attachment: assignment.attachment,
-                status: assignment.status,
-                }
-            : null,
-    };
+    if (!filter || filter === 'resource' || filter === 'learningMat') {
+        const learningMats = await LearningMaterial.find({})
+            .sort({ createdAt: -1 }) 
+            .limit(3)
+            .populate('targertGroup', 'name published')
+            .lean();
+
+        responseData.learningMats = learningMats.length > 0 ? learningMats.map(mat => ({
+            title: mat.title,
+            type: mat.type,
+            contentUrl: mat.contentUrl,
+            targeteAudience: mat.targeteAudience,
+            targertGroup: mat.targertGroup,
+            markAsAssigned: mat.markAsAssigned,
+        })) : [];
+    }
+
+    if (!filter || filter === 'woop') {
+        const woopsGoals = await WoopGoal.find({})
+            .sort({ createdAt: -1 })
+            .limit(3)
+            .lean();
+
+        responseData.woopsGoals = woopsGoals.length > 0 ? woopsGoals.map(woop => ({
+            goal: woop.goal,
+            wish: woop.wish,
+            outcome: woop.outcome,
+            obstacle: woop.obstacle,
+            plan: woop.plan,
+        })) : [];
+    }
+
+    if (!filter || filter === 'assignment') {
+        const assignments = await Assignment.find({
+            status: { $in: ['pending', 'in_progress'] } 
+        })
+            .sort({ dueDate: 1 }) 
+            .limit(3)
+            .populate('submitAssignment', 'studentId fileAssignment')
+            .lean();
+
+        responseData.assignments = assignments.length > 0 ? assignments.map(assignment => ({
+            teacher: assignment.teacher,
+            submitAssignment: assignment.submitAssignment,
+            title: assignment.title,
+            description: assignment.description,
+            dueDate: assignment.dueDate,
+            userGroup: assignment.userGroup,
+            userGroupTrack: assignment.userGroupTrack,
+            totalPoint: assignment.totalPoint,
+            attachment: assignment.attachment,
+            status: assignment.status,
+        })) : [];
+    }
+
+    return responseData;
 };
-
 export const mentorDashboardService = {
     getMentorDashboardWoops,
     getMentorDashboardDataFromDB,

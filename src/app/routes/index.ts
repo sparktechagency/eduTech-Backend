@@ -35,6 +35,7 @@ import { AssignmentSubRoutes } from '../modules/students/assignments/assignmentS
 import { CoordinatorRoutes } from '../modules/mentor-co-ordinator/coordinator.route';
 import { AdminOnboardingRoutes } from '../modules/admin/onboarding/onboarding.route';
 import { mentorDashboardRoutes } from '../modules/mentor/dashboard/dashboard.route';
+import { goalRoutes } from '../modules/admin/goal/goal.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -48,6 +49,7 @@ const apiRoutes = [
     { path: "/mentor/report", route: MentorReportRoutes },
     { path: "/learning", route: LearningMaterialRoutes },
     { path: "/mentor/woops", route: MentorWoopRoutes },
+    { path: "/goal", route: goalRoutes },
     { path: "/student-admin", route: StudentAdminPartRoutes },
     { path: "/student-attendance", route: AttendenceRoutes },
     { path: "/admin-mentor", route: adminMentorRoutes },
