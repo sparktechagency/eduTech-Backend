@@ -88,6 +88,14 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
+ 
+    department: {
+        type: String,
+        trim: true
+    },
+    rollNumber: {
+        type: Number
+    },
     havealaptop: {
       type: Boolean,
       required: false,
@@ -121,6 +129,10 @@ const userSchema = new Schema<IUser, UserModal>(
       required: false,
     },
     motivationLearning: {
+      type: String,
+      required: false,
+    },
+    readBooks: {
       type: String,
       required: false,
     },

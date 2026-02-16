@@ -135,6 +135,15 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
   const { id } = user;
   const existingUser = await User.findById(id)
     .populate('mentorId', 'firstName lastName email profile contact location')
+    .populate({
+      path: 'assignedStudents',
+      select: 'name email profile contact location classId',
+      populate: {
+        path: 'classId', 
+        model: 'Class'
+      }
+})
+    .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack');
 
   if (!existingUser) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");

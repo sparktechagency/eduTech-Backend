@@ -38,6 +38,7 @@ export type IUser = {
     preferedGroup: string;
     aviliableHours: string;
     motivationLearning: string;
+    readBooks: string;
     // review: string[];
     note: string;
     careerDirections: string[];
