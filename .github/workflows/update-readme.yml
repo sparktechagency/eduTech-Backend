@@ -2,10 +2,10 @@ name: Update README
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Runs every 6 hours
+    - cron: '0 0 */2 * *'  
   workflow_dispatch:
 
-# ১. পারমিশন ফিক্স (Organization Repo-র জন্য এটি বাধ্যতামূলক)
+# permissions fix (Organization Repo)
 permissions:
   contents: write
 
@@ -29,21 +29,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # ২. Python সেটআপ করা
+      # Python setup
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      # ৩. ডিলিট হয়ে যাওয়া অ্যাকশনের বদলে কাস্টম স্ক্রিপ্ট ব্যবহার
+      # delete action remove to custom python script
       - name: Update Quote with Python
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # প্রয়োজনীয় লাইব্রেরি ইনস্টল
+          # necessary library install
           pip install requests
 
-          # পাইথন স্ক্রিপ্ট চালানো
+          # run python script to fetch quote and update README
           python -c "
           import requests
           import re
@@ -56,7 +56,7 @@ jobs:
                   quote = f\"{data['content']} - {data['author']}\"
                   print(f'Got quote: {quote}')
                   
-                  # README ফাইল আপডেট করা
+                  # README update logic
                   with open('README.md', 'r') as f:
                       content = f.read()
                   
@@ -82,6 +82,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          # যদি কোনো পরিবর্তন না থাকে তবে এরর দিবে না
+          # If there are no changes, do not throw an error
           git commit -m "📝 Update quote" || exit 0
           git push
