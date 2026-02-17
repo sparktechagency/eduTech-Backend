@@ -24,6 +24,8 @@ const createWoopsZodicSchema = z.object({
         }),
     }),
 });
+
+
 const updateWoopsZodicSchema = z.object({
     body: z.object({
         wish: z.object({
