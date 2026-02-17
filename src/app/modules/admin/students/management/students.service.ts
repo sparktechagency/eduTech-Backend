@@ -37,7 +37,8 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     .populate('userId')    
     .populate('mentorId')   
     // .populate('batchId')    
-    .populate('woopGoals')  
+    .populate('woopGoals')
+    .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
     .sort({ createdAt: 'desc' });
 
   return result;
@@ -47,7 +48,8 @@ const getSingleStudentFromDB = async (id: string) => {
   const result = await User.findById(id)
     // .populate('userId')
     .populate('mentorId')
-    .populate('woopGoals');
+    .populate('woopGoals', 'title description status')
+    .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack');
   return result;
 };
 

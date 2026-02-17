@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 
 export interface IWoopSection {
-    mainData: string;    //  "What is an important wish that you want to fulfill?"
-    detail: string;      //  "What is your wish?" (Type here...)
-    summary: string;     //  "Describe your wish in a few words..."
+    // mainData: string; 
+    detail: string;    
+    // summary: string;  
 }
 
 export interface IWoopGoal extends Document {

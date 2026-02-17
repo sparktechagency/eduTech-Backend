@@ -8,6 +8,7 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     
     title: { type: String, required: true },
+    description: { type: String, required: false },
 
     type: {
         type: String, 

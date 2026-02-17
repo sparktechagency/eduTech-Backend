@@ -12,6 +12,7 @@ import { Reservation } from "../reservation/reservation.model";
 import { sendTwilioOTP } from "../../../helpers/twillo";
 import { formatPhoneNumber } from "../../../helpers/formatedPhoneNumber";
 import { AppError } from "../../../errors/error.app";
+import path from 'path';
 
 const createAdminToDB = async (payload: any): Promise<IUser> => {
 
@@ -137,14 +138,14 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
     .populate('mentorId', 'firstName lastName email profile contact location')
     .populate({
       path: 'assignedStudents',
-      select: 'name email profile contact location classId',
-      populate: {
-        path: 'classId', 
-        model: 'Class'
-      }
-})
-    .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack');
-
+      select: 'name email profile contact location classId woopGoals',
+    populate: [
+        { path: 'classId' }, 
+        { path: 'woopGoals'}  
+      ]
+    })
+    .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
+    .populate('woopGoals').lean();
   if (!existingUser) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }
