@@ -1,6 +1,6 @@
 import { createClient } from 'redis';
 
-const redisUrl = process.env.REDIS_URL ?? 'redis://10.10.7.72:6399'; //always use ipv4 not localhost
+const redisUrl = process.env.REDIS_URL ?? 'redis://127.0.0.1:6390'; //always use ipv4 not localhost
 
 export const redis = createClient({
   url: redisUrl,

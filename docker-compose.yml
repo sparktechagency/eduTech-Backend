@@ -3,10 +3,10 @@ services:
     image: redis:6-alpine
     container_name: eduTech-temp-redis
     ports:
-      - "6389:6389"
+      - "6390:6379"  # 👈 left Host Port (6390), right Container Port (6379)
     volumes:
       - redis_data:/data
-    command: redis-server --appendonly yes
+    command: redis-server --protected-mode no # Disable protected mode to allow external connections
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]

@@ -9,6 +9,7 @@ import seedSuperAdmin from "./DB";
 import { setupCluster } from "./app/modules/cluster/node.cluster";
 import cluster from 'cluster';
 import { setupSecurity } from "./app/modules/cluster/setup.security";
+import { initRedis } from "./shared/redisClient";
 
 //uncaught exception
 // process.on('uncaughtException', error => {
@@ -32,6 +33,7 @@ if (cluster.isPrimary) {
 // Main function - only runs in worker processes
 export async function main() {
     try {
+        await initRedis();
         // Connect to database
         await mongoose.connect(config.database_url as string);
         logger.info(colors.bgYellow('🚀 Database connected successfully'));
@@ -58,8 +60,8 @@ export async function main() {
                 origin: '*'
             }
         });
-
         socketHelper.socket(io);
+
 
         // Store in global for graceful shutdown
         global.httpServer = server;

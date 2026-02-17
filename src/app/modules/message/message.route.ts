@@ -7,7 +7,7 @@ import { getMultipleFilesPath } from '../../../shared/getFilePath';
 const router = express.Router();
 
 router.post('/',
-    auth(USER_ROLES.CUSTOMER, USER_ROLES.PROVIDER),
+    auth(USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT, USER_ROLES.COORDINATOR, USER_ROLES.SUPER_ADMIN),
     fileUploadHandler(),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -28,7 +28,7 @@ router.post('/',
     MessageController.sendMessage
 );
 router.get('/:id',
-    auth(USER_ROLES.CUSTOMER, USER_ROLES.PROVIDER),
+    auth(USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT, USER_ROLES.COORDINATOR, USER_ROLES.SUPER_ADMIN),
     MessageController.getMessage
 );
 
