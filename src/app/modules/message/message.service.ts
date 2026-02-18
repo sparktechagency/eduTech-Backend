@@ -7,9 +7,11 @@ import mongoose from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
 import { redis } from '../../../shared/redisClient';
+import { Server } from 'socket.io';
 
 const sendMessageToDB = async (payload: any) => {
   const response = await Message.create(payload);
+  const populatedResponse = await response.populate('sender', 'name email profileImg');
   // Cache invalidate: delete all pages for this chat + all users
   const chatId = payload.chatId;
   const keys = await redis.keys(`chat:${chatId}:user:*`);
@@ -17,6 +19,11 @@ const sendMessageToDB = async (payload: any) => {
     await redis.del(keys);
     console.log(`[Cache] Invalidated ${keys.length} keys for chat ${chatId}`);
   }
+  //socket emit
+  const io = global.socketServer as Server;
+    if (io) {
+        io.emit(`getMessage::${payload?.chatId}`, response);
+    }
   return response;
 };
 
