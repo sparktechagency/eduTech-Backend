@@ -1,23 +1,42 @@
+import { User } from './../user/user.model';
+import { Server } from 'socket.io';
 import { IMessage } from '../message/message.interface';
 import { Message } from '../message/message.model';
 import { IChat } from './chat.interface';
 import { Chat } from './chat.model';
 
-const createChatToDB = async (payload: string[]): Promise<IChat> => {
-    const isExistChat = await Chat.findOne({
-        participants: { $all: payload }
+const createChatToDB = async (payload: string[]) => {
+
+  // Exact match check (important)
+  const isExistChat = await Chat.findOne({
+    participants: { $all: payload },
+    $expr: { $eq: [{ $size: "$participants" }, payload.length] },
+  }).populate("participants", "name email profileImg");
+
+  if (isExistChat) {
+    return isExistChat;
+  }
+
+  const result = await Chat.create({
+    participants: payload,
+    status: true,
+  });
+
+  const Result = await result.populate(
+    "participants",
+    "name email profileImg"
+  );
+
+  // socket emit
+  const io = (global as any).socketServer as Server;
+
+  if (io) {
+    payload.forEach((userId) => {
+      io.to(userId).emit("newChat", Result);
     });
+  }
 
-    if (isExistChat) {
-        return isExistChat;
-    }
-
-    const result = await Chat.create({
-        participants: payload,
-        status: true
-    });
-
-    return result;
+  return Result;
 };
 
 const getChatFromDB = async (user: any, search: string): Promise<IChat[]> => {

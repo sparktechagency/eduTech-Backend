@@ -6,7 +6,8 @@ const chatSchema = new Schema<IChat, ChatModel>(
         participants: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'User'
+                ref: 'User',
+                required: true
             }
         ],
         status: {
