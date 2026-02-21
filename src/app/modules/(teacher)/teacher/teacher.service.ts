@@ -6,6 +6,7 @@ import { IUserGroup } from "../../user-group/user-group.interface";
 import { USER_ROLES } from "../../../../enums/user";
 import { Assignment } from "../assignment/assignment.model";
 import { Class } from "../class/class.model";
+import { LearningMaterial } from "../../mentor/lmetarial/learning.model";
 
 const getAllMyStudent = async ( user: JwtPayload, query: Record<string, any>) => {
   const teacher = (await User.findById(user.id, "userGroup userGroupTrack").lean().populate("userGroup")) as IUser & {
@@ -57,11 +58,16 @@ const getOverview = async (user: JwtPayload) => {
     $or: [{ teacher: user.id }, { userGroup: { $in: groupIds } }, { userGroupTrack: trackId }],
   });
 
+  const totalLearningMaterial = await LearningMaterial.countDocuments({
+    $or: [{ createdBy: user.id }, {targertGroup: { $in: groupIds } }],
+  });
+
   return {
     group: teacher.userGroup?.map((g:any) => g.name),
     totalStudent,
     totalClass,
     totalAssignment,
+    totalLearningMaterial
   };
 };
 
