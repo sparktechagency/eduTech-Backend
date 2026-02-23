@@ -8,12 +8,17 @@ const router = express.Router();
 
 router.route("/resources")
     .get(
-        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR),
+        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.TEACHER),
         CoordinatorController.getAllResources
     );
+router.route("/resources/recent")
+    .get(
+        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.TEACHER),
+        CoordinatorController.lastThreeResources
+)
 router.route("/resources/:id")
     .get(
-        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR),
+        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.TEACHER),
         CoordinatorController.getResourceById
     )
     .patch(
@@ -55,6 +60,12 @@ router.route("/:id")
         auth(USER_ROLES.COORDINATOR),
         CoordinatorController.updateMentorStatus
     );
+router.route("/students/recent")
+    .get(
+        auth(USER_ROLES.COORDINATOR),
+        CoordinatorController.getlastFIveAdedStudents
+)
+
 
 
 export const CoordinatorRoutes = router;

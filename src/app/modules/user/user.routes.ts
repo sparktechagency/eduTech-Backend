@@ -49,7 +49,8 @@ router
             USER_ROLES.SUPER_ADMIN,
             USER_ROLES.MENTOR,
             USER_ROLES.STUDENT,
-            USER_ROLES.TEACHER
+            USER_ROLES.TEACHER,
+            USER_ROLES.COORDINATOR
         ),
         fileUploadHandler(),
         UserController.updateProfile

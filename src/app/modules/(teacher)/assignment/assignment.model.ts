@@ -9,10 +9,12 @@ const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
       required: true,
     },
 
-    submitAssignment: {
-      type: Schema.Types.ObjectId,
-      ref: 'AssignmentsSub',
-    },
+    submitAssignment: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'AssignmentsSub',
+      },
+    ],
 
     title: {
       type: String,

@@ -3,24 +3,45 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../../shared/catchAsync';
 import sendResponse from '../../../../shared/sendResponse';
 import { AssignmentService } from './assignment.service';
-import { getSingleFilePath } from '../../../../shared/getFilePath';
+import { getMultipleFilesPath, getSingleFilePath } from '../../../../shared/getFilePath';
 
+// const createAssignment = catchAsync(async (req: Request, res: Response) => {
+//   const { ...assignmentData } = req.body;
+//   const teacherId = req.user?.id;
+//   let attachment = getSingleFilePath(req.files, 'attachment');
+//   if (attachment) {
+//     assignmentData.attachment = attachment;
+//   }
+//   assignmentData.teacher = teacherId;
+//   const result = await AssignmentService.createAssignmentToDB(assignmentData);
+
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: StatusCodes.OK,
+//     message: 'Assignment Created successfully',
+//     data: result,
+//   });
+// });
 const createAssignment = catchAsync(async (req: Request, res: Response) => {
   const { ...assignmentData } = req.body;
   const teacherId = req.user?.id;
-  let attachment = getSingleFilePath(req.files, 'attachment');
-  if (attachment) {
-    assignmentData.attachment = attachment;
-  }
-  assignmentData.teacher = teacherId;
-  const result = await AssignmentService.createAssignmentToDB(assignmentData);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.OK,
-    message: 'Assignment Created successfully',
-    data: result,
-  });
+  let attachments = getMultipleFilesPath(req.files, 'attachment');
+  
+  if (attachments && attachments.length > 0) {
+    assignmentData.attachments = attachments; 
+
+    assignmentData.teacher = teacherId;
+    
+    const result = await AssignmentService.createAssignmentToDB(assignmentData);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Assignment Created successfully',
+      data: result,
+    });
+  }
 });
 
 const getAllAssignments = catchAsync(async (req: Request, res: Response) => {

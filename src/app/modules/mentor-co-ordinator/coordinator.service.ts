@@ -6,6 +6,8 @@ import { UserGroupTrack } from "../user-group/user-group-track/user-group-track.
 import { UserGroup } from "../user-group/user-group.model";
 import { User } from "../user/user.model";
 import { Class } from "../(teacher)/class/class.model";
+import { query } from 'express';
+import QueryBuilder from "../../../shared/apiFeature";
 
 const getDashboardStats = async () => {
     const totalMentors = await User.countDocuments({ role: USER_ROLES.MENTOR });
@@ -23,10 +25,31 @@ const getDashboardStats = async () => {
     };
 }
 
-const getAllMentorsFromDB = async () => {
-    const mentors = await User.find({ role: USER_ROLES.MENTOR })
-    .populate('userGroup');
-    return mentors;
+const getAllMentorsFromDB = async (query: Record<string, unknown>) => {
+  const cleanQuery: Record<string, unknown> = Object.fromEntries(
+    Object.entries(query).filter(([_, v]) => v !== "" && v !== null && v !== undefined)
+  );
+
+  if (cleanQuery.status) {
+    cleanQuery.verified = cleanQuery.status === "Active" ? true : false;
+    delete cleanQuery.status; 
+  }
+
+  const mentorQuery = new QueryBuilder(
+    User.find({ role: USER_ROLES.MENTOR }),
+    cleanQuery
+  )
+    .search(['name', 'firstName', 'lastName', 'email'])
+    .filter()
+    .sort()
+    .paginate();
+
+  const mentorsData = await mentorQuery.queryModel
+    .populate('userGroup')
+    .populate('assignedStudents');
+  const pagination = await mentorQuery.getPaginationInfo();
+
+  return { mentors: mentorsData, pagination };
 };
 
 const getMentorById = async (id: string) => {
@@ -82,12 +105,21 @@ const updateClassStatusFromDB = async (id: string) => {
 };
 
 
-const getAllResourcesFromDB = async () => {
-   const material = await LearningMaterial.find()
-   .populate({ path: 'createdBy', select: 'name' })
-   .populate({ path: 'targeteAudience', select: 'name' })
-   .populate({ path: 'targertGroup', select: 'name' });
-   return material;
+const getAllResourcesFromDB = async (query: Record<string, any>) => {
+    const material = new QueryBuilder(LearningMaterial.find(), query)
+    .search(['title', 'description', 'type', 'contentUrl'])
+    .filter()
+    .sort()
+    .paginate();
+
+    const resources = await material.queryModel
+    .populate({ path: 'createdBy', select: 'name' })
+    .populate({ path: 'targeteAudience', select: 'name' })
+    .populate({ path: 'targertGroup', select: 'name' });
+
+    const pagination = await material.getPaginationInfo();
+
+    return { resources, pagination };
 };
 
 const getResourceByIdFromDB = async (id: string) => {
@@ -117,6 +149,23 @@ const updateResourceStatusFromDB = async (id: string) => {
     return updatedMaterial;
 };
 
+const getlastFIveAdedStudentsFromDB = async () => {
+    const students = await User.find({ role: USER_ROLES.STUDENT })
+    .sort({ createdAt: -1 })
+    .limit(5);
+    return students;
+};
+
+const lastThreeResourcesFromDB = async () => {
+    const resources = await LearningMaterial.find()
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .populate({ path: 'createdBy', select: 'name' })
+    .populate({ path: 'targeteAudience', select: 'name' })
+    .populate({ path: 'targertGroup', select: 'name' });
+    return resources;
+};
+
 export const CoordinatorService = {
     getDashboardStats,
     getAllMentorsFromDB,
@@ -127,5 +176,7 @@ export const CoordinatorService = {
     updateClassStatusFromDB,
     getAllResourcesFromDB,
     getResourceByIdFromDB,
-    updateResourceStatusFromDB
+    updateResourceStatusFromDB,
+    getlastFIveAdedStudentsFromDB,
+    lastThreeResourcesFromDB
 }

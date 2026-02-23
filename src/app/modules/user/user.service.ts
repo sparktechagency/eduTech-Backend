@@ -65,7 +65,6 @@ const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
 };
 
 
-
 const updateProfileToDB = async (
   user: JwtPayload,
   payload: Partial<IUser>

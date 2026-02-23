@@ -40,14 +40,32 @@ const createAssignmentToDB = async (payload: IAssignment) => {
 };
 
 const getAllAssignmentsFromDB = async (query: Record<string, any>) => {
-  const result = new QueryBuilder(Assignment.find()
-  .populate('userGroup')
-  .populate('userGroupTrack')
-  .populate('submitAssignment'), query)
+  const result = new QueryBuilder(
+    Assignment.find()
+      .populate('userGroup')
+      .populate('userGroupTrack')
+      .populate({
+        path: 'submitAssignment',
+        populate: [
+          {
+            path: 'assignmentId', 
+            model: 'Assignment',
+            select: 'title description' 
+          },
+          {
+            path: 'studentId',   
+            model: 'User',
+            select: 'name email mobilenumber role'       
+          }
+        ]
+      }),
+    query
+  )
     .search(['title', 'description'])
     .filter()
     .sort()
     .paginate();
+
   const assignments = await result.queryModel;
   const pagination = await result.getPaginationInfo();
   return { assignments, pagination };

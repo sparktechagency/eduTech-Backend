@@ -17,7 +17,9 @@ const getstat = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllMentors = catchAsync(async (req: Request, res: Response) => {
-    const result = await CoordinatorService.getAllMentorsFromDB();  
+    console.log("Logged in user:", req.user);
+    console.log("Query:", req.query);
+    const result = await CoordinatorService.getAllMentorsFromDB( req.query);  
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
@@ -87,7 +89,7 @@ const updateClassStatus = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllResources = catchAsync(async (req: Request, res: Response) => {
-    const result = await CoordinatorService.getAllResourcesFromDB();
+    const result = await CoordinatorService.getAllResourcesFromDB(req.query);
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
@@ -121,6 +123,28 @@ const updateResourceStatus = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getlastFIveAdedStudents = catchAsync(async (req: Request, res: Response) => {
+    const result = await CoordinatorService.getlastFIveAdedStudentsFromDB();
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Last five added students retrieved successfully',
+        data: result,
+    });
+});
+
+const lastThreeResources = catchAsync(async (req: Request, res: Response) => {
+    const result = await CoordinatorService.lastThreeResourcesFromDB();
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Last three added resources retrieved successfully',
+        data: result,
+    });
+});
+
 export const CoordinatorController = {
     getstat,
     getAllMentors,
@@ -131,5 +155,7 @@ export const CoordinatorController = {
     updateClassStatus,
     getAllResources,
     getResourceById,
-    updateResourceStatus
+    updateResourceStatus,
+    getlastFIveAdedStudents,
+    lastThreeResources
     }

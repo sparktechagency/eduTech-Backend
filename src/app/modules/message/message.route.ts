@@ -32,4 +32,14 @@ router.get('/:id',
     MessageController.getMessage
 );
 
+router.patch('/:id',
+    auth(USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT, USER_ROLES.COORDINATOR, USER_ROLES.SUPER_ADMIN),
+    MessageController.updateMessage
+);
+router.delete('/:id',
+    auth(USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT, USER_ROLES.COORDINATOR, USER_ROLES.SUPER_ADMIN),
+    MessageController.deleteMessage
+);
+
+
 export const MessageRoutes = router;

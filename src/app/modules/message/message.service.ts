@@ -74,4 +74,27 @@ const getMessageFromDB = async (user: JwtPayload, id: string, query: Record<stri
   return response;
 };
 
-export const MessageService = { sendMessageToDB, getMessageFromDB };
+const updateMessageFromDB = async (id: string, payload: any) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid Message ID');
+  }
+
+  const result = await Message.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
+
+const deleteMessageFromDB = async (id: string) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid Message ID');
+  }
+
+  const result = await Message.findByIdAndDelete(id);
+  return result;
+};
+
+export const MessageService = { 
+  sendMessageToDB, 
+  getMessageFromDB, 
+  updateMessageFromDB, 
+  deleteMessageFromDB  
+};
