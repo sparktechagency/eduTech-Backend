@@ -9,42 +9,6 @@ const createStudentIntoDB = async (payload: IStudentProfile) => {
   return result;
 };
 
-// const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-//   const { searchTerm, ...filterData } = query;
-//   const andConditions = [];
-
-//   // Search Logic (Name, ID, Department)
-//   if (searchTerm) {
-//     andConditions.push({
-//       $or: ['studentId', 'department'].map((field) => ({
-//         [field]: { $regex: searchTerm, $options: 'i' },
-//       })),
-//     });
-//   }
-
-//   // Filter Logic (Exact match for status, batchId, mentorId)
-//   if (Object.keys(filterData).length) {
-//     andConditions.push({
-//       $and: Object.entries(filterData).map(([field, value]) => ({
-//         [field]: value,
-//       })),
-//     });
-//   }
-
-//   const whereConditions =
-//     andConditions.length > 0 ? { $and: andConditions } : {};
-
-//   const result = await User.find({  role: 'student', ...whereConditions })
-//     .populate('userId')    
-//     .populate('mentorId')   
-//     // .populate('batchId')    
-//     .populate('woopGoals')
-//     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
-//     .sort({ createdAt: 'desc' });
-
-//   return result;
-// };
-
 const getAllStudentsFromDB = async (query: Record<string, any>) => {
 
   const queryBuilder = new QueryBuilder(

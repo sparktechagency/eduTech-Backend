@@ -29,7 +29,7 @@ const fileUploadHandler = () => {
                 case 'image':
                     uploadDir = path.join(baseUploadDir, 'images');
                 break;
-                case 'file-assignment':
+                case 'submittedfile':
                     uploadDir = path.join(baseUploadDir, 'student-assignments');
                 break;
                 case 'attachment':
@@ -60,7 +60,7 @@ const fileUploadHandler = () => {
     const filterFilter = (req: Request, file: any, cb: FileFilterCallback) => {
 
         // console.log("file handler",file)
-        if (file.fieldname === 'image' || file.fieldname === 'file-assignment' || file.fieldname === 'attachment') {
+        if (file.fieldname === 'image' || file.fieldname === 'submittedfile' || file.fieldname === 'attachment') {
             if (
                 file.mimetype === 'image/jpeg' ||
                 file.mimetype === 'image/png' ||
@@ -108,7 +108,7 @@ const fileUploadHandler = () => {
     const upload = multer({ storage: storage, fileFilter: filterFilter})
     .fields([
         { name: 'image', maxCount: 30 },
-        { name: 'file-assignment', maxCount: 15 },
+        { name: 'submittedfile', maxCount: 15 },
         { name: 'attachment', maxCount: 15 },
      ]);
     return upload;

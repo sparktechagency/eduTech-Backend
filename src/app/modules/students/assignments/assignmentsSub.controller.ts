@@ -11,7 +11,7 @@ const submitAssignment = catchAsync(async (req: Request, res: Response) => {
     const studentId = req.user?.id; 
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    const fileData = files?.['file-assignment'] ? files['file-assignment'][0] : null;
+    const fileData = files?.['submittedfile'] ? files['submittedfile'][0] : null;
     
     let fileUrl = '';
 
@@ -97,10 +97,23 @@ const getUpcomingEvents = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getAllSubmitedAssignments = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    const result = await AssignmentsSubService.getAllsubmitedAssignmentsFromDB(userId, req.query);
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'All submited assignments fetched successfully',
+        data: result,
+    });
+});
+
 export const AssignmentsSubController = {
   submitAssignment,
   getAssignmentSubmissions,
   getMySubmissions,
   getMyAssignments,
-  getUpcomingEvents
+  getUpcomingEvents,
+  getAllSubmitedAssignments
 };

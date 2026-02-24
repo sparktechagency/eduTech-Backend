@@ -7,6 +7,8 @@ import { User } from '../../user/user.model';
 import { Event } from '../../admin/event/event.model';
 import { IAssignmentsSub } from './assignmentsSub.interface';
 import { AssignmentsSub } from './assignmentsSub.model';
+import QueryBuilder from '../../../../shared/apiFeature';
+import mongoose, { Types } from 'mongoose';
 
 const submitAssignmentIntoDB = async (payload: IAssignmentsSub) => {
   const result = await AssignmentsSub.create(payload);
@@ -77,10 +79,69 @@ const getupcomigEventsFromDB = async () => {
   return result;
 }
 
+
+// const getAllsubmitedAssignmentsFromDB = async (query: Record<string, any>, userId: string) => {
+
+//   const queryBuilder = new QueryBuilder(
+//     AssignmentsSub.find(), query)
+//     .search(['assignmentId'])
+//     .filter()
+//     .sort()
+//     .paginate();
+
+//   const result = await queryBuilder.queryModel
+//     .populate('assignmentId')
+//     .exec();
+
+//   const pagination = await queryBuilder.getPaginationInfo();
+
+//   return { data: result, pagination };
+// }
+const getAllsubmitedAssignmentsFromDB = async (
+  teacherId: string,
+  query: Record<string, unknown>
+) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  // Step 1: Get all assignment IDs that belong to this teacher
+  const teacherAssignments = await Assignment.find({
+    teacher: new Types.ObjectId(teacherId),
+  }).select('_id');
+
+  const assignmentIds = teacherAssignments.map((a) => a._id);
+
+  // Step 2: Find all submissions where assignmentId matches teacher's assignments
+  const total = await AssignmentsSub.countDocuments({
+    assignmentId: { $in: assignmentIds },
+  });
+
+  const result = await AssignmentsSub.find({
+    assignmentId: { $in: assignmentIds },
+  })
+    .populate('assignmentId', 'title description dueDate totalPoint status attachment')
+    .populate('studentId', 'name email role')
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  return {
+    meta: {
+      total,
+      totalPage: Math.ceil(total / limit),
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
 export const AssignmentsSubService = {
   submitAssignmentIntoDB,
   getSubmissionsForTeacherFromDB,
   getStudentOwnSubmissionsFromDB,
   getMyAssignmentsFromDB ,
-  getupcomigEventsFromDB
+  getupcomigEventsFromDB,
+  getAllsubmitedAssignmentsFromDB
 };
