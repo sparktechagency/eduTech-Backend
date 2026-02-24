@@ -2,47 +2,68 @@ import mongoose, { SortOrder } from 'mongoose';
 import { StudentProfile } from './students.model';
 import {  IStudentProfile, IStudentReview } from './students.interface';
 import { User } from '../../../user/user.model';
+import QueryBuilder from '../../../../../shared/apiFeature';
 
 const createStudentIntoDB = async (payload: IStudentProfile) => {
   const result = await StudentProfile.create(payload);
   return result;
 };
 
-const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  const { searchTerm, ...filterData } = query;
-  const andConditions = [];
+// const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+//   const { searchTerm, ...filterData } = query;
+//   const andConditions = [];
 
-  // Search Logic (Name, ID, Department)
-  if (searchTerm) {
-    andConditions.push({
-      $or: ['studentId', 'department'].map((field) => ({
-        [field]: { $regex: searchTerm, $options: 'i' },
-      })),
-    });
-  }
+//   // Search Logic (Name, ID, Department)
+//   if (searchTerm) {
+//     andConditions.push({
+//       $or: ['studentId', 'department'].map((field) => ({
+//         [field]: { $regex: searchTerm, $options: 'i' },
+//       })),
+//     });
+//   }
 
-  // Filter Logic (Exact match for status, batchId, mentorId)
-  if (Object.keys(filterData).length) {
-    andConditions.push({
-      $and: Object.entries(filterData).map(([field, value]) => ({
-        [field]: value,
-      })),
-    });
-  }
+//   // Filter Logic (Exact match for status, batchId, mentorId)
+//   if (Object.keys(filterData).length) {
+//     andConditions.push({
+//       $and: Object.entries(filterData).map(([field, value]) => ({
+//         [field]: value,
+//       })),
+//     });
+//   }
 
-  const whereConditions =
-    andConditions.length > 0 ? { $and: andConditions } : {};
+//   const whereConditions =
+//     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  const result = await StudentProfile.find(whereConditions)
-    .populate('userId')    
-    .populate('mentorId')   
-    // .populate('batchId')    
-    .populate('woopGoals')
+//   const result = await User.find({  role: 'student', ...whereConditions })
+//     .populate('userId')    
+//     .populate('mentorId')   
+//     // .populate('batchId')    
+//     .populate('woopGoals')
+//     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
+//     .sort({ createdAt: 'desc' });
+
+//   return result;
+// };
+
+const getAllStudentsFromDB = async (query: Record<string, any>) => {
+
+  const queryBuilder = new QueryBuilder(
+    User.find({ role: 'STUDENT' }), query)
+    .search(['studentId', 'department'])
+    .filter()
+    .sort()
+    .paginate();
+
+  const result = await queryBuilder.queryModel
+    .populate('mentorId' , 'firstName lastName email profile contact location')
+    .populate('woopGoals' , 'title description status')
     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
-    .sort({ createdAt: 'desc' });
+    .exec();
 
-  return result;
-};
+  const pagination = await queryBuilder.getPaginationInfo();
+
+  return { data: result, pagination };
+}
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await User.findById(id)

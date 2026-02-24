@@ -19,7 +19,7 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {;
 const getMessage = catchAsync(async (req: Request, res: Response) => {
 
     const id = req.params.id;
-    const messages = await MessageService.getMessageFromDB(req.user, id, req.query);
+    const messages = await MessageService.getMessageFromDB(req.user, id);
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,

@@ -6,6 +6,12 @@ import { CoordinatorController } from './coordinator.controller';
 
 const router = express.Router();
 
+router.route("/mentors")
+    .get(
+        auth(USER_ROLES.COORDINATOR),
+        CoordinatorController.getAllMentors
+    );
+
 router.route("/resources")
     .get(
         auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.TEACHER),
@@ -13,7 +19,7 @@ router.route("/resources")
     );
 router.route("/resources/recent")
     .get(
-        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.TEACHER),
+        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR,USER_ROLES.TEACHER,USER_ROLES.TEACHER),
         CoordinatorController.lastThreeResources
 )
 router.route("/resources/:id")
@@ -46,11 +52,6 @@ router.route("/classes/:id")
         CoordinatorController.updateClassStatus
     );
 
-router.route("/mentors")
-    .get(
-        auth(USER_ROLES.COORDINATOR),
-        CoordinatorController.getAllMentors
-    );
 router.route("/:id")
     .get(
         auth(USER_ROLES.COORDINATOR),

@@ -9,7 +9,7 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
     
     title: { type: String, required: true },
     description: { type: String, required: false },
-
+    dueDate: { type: Date, required: false},
     type: {
         type: String, 
         enum: Object.values(ResourceType),

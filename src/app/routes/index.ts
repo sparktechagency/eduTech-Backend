@@ -36,6 +36,7 @@ import { CoordinatorRoutes } from '../modules/mentor-co-ordinator/coordinator.ro
 import { AdminOnboardingRoutes } from '../modules/admin/onboarding/onboarding.route';
 import { mentorDashboardRoutes } from '../modules/mentor/dashboard/dashboard.route';
 import { goalRoutes } from '../modules/admin/goal/goal.route';
+import { StudentStatsRoutes } from '../modules/students/studentstats/stat.route';
 const router = express.Router();
 
 const apiRoutes = [
@@ -51,6 +52,7 @@ const apiRoutes = [
     { path: "/mentor/woops", route: MentorWoopRoutes },
     { path: "/goal", route: goalRoutes },
     { path: "/student-admin", route: StudentAdminPartRoutes },
+    { path: "/student-stats", route: StudentStatsRoutes },
     { path: "/student-attendance", route: AttendenceRoutes },
     { path: "/admin-mentor", route: adminMentorRoutes },
     { path: "/admin-teacher", route: adminTeacherRoutes },

@@ -1,3 +1,4 @@
+import QueryBuilder, { GetAllEventsQuery } from "../../../../shared/apiFeature";
 import { IEvent } from "./event.interface";
 import { Event } from "./event.model";
 
@@ -6,12 +7,45 @@ const createEventFromDB = async (payload: Partial<IEvent>) => {
   return event;
 };
 
-const getAllEventsFromDB = async () => {
-    const result = await Event.find()
+const getAllEventsFromDB = async (query?: GetAllEventsQuery) => {
+  const safeQuery = query || {};
+
+  const page = Number(safeQuery.page) || 1;
+  const limit = Number(safeQuery.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  let queryBuilder = Event.find();
+
+  if (safeQuery.searchTerm) {
+    queryBuilder = queryBuilder.find({
+      $or: [
+        { title: { $regex: safeQuery.searchTerm, $options: "i" } },
+        { description: { $regex: safeQuery.searchTerm, $options: "i" } },
+      ],
+    });
+  }
+
+  const total = await queryBuilder.clone().countDocuments();
+
+  const events = await queryBuilder
+    .sort(safeQuery.sort || "-createdAt")
+    .skip(skip)
+    .limit(limit)
     .populate("group")
-    .populate("targetUser");
-    return result;
-}
+    .populate("targetUser")
+    .exec();
+
+  return {
+    success: true,
+    data: events || [],
+    pagination: {
+      total,
+      totalPage: Math.ceil(total / limit),
+      page,
+      limit,
+    },
+  };
+};
 
 const getEventByIdFromDB = async (id:string) => {
     const result = await Event.findById(id)

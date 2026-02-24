@@ -23,7 +23,7 @@ const getStudentReports = catchAsync(async (req: Request, res: Response) => {
 });
 
 const  getAllReports = catchAsync(async (req: Request, res: Response) => {
-    const reports = await WeeklyReportService.getAllStudentReportsFromDB();
+    const reports = await WeeklyReportService.getAllStudentReportsFromDB(req.query);
     res.status(200).json({
         success: true,
         data: reports,

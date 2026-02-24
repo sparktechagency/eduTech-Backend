@@ -24,13 +24,13 @@ router.route("/")
 
 router.route("/:id")
     .get(
-        auth(
-            USER_ROLES.ADMIN, 
-            USER_ROLES.SUPER_ADMIN, 
-            USER_ROLES.MENTOR, 
-            USER_ROLES.STUDENT, 
-            USER_ROLES.TEACHER
-        ),
+        // auth(
+        //     USER_ROLES.ADMIN, 
+        //     USER_ROLES.SUPER_ADMIN, 
+        //     USER_ROLES.MENTOR, 
+        //     USER_ROLES.STUDENT, 
+        //     USER_ROLES.TEACHER
+        // ),
         adminMentorController.getMentorById
     )
     .patch(

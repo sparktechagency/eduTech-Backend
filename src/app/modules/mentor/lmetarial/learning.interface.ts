@@ -7,6 +7,7 @@ export interface ILearningMaterial extends Document {
     createdBy: Types.ObjectId;
     title: string;
     description?: string;
+    dueDate?: Date;
     type: ResourceType;
     contentUrl: string;
     targeteAudience: string;

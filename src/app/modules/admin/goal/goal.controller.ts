@@ -14,7 +14,7 @@ const createGoal = catchAsync(async (req: Request, res: Response) => {
 
 const getAllGoals = catchAsync(async (req: Request, res: Response) => {
     const query = req.query;
-    const result = await goalService.getAllGoalsFromDB(query);
+    const result = await goalService.getAllGoalsFromDB(req.query);
     res.status(200).json({
         success: true,
         ...result,

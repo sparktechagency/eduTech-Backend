@@ -25,7 +25,7 @@ const bulkUploadTeachers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllTeachers = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserService.getAllTeachersFromDB();
+    const result = await UserService.getAllTeachersFromDB(req.query);
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,

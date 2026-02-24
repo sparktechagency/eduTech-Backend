@@ -53,7 +53,7 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllEvents = catchAsync(async (req, res) => {
-    const result = await EventService.getAllEventsFromDB();
+    const result = await EventService.getAllEventsFromDB(req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -75,14 +75,29 @@ const getEventById = catchAsync(async (req, res) => {
 });
 
 const updateEventById = catchAsync(async (req, res) => {
-    const result = await EventService.updateEventByIdInDB(req.params.id, req.body);
 
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: 'Event updated successfully',
-        data: result,
-    });
+  const payload = { ...req.body };
+const files = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+  };
+
+  let imagePath: string | undefined;
+
+  if (files?.image && files.image.length > 0) {
+    imagePath = `/images/${files.image[0].filename}`;
+    payload.image = imagePath;
+  }
+  const result = await EventService.updateEventByIdInDB(
+    req.params.id,
+    payload
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Event updated successfully',
+    data: result,
+  });
 });
 
 const deleteEventById = catchAsync(async (req, res) => {

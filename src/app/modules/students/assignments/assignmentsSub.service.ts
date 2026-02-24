@@ -62,6 +62,7 @@ const getMyAssignmentsFromDB = async (userId: string) => {
         .populate('teacher', 'firstName lastName profile')
         .populate('userGroup')
         .populate('userGroupTrack')
+        .populate('submitAssignment')
         .sort({ createdAt: -1 });
 
     return result;

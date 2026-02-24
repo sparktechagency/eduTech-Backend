@@ -18,6 +18,7 @@ const AssignmentsSubSchema = new Schema<IAssignmentsSub>({
         type: String,
         required: [true, "Submitted file URL is required"]
     },
+    
 }, {
     timestamps: true
 });

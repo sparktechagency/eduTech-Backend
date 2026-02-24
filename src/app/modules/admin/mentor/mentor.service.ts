@@ -6,6 +6,8 @@ import { USER_ROLES } from '../../../../enums/user';
 import { UserGroup } from '../../user-group/user-group.model';
 import { IStudentReview } from '../students/management/students.interface';
 import { StudentProfile } from '../students/management/students.model';
+import QueryBuilder from '../../../../shared/apiFeature';
+import { query } from 'express';
 
 const bulkImportMentors = async (fileBuffer: Buffer) => {
     const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
@@ -87,11 +89,21 @@ const bulkImportMentors = async (fileBuffer: Buffer) => {
     };
 };
 
-const getAllMentorsFromDB = async () => {
-    const mentors = await User.find({ role: USER_ROLES.MENTOR })
+const getAllMentorsFromDB = async (query: any) => {
+  const result = await new QueryBuilder(
+    User.find({ role: USER_ROLES.MENTOR })
+      .populate('assignedStudents', 'name email profile contact location')
+      .populate('userGroup'),
+    query  
+  )
+    .search(['firstName', 'lastName', 'email'])
+    .filter()
+    .sort()
+    .paginate()
     .populate('userGroup')
-    .populate('assignedStudents');
-    return mentors;
+    .populate('assignedStudents', 'name email profile contact location');
+
+  return result;
 };
 
 const getMentorById = async (id: string) => {

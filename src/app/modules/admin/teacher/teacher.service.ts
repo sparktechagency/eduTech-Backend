@@ -6,6 +6,8 @@ import { USER_ROLES } from '../../../../enums/user';
 import { UserGroup } from '../../user-group/user-group.model';
 import { IStudentReview } from '../students/management/students.interface';
 import { StudentProfile } from '../students/management/students.model';
+import { query } from 'winston';
+import QueryBuilder from '../../../../shared/apiFeature';
 
 const bulkImportTeachers = async (fileBuffer: Buffer) => {
     const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
@@ -86,8 +88,8 @@ const bulkImportTeachers = async (fileBuffer: Buffer) => {
     };
 };
 
-const getAllTeachersFromDB = async () => {
-    const teachers = await User.find({ role: USER_ROLES.TEACHER })
+const getAllTeachersFromDB = async (query: Record<string, any>) => {
+    const teachers = await new QueryBuilder(User.find({ role: USER_ROLES.TEACHER }), query).search(['name', 'email']).filter().sort().paginate().queryModel
     .populate('userGroup');
     return teachers;
 };

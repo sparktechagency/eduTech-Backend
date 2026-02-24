@@ -11,59 +11,58 @@ import { Server } from 'socket.io';
 
 const sendMessageToDB = async (payload: any) => {
   const response = await Message.create(payload);
-  const populatedResponse = await response.populate('sender', 'name email profileImg');
-  // Cache invalidate: delete all pages for this chat + all users
+
+  const populatedResponse = await response.populate('sender', 'firstName lastName email profile');
+
   const chatId = payload.chatId;
   const keys = await redis.keys(`chat:${chatId}:user:*`);
   if (keys.length > 0) {
     await redis.del(keys);
     console.log(`[Cache] Invalidated ${keys.length} keys for chat ${chatId}`);
   }
-  //socket emit
+
   const io = global.socketServer as Server;
-    if (io) {
-        io.emit(`getMessage::${payload?.chatId}`, response);
-    }
-  return response;
+  if (io) {
+    io.emit(`getMessage::${chatId}`, populatedResponse);
+  }
+
+  return populatedResponse;
 };
 
-const getMessageFromDB = async (user: JwtPayload, id: string, query: Record<string, any>) => {
+const getMessageFromDB = async (user: JwtPayload, id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid Chat ID');
   }
 
-  const cacheKey = `chat:${id}:user:${user.id}:page:${query.page || 1}:limit:${query.limit || 20}`;
-  
+  const cacheKey = `chat:${id}:user:${user.id}:allMessages`;
+
+  // Try Redis cache first
   try {
     const cached = await redis.get(cacheKey);
     if (cached) {
       console.log('[Redis Cache] HIT:', cacheKey);
-      const parsed = JSON.parse(cached) as { messages: IMessage[], pagination: any, participant: any };
-      return parsed;
+      return JSON.parse(cached) as { messages: IMessage[], participant: any };
     }
   } catch (redisError) {
     console.error('[Redis Cache] MISS/ERROR:', redisError);
   }
 
+  const messages = await Message.find({ chatId: id })
+    .sort({ createdAt: -1 })
+    .populate('sender', 'firstName lastName email profileImg');
   
-  const result = new QueryBuilder(
-    Message.find({ chatId: id }).sort({ createdAt: -1 }),  
-    query
-  ).paginate();  
-  
-  const messages = await result.queryModel; 
-  
-  const participant = await Chat.findById(id).populate({
+  const participantDoc = await Chat.findById(id).populate({
     path: 'participants',
-    select: 'name profile location',
+    select: 'firstName lastName email profile location',
     match: { _id: { $ne: user.id } }
   });
 
-  const response = { 
-    messages, 
-    participant: participant?.participants[0] 
+  const response = {
+    messages,
+    participant: participantDoc?.participants[0] || null
   };
 
+  // Cache in Redis
   try {
     await redis.set(cacheKey, JSON.stringify(response), { EX: 300 });
     console.log('[Redis Cache] SET:', cacheKey);
@@ -73,7 +72,6 @@ const getMessageFromDB = async (user: JwtPayload, id: string, query: Record<stri
 
   return response;
 };
-
 const updateMessageFromDB = async (id: string, payload: any) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid Message ID');

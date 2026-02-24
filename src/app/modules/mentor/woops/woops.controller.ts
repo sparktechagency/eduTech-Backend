@@ -15,14 +15,14 @@ const createwoop = catchAsync(async (req, res) => {
   
 const getUserWoops = catchAsync(async (req, res) => {
     const id = req.user.id;
-    const woops = await WoopService.getUserWoopsFromDB(id);
+    const woops = await WoopService.getUserWoopsFromDB(id, req.query);
     res.status(200).json({
         success: true,
         data: woops,
     });
 });     
 const  getAllWoops = catchAsync(async (req, res) => {
-    const woops = await WoopService.getAllUserWoopsFromDB();
+    const woops = await WoopService.getAllUserWoopsFromDB(req.query);
     res.status(200).json({
         success: true,
         data: woops,

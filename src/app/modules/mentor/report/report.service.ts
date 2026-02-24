@@ -18,7 +18,7 @@ const getStudentReportsFromDB = async (studentId: string) => {
     return result;
 };
 
-const getAllStudentReportsFromDB = async () => {
+const getAllStudentReportsFromDB = async (query: Record<string, any>) => {
     const result = new QueryBuilder(WeeklyReport.find(), query)
     .search(['studentId', 'weekStartDate', 'weekEndDate', 'isPresent', 'achievedHardOutcomes', 'softSkillImprovements', 'comments', 'goalSheet', 'objectives'])
     .filter()
