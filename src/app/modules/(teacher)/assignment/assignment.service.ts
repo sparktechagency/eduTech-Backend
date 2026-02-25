@@ -6,6 +6,7 @@ import { Assignment } from './assignment.model';
 import { UserGroupTrack } from '../../user-group/user-group-track/user-group-track.model';
 import { UserGroup } from '../../user-group/user-group.model';
 import { RecentActivity } from '../recentActivities/recentActivity.model';
+import { AssignmentsSub } from '../../students/assignments/assignmentsSub.model';
 
 const createAssignmentToDB = async (payload: IAssignment) => {
 
@@ -115,10 +116,28 @@ const deleteAssignmentFromDB = async (id: string) => {
   return  result ;
 };
 
+const addmarksAndFeedbackToSubmission = async (
+  submissionId: string,
+  marks: number,
+  feedback: string
+) => {
+  const submission = await AssignmentsSub.findById(submissionId);
+  if (!submission) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Submission not found');
+  }
+
+  submission.marks = marks;
+  submission.feedback = feedback;
+  await submission.save();
+
+  return submission;
+};
+
 export const AssignmentService = {
   createAssignmentToDB,
   getAllAssignmentsFromDB,
   getAssignmentByIdFromDB,
   updateAssignmentToDB,
   deleteAssignmentFromDB,
+  addmarksAndFeedbackToSubmission
 };

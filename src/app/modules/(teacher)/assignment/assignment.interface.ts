@@ -8,7 +8,7 @@ export type IAssignment = {
   userGroup: Types.ObjectId[];
   userGroupTrack: Types.ObjectId;
   dueDate: Date;
-  individualPoint: number;
+  totalPoint?: number; 
   attachment?: string;
   submitAssignment?: Types.ObjectId;
   status: string;

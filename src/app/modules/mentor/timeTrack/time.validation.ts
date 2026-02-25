@@ -16,8 +16,8 @@ const createTimeValidationZodSchema = z.object({
         endTime: z.string({
             required_error: 'End time is required',
         }),
-        requesting: z.string({
-            required_error: 'Requesting field is required',
+        spentHours: z.number({
+            required_error: 'Spent hours is required',
         }),
         comments: z.string().optional(),
     }),

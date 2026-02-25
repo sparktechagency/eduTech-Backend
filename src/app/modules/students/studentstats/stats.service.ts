@@ -7,7 +7,8 @@ import { Assignment } from "../../(teacher)/assignment/assignment.model";
 
 const getMyStatsFromDB = async (studentId: string) => {
   const result = await User.findById(studentId)
-    .populate('woopGoals')
+    .populate('woop')
+    .populate('Goals')
     .populate('mentorId')
     .populate('classId');
   
@@ -24,7 +25,7 @@ const getMyStatsFromDB = async (studentId: string) => {
     totalSubmittedAssignments: submittedAssignmentsCount,
     totalClasses: result.classId ? (result.classId as any).totalClasses || 0 : 0,
     mentorTotal: result.mentorId ? (result.mentorId as any).totalMentor || 0 : 0,
-    totalGoals: result.woopGoals?.length || 0,
+    totalGoals: result.Goals?.length || 0,
   }
   
   return countindividual;

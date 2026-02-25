@@ -123,45 +123,8 @@ const getAllsubmitedAssignmentsFromDB = async (
     data: result,
   };
 };
-// const getAllsubmitedAssignmentsFromDB = async (
-//   teacherId: string,
-//   query: Record<string, unknown>
-// ) => {
-//   const page = Number(query.page) || 1;
-//   const limit = Number(query.limit) || 10;
-//   const skip = (page - 1) * limit;
 
-//   // Step 1: Get all assignment IDs that belong to this teacher
-//   const teacherAssignments = await Assignment.find({
-//     teacher: new Types.ObjectId(teacherId),
-//   }).select('_id');
 
-//   const assignmentIds = teacherAssignments.map((a) => a._id);
-
-//   // Step 2: Find all submissions where assignmentId matches teacher's assignments
-//   const total = await AssignmentsSub.countDocuments({
-//     assignmentId: { $in: assignmentIds },
-//   });
-
-//   const result = await AssignmentsSub.find({
-//     assignmentId: { $in: assignmentIds },
-//   })
-//     .populate('assignmentId', 'title description dueDate totalPoint status attachment')
-//     .populate('studentId', 'name email role')
-//     .skip(skip)
-//     .limit(limit)
-//     .lean();
-
-//   return {
-//     meta: {
-//       total,
-//       totalPage: Math.ceil(total / limit),
-//       page,
-//       limit,
-//     },
-//     data: result,
-//   };
-// };
 
 export const AssignmentsSubService = {
   submitAssignmentIntoDB,
@@ -169,5 +132,6 @@ export const AssignmentsSubService = {
   getStudentOwnSubmissionsFromDB,
   getMyAssignmentsFromDB ,
   getupcomigEventsFromDB,
-  getAllsubmitedAssignmentsFromDB
+  getAllsubmitedAssignmentsFromDB,
+
 };

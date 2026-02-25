@@ -114,11 +114,14 @@ const getAllSubmitedAssignments = catchAsync(async (req: Request, res: Response)
     });
 });
 
+
+
+
 export const AssignmentsSubController = {
   submitAssignment,
   getAssignmentSubmissions,
   getMySubmissions,
   getMyAssignments,
   getUpcomingEvents,
-  getAllSubmitedAssignments
+  getAllSubmitedAssignments,
 };

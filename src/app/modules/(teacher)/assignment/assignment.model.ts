@@ -50,7 +50,7 @@ const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
       required: true,
     },
     
-    individualPoint: {
+    totalPoint: {
       type: Number,
       default: 0,
     },

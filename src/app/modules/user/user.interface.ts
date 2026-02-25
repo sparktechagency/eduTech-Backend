@@ -54,7 +54,8 @@ export type IUser = {
     githubProfile?: string;
     PortfolioWebsite?:string;
     mentorId?: mongoose.Types.ObjectId | IUser;
-    woopGoals?: (mongoose.Types.ObjectId | any)[];
+    woop?: (mongoose.Types.ObjectId | any)[];
+    Goals?: (mongoose.Types.ObjectId | any)[];
     classId?: mongoose.Types.ObjectId | IClass;
     isUpdate: boolean;
     verified: boolean;

@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import ApiError from "../../../errors/ApiError";
 import { StatusCodes } from "http-status-codes";
 import config from "../../../config";
+import { Goal } from '../admin/goal/goal.model';
 
 const userSchema = new Schema<IUser, UserModal>(
   {
@@ -202,10 +203,16 @@ const userSchema = new Schema<IUser, UserModal>(
       enum: ["Male", "Female", "Children", "Others"],
       required: false,
     },
-    woopGoals: [
+    woop: [
       {
         type: Schema.Types.ObjectId,
         ref: "WoopGoal",
+      },
+    ],
+    Goals: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Goal",
       },
     ],
     mentorId: {

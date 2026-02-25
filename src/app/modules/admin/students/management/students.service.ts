@@ -20,7 +20,8 @@ const getAllStudentsFromDB = async (query: Record<string, any>) => {
 
   const result = await queryBuilder.queryModel
     .populate('mentorId' , 'firstName lastName email profile contact location')
-    .populate('woopGoals' , 'title description status')
+    .populate('woop' , 'title')
+    .populate('Goals' , 'title')
     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
     .exec();
 
@@ -33,7 +34,8 @@ const getSingleStudentFromDB = async (id: string) => {
   const result = await User.findById(id)
     // .populate('userId')
     .populate('mentorId')
-    .populate('woopGoals', 'title description status')
+    .populate('woop', 'title description status')
+    .populate('Goals', 'title index description')
     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack');
   return result;
 };

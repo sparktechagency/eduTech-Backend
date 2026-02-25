@@ -79,10 +79,36 @@ const deleteAssignment = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const addmarksAndFeedbackToSubmission = catchAsync(async (req: Request, res: Response) => {
+    const { submissionId } = req.params;
+    const { marks, feedback } = req.body;
+
+    if (marks === '' || feedback === '') {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: 'Marks and feedback are required',
+        });
+    }
+
+    const result = await AssignmentService.addmarksAndFeedbackToSubmission(
+        submissionId,
+        marks,
+        feedback
+    );
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Marks and feedback added successfully',
+        data: result,
+    });
+});
+
 export const AssignmentController = {
   createAssignment,
   getAllAssignments,
   getAssignmentById,
   updateAssignment,
   deleteAssignment,
+  addmarksAndFeedbackToSubmission,
 };

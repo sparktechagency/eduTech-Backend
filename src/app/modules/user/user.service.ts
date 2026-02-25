@@ -137,14 +137,15 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
     .populate('mentorId', 'firstName lastName email profile contact location')
     .populate({
       path: 'assignedStudents',
-      select: 'name profile email contact location classId woopGoals',
+      select: 'name profile email contact location classId woop Goals',
     populate: [
         { path: 'classId' }, 
-        { path: 'woopGoals'}  
+        { path: 'woop'},
+        { path: 'Goals'}  
       ]
     })
     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
-    .populate('woopGoals').lean();
+    .populate('woop').lean();
   if (!existingUser) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
   }
