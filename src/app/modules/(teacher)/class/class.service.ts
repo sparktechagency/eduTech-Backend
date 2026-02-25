@@ -34,12 +34,44 @@ const createClassToDB = async (payload: IClass) => {
   return result;
 };
 
+// const getAllClassesFromDB = async (query: Record<string, any>) => {
+//   const result = new QueryBuilder(Class.find(), query)
+//     .search(["title", "location", "description"])
+//     .filter()
+//     .sort()
+//     .paginate();
+//   const classes = await result.queryModel
+//     .populate({
+//       path: "userGroup",
+//       select: "name",
+//     })
+//     .populate({
+//       path: "userGroupTrack",
+//       select: "name",
+//     });
+//   const pagination = await result.getPaginationInfo();
+//   return { classes, pagination };
+// };
 const getAllClassesFromDB = async (query: Record<string, any>) => {
-  const result = new QueryBuilder(Class.find(), query)
+  let baseQuery = Class.find();
+
+  if (query.userGroup) {
+    const userGroupIds = Array.isArray(query.userGroup)
+      ? query.userGroup
+      : [query.userGroup];
+    baseQuery = baseQuery.where("userGroup").in(userGroupIds);
+  }
+
+  if (query.userGroupTrack) {
+    baseQuery = baseQuery.where("userGroupTrack").equals(query.userGroupTrack);
+  }
+
+  const result = new QueryBuilder(baseQuery, query)
     .search(["title", "location", "description"])
-    .filter()
+    .filter() 
     .sort()
     .paginate();
+
   const classes = await result.queryModel
     .populate({
       path: "userGroup",
@@ -49,6 +81,7 @@ const getAllClassesFromDB = async (query: Record<string, any>) => {
       path: "userGroupTrack",
       select: "name",
     });
+
   const pagination = await result.getPaginationInfo();
   return { classes, pagination };
 };
