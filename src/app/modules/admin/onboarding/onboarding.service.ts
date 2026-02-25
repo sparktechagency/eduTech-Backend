@@ -28,11 +28,8 @@ const updateOnBoardingFromDB = async (userId: string, data: any) => {
     return result;
 }
 
-const getOnBoardingFromDB = async (userId: string) => {
-    const result = await Onboarding.findOne({ user: userId });
-    if (!result) {
-        throw new ApiError(StatusCodes.NOT_FOUND, 'Onboarding not found for this user');
-    }
+const getOnBoardingFromDB = async () => {
+    const result = await Onboarding.findOne();
     return result;
 }
 

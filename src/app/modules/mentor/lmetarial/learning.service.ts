@@ -126,7 +126,7 @@ const getAllMentorResourcesFromDB = async (query?: Record<string, any>) => {
 
 const getFilteredResourcesFromDB = async (query?: Record<string, any>) => {
   const safeQuery = query || {};
-  const searchableFields = ['title', 'type', 'targetAudience']; // fixed typo
+  const searchableFields = ['title', 'type', 'targetAudience'];
 
   const qb = new QueryBuilder(LearningMaterial.find(), safeQuery)
     .search(searchableFields)

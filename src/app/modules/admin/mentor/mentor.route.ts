@@ -43,7 +43,8 @@ router.route("/:id")
     .delete(
         auth(
             USER_ROLES.ADMIN, 
-            USER_ROLES.SUPER_ADMIN
+            USER_ROLES.SUPER_ADMIN,
+            USER_ROLES.MENTOR
         ),
         adminMentorController.deleteMentor
     );

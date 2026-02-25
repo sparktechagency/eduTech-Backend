@@ -42,8 +42,8 @@ const completeOnboarding = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getOnboarding = catchAsync(async (req, res) => {
-    const userId = req.user.id; 
-    const result = await OnboardingService.getOnBoardingFromDB(userId);
+    // const userId = req.user.id; 
+    const result = await OnboardingService.getOnBoardingFromDB();
 
      sendResponse(res, {
          statusCode: StatusCodes.OK,

@@ -16,6 +16,7 @@ const WoopGoalSchema = new Schema<IWoopGoal>(
        goal: {
             type: Schema.Types.ObjectId,
             ref: 'Goal',
+            required: true
         },
 
         woop: {
