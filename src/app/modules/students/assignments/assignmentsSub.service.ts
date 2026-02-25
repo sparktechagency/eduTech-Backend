@@ -78,25 +78,6 @@ const getupcomigEventsFromDB = async () => {
 
   return result;
 }
-
-
-// const getAllsubmitedAssignmentsFromDB = async (query: Record<string, any>, userId: string) => {
-
-//   const queryBuilder = new QueryBuilder(
-//     AssignmentsSub.find(), query)
-//     .search(['assignmentId'])
-//     .filter()
-//     .sort()
-//     .paginate();
-
-//   const result = await queryBuilder.queryModel
-//     .populate('assignmentId')
-//     .exec();
-
-//   const pagination = await queryBuilder.getPaginationInfo();
-
-//   return { data: result, pagination };
-// }
 const getAllsubmitedAssignmentsFromDB = async (
   teacherId: string,
   query: Record<string, unknown>
@@ -105,14 +86,20 @@ const getAllsubmitedAssignmentsFromDB = async (
   const limit = Number(query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  // Step 1: Get all assignment IDs that belong to this teacher
-  const teacherAssignments = await Assignment.find({
-    teacher: new Types.ObjectId(teacherId),
-  }).select('_id');
+  let assignmentIds: Types.ObjectId[] = [];
 
-  const assignmentIds = teacherAssignments.map((a) => a._id);
+  if (query.assignmentId) {
+    if (!Types.ObjectId.isValid(query.assignmentId as string)) {
+      throw new Error('Invalid assignmentId');
+    }
+    assignmentIds = [new Types.ObjectId(query.assignmentId as string)];
+  } else {
+    const teacherAssignments = await Assignment.find({
+      teacher: new Types.ObjectId(teacherId),
+    }).select('_id');
+    assignmentIds = teacherAssignments.map((a) => new Types.ObjectId(a._id.toString()));
+  }
 
-  // Step 2: Find all submissions where assignmentId matches teacher's assignments
   const total = await AssignmentsSub.countDocuments({
     assignmentId: { $in: assignmentIds },
   });
@@ -136,6 +123,45 @@ const getAllsubmitedAssignmentsFromDB = async (
     data: result,
   };
 };
+// const getAllsubmitedAssignmentsFromDB = async (
+//   teacherId: string,
+//   query: Record<string, unknown>
+// ) => {
+//   const page = Number(query.page) || 1;
+//   const limit = Number(query.limit) || 10;
+//   const skip = (page - 1) * limit;
+
+//   // Step 1: Get all assignment IDs that belong to this teacher
+//   const teacherAssignments = await Assignment.find({
+//     teacher: new Types.ObjectId(teacherId),
+//   }).select('_id');
+
+//   const assignmentIds = teacherAssignments.map((a) => a._id);
+
+//   // Step 2: Find all submissions where assignmentId matches teacher's assignments
+//   const total = await AssignmentsSub.countDocuments({
+//     assignmentId: { $in: assignmentIds },
+//   });
+
+//   const result = await AssignmentsSub.find({
+//     assignmentId: { $in: assignmentIds },
+//   })
+//     .populate('assignmentId', 'title description dueDate totalPoint status attachment')
+//     .populate('studentId', 'name email role')
+//     .skip(skip)
+//     .limit(limit)
+//     .lean();
+
+//   return {
+//     meta: {
+//       total,
+//       totalPage: Math.ceil(total / limit),
+//       page,
+//       limit,
+//     },
+//     data: result,
+//   };
+// };
 
 export const AssignmentsSubService = {
   submitAssignmentIntoDB,

@@ -12,7 +12,8 @@ router.patch(
     auth(
         USER_ROLES.ADMIN, 
         USER_ROLES.SUPER_ADMIN, 
-        USER_ROLES.MENTOR
+        USER_ROLES.MENTOR,
+        USER_ROLES.TEACHER
     ),
     AttendanceController.updateStudentStatus
 );
@@ -22,7 +23,8 @@ router.route("/")
         auth(
             USER_ROLES.ADMIN, 
             USER_ROLES.SUPER_ADMIN, 
-            USER_ROLES.MENTOR
+            USER_ROLES.MENTOR,
+            USER_ROLES.TEACHER
         ),
         AttendanceController.saveBatchAttendance
     )
@@ -41,7 +43,8 @@ router.patch(
     auth(
         USER_ROLES.ADMIN, 
         USER_ROLES.SUPER_ADMIN,
-         USER_ROLES.MENTOR
+         USER_ROLES.MENTOR,
+         USER_ROLES.TEACHER
         ),
     AttendanceController.updateSpecificRecord
 );

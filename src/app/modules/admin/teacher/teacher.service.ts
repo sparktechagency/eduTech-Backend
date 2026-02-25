@@ -90,7 +90,9 @@ const bulkImportTeachers = async (fileBuffer: Buffer) => {
 
 const getAllTeachersFromDB = async (query: Record<string, any>) => {
     const teachers = await new QueryBuilder(User.find({ role: USER_ROLES.TEACHER }), query).search(['name', 'email']).filter().sort().paginate().queryModel
-    .populate('userGroup');
+    .populate('userGroup')
+    .populate('assignedStudents')
+    .lean();
     return teachers;
 };
 

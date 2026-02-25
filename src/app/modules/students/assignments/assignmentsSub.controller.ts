@@ -98,13 +98,18 @@ const getUpcomingEvents = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllSubmitedAssignments = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    const result = await AssignmentsSubService.getAllsubmitedAssignmentsFromDB(userId, req.query);
+    const teacherId = req.user?.id;
+    const query = req.query;
+
+    const result = await AssignmentsSubService.getAllsubmitedAssignmentsFromDB(
+        teacherId,
+        query
+    );
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
-        message: 'All submited assignments fetched successfully',
+        message: 'All submitted assignments fetched successfully',
         data: result,
     });
 });

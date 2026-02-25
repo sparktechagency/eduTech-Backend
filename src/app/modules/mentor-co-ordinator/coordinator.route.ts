@@ -54,7 +54,7 @@ router.route("/classes/:id")
 
 router.route("/:id")
     .get(
-        auth(USER_ROLES.COORDINATOR),
+        auth(USER_ROLES.COORDINATOR, USER_ROLES.MENTOR, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
         CoordinatorController.getmentorById
     )
     .patch(

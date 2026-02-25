@@ -90,21 +90,34 @@ const bulkImportMentors = async (fileBuffer: Buffer) => {
 };
 
 const getAllMentorsFromDB = async (query: any) => {
-  const result = await new QueryBuilder(
-    User.find({ role: USER_ROLES.MENTOR })
-      .populate('assignedStudents', 'name email profile contact location')
-      .populate('userGroup'),
-    query  
-  )
+  const qb = new QueryBuilder(User.find({ role: USER_ROLES.MENTOR }), query)
     .search(['firstName', 'lastName', 'email'])
     .filter()
     .sort()
-    .paginate()
+    .paginate();
+
+  const mentors = await qb.queryModel
     .populate('userGroup')
     .populate('assignedStudents', 'name email profile contact location');
 
-  return result;
+  const pagination = await qb.getPaginationInfo();
+
+  return { mentors, pagination };
 };
+
+// const getAllStudentReportsFromDB = async (query: Record<string, any>) => {
+//     const result = new QueryBuilder(WeeklyReport.find(), query)
+//     .search(['studentId', 'weekStartDate', 'weekEndDate', 'isPresent', 'achievedHardOutcomes', 'softSkillImprovements', 'comments', 'goalSheet', 'objectives'])
+//     .filter()
+//     .sort()
+//     .paginate();
+//     const reports = await result.queryModel
+//     .populate('studentId') 
+//         .sort({ weekStartDate: -1 }); 
+
+//     return { reports, pagination: await result.getPaginationInfo() };
+// };
+
 
 const getMentorById = async (id: string) => {
     const mentor = await User.findById(id)

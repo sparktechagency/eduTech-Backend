@@ -49,10 +49,10 @@ const assignmentSchema = new Schema<IAssignment, AssignmentModel>(
       type: Date,
       required: true,
     },
-
-    totalPoint: {
+    
+    individualPoint: {
       type: Number,
-      default: 100,
+      default: 0,
     },
 
     attachment: {

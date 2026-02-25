@@ -25,7 +25,7 @@ const bulkUploadMentors = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllMentors = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserService.getAllMentorsFromDB();
+    const result = await UserService.getAllMentorsFromDB(req.query);
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
