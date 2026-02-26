@@ -77,7 +77,7 @@ const updateProfileToDB = async (
   }
 
   const fileFields = ['profile', 'tradeLicences', 'sallonPhoto', 'proofOwnerId'];
-
+  console.log('Existing user data before update:', existingUser);
   for (const field of fileFields) {
     if (payload[field as keyof IUser] && existingUser[field as keyof IUser]) {
       try {
@@ -135,7 +135,7 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
   const { id } = user;
 
   const existingUser = await User.findById(id)
-    .populate('mentorId', 'firstName lastName email profile contact location')
+    .populate('mentorId', 'firstName lastName email profile contact location professionalTitle highestEducation havealaptop company jobTitle preferedGroup aviliableHours motivationLearning readBooks note careerDirections userGroup linkedInProfile githubProfile PortfolioWebsite PortfolioWebsite')
     .populate({
       path: 'assignedStudents',
       select: 'name profile email contact location classId woop Goals',

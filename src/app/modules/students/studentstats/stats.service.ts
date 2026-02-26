@@ -23,11 +23,12 @@ const getMyStatsFromDB = async (userId: string) => {
 
   const countindividual = {
     totalSubmittedAssignments,
-    totalClasses: result.classId ? (result.classId as any).totalClasses || 0 : 0,
-    mentorName: result.mentorId
-      ? `${(result.mentorId as any).firstName || ''} ${(result.mentorId as any).lastName || ''}`.trim()
-      : '',
-    totalGoals: result.Goals?.length || 0,  
+   totalClasses: result.classId ? 1 : 0,
+   totalMentors: result.mentorId ? 1 : 0,
+    // mentorName: result.mentorId
+    //   ? `${(result.mentorId as any).totalMentors || 0} ${(result.mentorId as any).name || ''}`
+    //   : '',
+    totalGoals: result.Goals?.length || 0, 
     totalWoops: result.woop?.length || 0,
   };
 

@@ -14,7 +14,7 @@ const eventSchema = new Schema<IEvent>({
     },
     image: {
         type: String,
-        trim: true
+        trim: false
     },
     date: {
         type: Date,
@@ -34,10 +34,11 @@ const eventSchema = new Schema<IEvent>({
         ref: 'UserGroup',
         required: [true, "Associated user group is required"]
     },
-    targetUser: [{
+
+    targetUser: {
         type: Schema.Types.ObjectId,
         ref: 'UserGroupTrack'
-    }]
+    }
     // targetUser: {
     //     type: [Schema.Types.ObjectId],
     //     ref: 'User'

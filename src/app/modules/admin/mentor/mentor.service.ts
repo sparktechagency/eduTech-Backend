@@ -8,6 +8,9 @@ import { IStudentReview } from '../students/management/students.interface';
 import { StudentProfile } from '../students/management/students.model';
 import QueryBuilder from '../../../../shared/apiFeature';
 import { query } from 'express';
+import { assign } from 'nodemailer/lib/shared';
+import { socketHelper } from '../../../../helpers/socketHelper';
+import { sendNotifications } from '../../../../helpers/notificationsHelper';
 
 const bulkImportMentors = async (fileBuffer: Buffer) => {
     const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
@@ -131,6 +134,18 @@ const getMentorById = async (id: string) => {
 
 const updateMentor = async (id: string, updateData: Partial<any>) => {
     const mentor = await User.findByIdAndUpdate(id, updateData, { new: true });
+    const notificationData = {
+        text: `updated your profile ${mentor?.assignedStudents}.`,
+        receiver: mentor,
+        sender:'admin',
+        type: "MENTOR",
+        targetRole: mentor?.userGroup ? "STUDENT" : mentor?.assignedStudents,
+    };
+  const io = (socketHelper as { getIO?: () => { emit: (event: string, data: unknown) => void } }).getIO?.();
+  if (io) {
+      io.emit("notification", notificationData);
+  }
+  sendNotifications(notificationData);
     if (!mentor || mentor.role !== USER_ROLES.MENTOR) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Mentor not found');
     }

@@ -9,26 +9,64 @@ const createStudentIntoDB = async (payload: IStudentProfile) => {
   return result;
 };
 
-const getAllStudentsFromDB = async (query: Record<string, any>) => {
+// const getAllStudentsFromDB = async (query: Record<string, any>) => {
 
+//   const queryBuilder = new QueryBuilder(
+//     User.find({ role: 'STUDENT' }), query)
+//     .search(['studentId', 'department'])
+//     .filter()
+//     .sort()
+//     .paginate();
+
+//   const result = await queryBuilder.queryModel
+//     .populate('mentorId' , 'firstName lastName email profile contact location')
+//     .populate('woop' , 'title')
+//     .populate('Goals' , 'title')
+//     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
+//     .exec();
+
+//   const pagination = await queryBuilder.getPaginationInfo();
+
+//   return { data: result, pagination };
+// }
+
+const getAllStudentsFromDB = async (query: Record<string, any>) => {
   const queryBuilder = new QueryBuilder(
-    User.find({ role: 'STUDENT' }), query)
+    User.find({ role: 'STUDENT' }),
+    query
+  )
     .search(['studentId', 'department'])
     .filter()
     .sort()
     .paginate();
-
-  const result = await queryBuilder.queryModel
-    .populate('mentorId' , 'firstName lastName email profile contact location')
-    .populate('woop' , 'title')
-    .populate('Goals' , 'title')
-    .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
-    .exec();
+const result = await queryBuilder.queryModel
+  .populate('mentorId', 'firstName lastName email profile contact location')
+  .populate('woop', 'title')
+  .populate('Goals', 'title')
+  .populate({
+    path: 'classId',
+    select: 'title description classDate location virtualClass published status',
+    populate: [
+      { path: 'userGroup', select: 'name description', model: 'UserGroup' },
+      { path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' },
+    ],
+  })
+  .populate({
+    path: 'userGroup',
+    select: 'name description',
+    model: 'UserGroup',
+  })
+  .populate({
+    path: 'userGroupTrack',
+    select: 'name description',
+    model: 'UserGroupTrack',
+  })
+  .exec();
 
   const pagination = await queryBuilder.getPaginationInfo();
 
   return { data: result, pagination };
-}
+};
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await User.findById(id)
@@ -39,8 +77,6 @@ const getSingleStudentFromDB = async (id: string) => {
     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack');
   return result;
 };
-
-// 4. Update Student (Use this for: Assign Mentor, Update Attendance, Change Status)
 const updateStudentInDB = async (id: string, payload: Partial<IStudentProfile>) => {
   const result = await StudentProfile.findByIdAndUpdate(id, payload, {
     new: true,
@@ -49,7 +85,6 @@ const updateStudentInDB = async (id: string, payload: Partial<IStudentProfile>) 
   return result;
 };
 
-// 5. Special Service: Add Review (Admin/Mentor gives review)
 const addReviewToStudent = async (studentId: string, reviewData: IStudentReview) => {
   const result = await StudentProfile.findByIdAndUpdate(
     studentId,
@@ -62,8 +97,6 @@ const addReviewToStudent = async (studentId: string, reviewData: IStudentReview)
 };
 
 
-
-// 6. Delete Student (Soft Delete)
 const deleteStudentFromDB = async (id: string) => {
   const result = await StudentProfile.findByIdAndUpdate(
     id,

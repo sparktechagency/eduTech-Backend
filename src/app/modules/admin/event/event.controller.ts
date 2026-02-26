@@ -7,43 +7,45 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 const createEvent = catchAsync(async (req: Request, res: Response) => {
-  const files = req.files as {
-    [fieldname: string]: Express.Multer.File[];
-  };
+  
+  
+  // const files = req.files as {
+  //   [fieldname: string]: Express.Multer.File[];
+  // };
 
-  let imagePath: string | undefined;
+  // let imagePath: string | undefined;
 
-  if (files?.image && files.image.length > 0) {
-    imagePath = `/images/${files.image[0].filename}`;
-  }
+  // if (files?.image && files.image.length > 0) {
+  //   imagePath = `/images/${files.image[0].filename}`;
+  // }
 
-  const {
-    title,
-    description,
-    date,
-    location,
-    type,
-    group,
-    targetUser,
-  } = req.body;
+  // const {
+  //   title,
+  //   description,
+  //   date,
+  //   location,
+  //   type,
+  //   group,
+  //   targetUser,
+  // } = req.body;
 
-  let parsedTargetUser = targetUser;
-  if (typeof targetUser === "string") {
-    parsedTargetUser = JSON.parse(targetUser);
-  }
+  // let parsedTargetUser = targetUser;
+  // if (typeof targetUser === "string") {
+  //   parsedTargetUser = JSON.parse(targetUser);
+  // }
 
-  const eventData = {
-    title,
-    description,
-    date,
-    location,
-    type,
-    group,
-    targetUser: parsedTargetUser,
-    image: imagePath,
-  };
+  // const eventData = {
+  //   title,
+  //   description,
+  //   date,
+  //   location,
+  //   type,
+  //   group,
+  //   targetUser: parsedTargetUser,
+  //   image: imagePath,
+  // };
 
-  const result = await EventService.createEventFromDB(eventData);
+  const result = await EventService.createEventFromDB(req.body);
 
   res.status(StatusCodes.CREATED).json({
     success: true,

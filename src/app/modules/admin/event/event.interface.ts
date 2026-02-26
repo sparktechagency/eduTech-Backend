@@ -7,7 +7,7 @@ export interface IEvent extends Document {
     location?: string;
     type: 'webinar' | 'workshop' | 'seminar' | 'conference';
     group: Types.ObjectId;
-    targetUser: Types.ObjectId[];
+    targetUser: Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }

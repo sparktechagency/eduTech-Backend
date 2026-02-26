@@ -16,7 +16,7 @@ const createResourceFromDB = async (payload: ILearningMaterial) => {
         text: `new resource added ${resource.title}.`,
         receiver: resource.targertGroup ? resource.targertGroup : resource.targeteAudience,
         sender: resource.createdBy,
-        type: "RESOURCE",
+        type: "STUDENT",
         targetRole: resource.targertGroup ? "STUDENT" : resource.targeteAudience,
     };
   const io = (socketHelper as { getIO?: () => { emit: (event: string, data: unknown) => void } }).getIO?.();
