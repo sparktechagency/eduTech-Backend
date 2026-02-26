@@ -6,63 +6,27 @@ import { query } from 'express';
 import QueryBuilder from "../../../../shared/apiFeature";
 import { User } from "../../user/user.model";
 import path from 'path';
+import { sendNotifications } from "../../../../helpers/notificationsHelper";
+import { socketHelper } from "../../../../helpers/socketHelper";
 
 
 const createResourceFromDB = async (payload: ILearningMaterial) => {
     const resource  = await LearningMaterial.create(payload);
-    return resource;
+    const notificationData = {
+        text: `new resource added ${resource.title}.`,
+        receiver: resource.targertGroup ? resource.targertGroup : resource.targeteAudience,
+        sender: resource.createdBy,
+        type: "RESOURCE",
+        targetRole: resource.targertGroup ? "STUDENT" : resource.targeteAudience,
+    };
+  const io = (socketHelper as { getIO?: () => { emit: (event: string, data: unknown) => void } }).getIO?.();
+  if (io) {
+      io.emit("notification", notificationData);
+  }
+  sendNotifications(notificationData);
+  return resource;
 }
 
-
-// const getCreatedByResourcesFromDB = async (createdBy: string) => {
-//     const result = await LearningMaterial.find({ createdBy })
-//         .populate('createdBy') 
-//         .sort({ createdAt: -1 }); 
-
-//     return result;
-// };
-
-// const getResourceByIdFromDB = async (id: string) => {
-//     const result = await LearningMaterial.findById(id)
-//         .populate('createdBy'); 
-
-//     return result;
-// };
-
-// const getAllMentorResourcesFromDB = async (query: Record<string, any>) => {
-//    const searchableFields = ['title', 'description', 'type', 'contentUrl'];
-
-//    const qb = new QueryBuilder(LearningMaterial.find(), query)
-//        .search(searchableFields)
-//        .filter()
-//        .sort()
-//        .paginate();
-//    const resources = await qb.getQuery()
-//        .populate('createdBy') 
-//        .populate('targertGroup'); // markAsAssigned is boolean, no need populate
-
-//    const pagination = await qb.getPaginationInfo();
-
-//    return { resources, pagination };
-// };
-
-// const getFilteredResourcesFromDB = async (query: Record<string, any>) => {
-//     const searchableFields = ['title', 'type', 'targeteAudience'];
-
-//     const qb = new QueryBuilder(LearningMaterial.find(), query)
-//         .search(searchableFields)
-//         .filter()
-//         .sort()
-//         .paginate();
-
-//     const resources = await qb.getQuery()
-//         .populate('targertGroup')
-//         .select('-createdBy'); 
-
-//     const pagination = await qb.getPaginationInfo();
-
-//     return { resources, pagination };
-// };
 
 const getCreatedByResourcesFromDB = async (createdBy: string, query?: Record<string, any>) => {
   const safeQuery = query || {};

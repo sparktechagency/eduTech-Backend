@@ -249,10 +249,19 @@ const updateallAttendanceRecordsFromDB = async (attendanceId: string, records: a
     return result;
 }
 
+const getstudentIdFromAttendance = async (studentId: string) => {
+    const result = await ClassAttendance.findById(studentId).select('records.studentId');
+    if (!result) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "Attendance record not found");
+    }
+    return result;
+}
+
 export const AttendanceService = {
     saveBatchAttendanceInDB,
     updateSingleStudentStatus,
     getAttendanceByDateAndClass,
     getStudentAttendanceStats,
     updateallAttendanceRecordsFromDB,
+    getstudentIdFromAttendance
 };

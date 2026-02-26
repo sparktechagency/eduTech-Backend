@@ -49,4 +49,15 @@ router.patch(
     AttendanceController.updateSpecificRecord
 );
 
+router.get(
+    "/student/:studentId",
+    auth(
+        USER_ROLES.ADMIN, 
+        USER_ROLES.SUPER_ADMIN,
+         USER_ROLES.MENTOR,
+         USER_ROLES.TEACHER
+        ),
+    AttendanceController.getStudentIdFromAttendance
+);
+
 export const AttendenceRoutes = router;

@@ -5,31 +5,34 @@ import { AssignmentsSub } from "../assignments/assignmentsSub.model";
 import { Assignment } from "../../(teacher)/assignment/assignment.model";
 
 
-const getMyStatsFromDB = async (studentId: string) => {
-  const result = await User.findById(studentId)
+const getMyStatsFromDB = async (userId: string) => {
+  const result = await User.findById(userId)
     .populate('woop')
     .populate('Goals')
     .populate('mentorId')
     .populate('classId');
-  
+
   if (!result) {
-    console.log("No User found for ID:", studentId);
-    throw new Error('User not found');
+    throw new Error('Student profile not found for this user');
   }
 
-  const profileId = result._id;
-  const submittedAssignmentsCount = await mongoose.model('AssignmentsSub')
-    .countDocuments({ studentId: profileId });
+  
+  const totalSubmittedAssignments = await AssignmentsSub.countDocuments({
+    studentId: result._id,
+  });
 
   const countindividual = {
-    totalSubmittedAssignments: submittedAssignmentsCount,
+    totalSubmittedAssignments,
     totalClasses: result.classId ? (result.classId as any).totalClasses || 0 : 0,
-    mentorTotal: result.mentorId ? (result.mentorId as any).totalMentor || 0 : 0,
-    totalGoals: result.Goals?.length || 0,
-  }
-  
+    mentorName: result.mentorId
+      ? `${(result.mentorId as any).firstName || ''} ${(result.mentorId as any).lastName || ''}`.trim()
+      : '',
+    totalGoals: result.Goals?.length || 0,  
+    totalWoops: result.woop?.length || 0,
+  };
+
   return countindividual;
-}
+};
 
 const getUpcomingEventsFromDB = async (studentId: string) => {
   const upcomingEvents = await Event.find({ date: { $gte: new Date() } })

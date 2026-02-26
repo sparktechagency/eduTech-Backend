@@ -26,7 +26,7 @@ const notificationSchema = new Schema<INotification, NotificationModel>(
         },
         type: {
             type: String,
-            enum: ['ADMIN'],
+            enum: ['RESOURCE'],
             required: false
         }
     },

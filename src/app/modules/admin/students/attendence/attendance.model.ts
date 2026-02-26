@@ -19,7 +19,7 @@ const classAttendanceSchema = new Schema<IClassAttendance>({
     records: [{
         studentId: {
             type: Schema.Types.ObjectId,
-            ref: 'StudentProfile',
+            ref: 'User',
             required: true
         },
         status: {

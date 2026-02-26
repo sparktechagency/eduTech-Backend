@@ -74,8 +74,9 @@ const deleteStudentFromDB = async (id: string) => {
 };
 
 const getmystatsFromDB = async (userId: string) => {
-  const result = await StudentProfile.findOne({ studentId: userId }) 
-    .populate('woopGoals')
+  const result = await User.findOne({ studentId: userId }) 
+    .populate('woop')
+    .populate('Goals')
     .populate('mentorId')
     .populate('classId');
   
@@ -85,8 +86,10 @@ const getmystatsFromDB = async (userId: string) => {
   }
 
   const profileId = result._id;
-  const submittedAssignmentsCount = await mongoose.model('AssignmentsSub')
-    .countDocuments({ studentId: profileId });
+  const submittedAssignmentsCount = await User.countDocuments({
+     studentId: profileId, 'assignments.status': 'submitted' 
+    });
+
 
   const countindividual = {
     totalSubmittedAssignments: submittedAssignmentsCount,
