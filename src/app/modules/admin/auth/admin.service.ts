@@ -54,29 +54,105 @@ const getTotalUsersByRoleFromDB = async (): Promise<{ totalStudents: number; tot
     };
 };
 
-//get recent create activity like class, event, resource, assignment etc.
+// const getRecentActivitiesFromDB = async () => {
+
+//     const [events, resources, assignments] = await Promise.all([
+//         Event.find()
+//             .sort({ createdAt: -1 })
+//             .limit(2)
+//             .lean(),
+
+//         LearningMaterial.find()
+//             .sort({ createdAt: -1 })
+//             .limit(2)
+//             .lean(),
+
+//         Assignment.find()
+//             .sort({ createdAt: -1 })
+//             .limit(2)
+//             .lean(),
+//     ]);
+
+//     const formattedEvents = events.map(item => ({
+//         ...item,
+//         activityType: 'event'
+//     }));
+
+//     const formattedResources = resources.map(item => ({
+//         ...item,
+//         activityType: 'resource'
+//     }));
+
+//     const formattedAssignments = assignments.map(item => ({
+//         ...item,
+//         activityType: 'assignment'
+//     }));
+
+//     // Merge all
+//     const allActivities = [
+//         ...formattedEvents,
+//         ...formattedResources,
+//         ...formattedAssignments
+//     ];
+
+//     // Sort again by createdAt (so mixed recent order)
+    // allActivities.sort((a, b) =>
+    //     new Date(b.createdAt || 0).getTime() -
+    //     new Date(a.createdAt || 0).getTime()
+    // );
+
+//     return allActivities;
+// };
+
 const getRecentActivitiesFromDB = async () => {
-    const recentEvents = await Event.find()
-        .sort({ createdAt: -1 })
-        .limit(2)
-        .populate('title');
-    
-    const resources = await LearningMaterial.find()
-        .sort({ createdAt: -1 })
-        .limit(2)
-        .populate('title');
-    
-    const getAssignments = await Assignment.find()
-        .sort({ createdAt: -1 })
-        .limit(2)
-        .populate('title');
 
-    return {
-        recentEvents,
-        resources,
-        getAssignments
-    };
+    const [events, resources, assignments] = await Promise.all([
+        Event.find()
+            .sort({ createdAt: -1 })
+            .limit(2)
+            .select('title createdAt')
+            .lean(),
 
+        LearningMaterial.find()
+            .sort({ createdAt: -1 })
+            .limit(2)
+            .select('title createdAt')
+            .lean(),
+
+        Assignment.find()
+            .sort({ createdAt: -1 })
+            .limit(2)
+            .select('title createdAt')
+            .lean(),
+    ]);
+
+    const formattedEvents = events.map(item => ({
+        ...item,
+        activityType: 'event'
+    }));
+
+    const formattedResources = resources.map(item => ({
+        ...item,
+        activityType: 'resource'
+    }));
+
+    const formattedAssignments = assignments.map(item => ({
+        ...item,
+        activityType: 'assignment'
+    }));
+
+    const allActivities = [
+        ...formattedEvents,
+        ...formattedResources,
+        ...formattedAssignments
+    ];
+
+allActivities.sort((a, b) =>
+        new Date(b.createdAt || 0).getTime() -
+        new Date(a.createdAt || 0).getTime()
+    );
+
+    return allActivities;
 };
 
 export const AdminService = {
