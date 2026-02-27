@@ -70,7 +70,8 @@ const getMyAssignmentsFromDB = async (userId: string) => {
     return result;
 };
 
-//get not expired eveent like show upcoming when date is already pass not show
+
+
 const getupcomigEventsFromDB = async () => {
   const currentDate = new Date();
  const result = await Event.find({ date: { $gte: currentDate } })

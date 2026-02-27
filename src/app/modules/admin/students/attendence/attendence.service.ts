@@ -5,26 +5,22 @@ import ApiError from "../../../../../errors/ApiError";
 import { StatusCodes } from "http-status-codes";
 import { query } from 'express';
 import QueryBuilder from "../../../../../shared/apiFeature";
+const getDayRange = (dateStr?: string | Date) => {
+    const targetDate = dateStr ? new Date(dateStr) : new Date(); // today if not passed
 
-// Helper: Normalize Date to handle Timezone issues
-const getDayRange = (dateStr: string | Date) => {
-    const targetDate = new Date(dateStr);
     if (isNaN(targetDate.getTime())) {
         throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid Date Format. Use YYYY-MM-DD");
     }
-    
-    // Start of Day (00:00:00)
+
     const start = new Date(targetDate);
     start.setUTCHours(0, 0, 0, 0);
 
-    // End of Day (23:59:59)
     const end = new Date(targetDate);
     end.setUTCHours(23, 59, 59, 999);
 
     return { start, end };
 };
 
-// 1. CREATE/UPDATE BATCH (For the "Save Attendance" button)
 const saveBatchAttendanceInDB = async (payload: IClassAttendance) => {
     const targetDate = new Date(payload.date);
     const start = new Date(targetDate);
@@ -115,24 +111,50 @@ const updateSingleStudentStatus = async (
     return result;
 };
 
-const getAttendanceByDateAndClass = async (dateStr: string, classId: string) => {
+// const getAttendanceByDateAndClass = async (dateStr: string, classId: string) => {
+//     const { start, end } = getDayRange(dateStr);
+
+//     const result = await ClassAttendance.findOne({ 
+//         classId,
+//         date: { $gte: start, $lte: end }
+//     }).populate({
+//         path: 'records.studentId',
+//         select: 'studentId name userId rollNumber image', 
+//         populate: {
+//             path: 'userId', 
+//             select: 'name profile'
+//         }
+//     });
+
+//     return result;
+// };
+const getAttendanceByDateAndClass = async (dateStr?: string, classId?: string) => {
     const { start, end } = getDayRange(dateStr);
 
-    const result = await ClassAttendance.findOne({ 
-        classId,
+
+    const query: any = {
         date: { $gte: start, $lte: end }
-    }).populate({
-        path: 'records.studentId',
-        select: 'studentId name userId rollNumber image', 
-        populate: {
-            path: 'userId', 
-            select: 'name profile'
-        }
-    });
+    };
+    if (classId) query.classId = classId;
+
+
+    const result = await ClassAttendance.find(query)
+        .populate({
+            path: 'records.studentId',
+            select: 'name rollNumber image email' 
+        })
+        .populate({
+            path: 'classId',
+            select: 'name'
+        })
+        .populate({
+            path: 'takenBy',
+            select: 'name email'
+        })
+        .sort({ date: -1 }); 
 
     return result;
 };
-
 const getStudentAttendanceStats = async (classId: string, query: Record<string, any>) => {
     
     const pipeline: any[] = [

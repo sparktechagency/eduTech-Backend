@@ -174,6 +174,17 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteUserById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await AuthService.deleteUserByIdFromDB(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Account Deleted successfully',
+  });
+}); 
+
 
 export const AuthController = {
   // verifyMobile,
@@ -185,6 +196,7 @@ export const AuthController = {
   resendVerificationEmail,
   socialLogin,
   deleteUser,
+  deleteUserById,
   verifyEmail,
   login,
   verifyLoginOTP,

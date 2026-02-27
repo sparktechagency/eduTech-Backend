@@ -151,6 +151,8 @@ const updateResourceStatusFromDB = async (id: string) => {
 
 const getlastFIveAdedStudentsFromDB = async () => {
     const students = await User.find({ role: USER_ROLES.STUDENT })
+    .populate('userGroup')
+    .populate('userGroupTrack')
     .sort({ createdAt: -1 })
     .limit(5);
     return students;

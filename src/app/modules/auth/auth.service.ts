@@ -709,6 +709,16 @@ const deleteUserFromDB = async (user: JwtPayload, password: string) => {
     return;
 };
 
+//id by delete user
+const deleteUserByIdFromDB = async (id: string) => {
+
+    const isExistUser = await User.findByIdAndDelete(id);
+    if (!isExistUser) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+    }
+    return;
+};
+
 export const AuthService = {
 
     loginUserFromDB,
@@ -719,6 +729,7 @@ export const AuthService = {
     resendVerificationEmailToDB,
     socialLoginFromDB,
     deleteUserFromDB,
+    deleteUserByIdFromDB,
     // verifyOTP,
     verifyEmailToDB,
     loginService,

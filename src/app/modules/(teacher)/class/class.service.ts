@@ -7,79 +7,116 @@ import { User } from "../../user/user.model";
 import { Types } from "mongoose";
 import { RecentActivity } from "../recentActivities/recentActivity.model";
 
-const createClassToDB = async (payload: IClass) => {
-  const teacherInfo = await User.findById(payload.teacher);
-  if (!teacherInfo) {
-    throw new ApiError(StatusCodes.NOT_FOUND, "Teacher doesn't exist!");
-  }
+// const createClassToDB = async (payload: IClass) => {
+//   const teacherInfo = await User.findById(payload.teacher);
+//   console.log("Teacher ID:", payload.teacher);
+//   if (!teacherInfo) {
+//     throw new ApiError(StatusCodes.NOT_FOUND, "Teacher doesn't exist!");
+//   }
 
-  if (teacherInfo && teacherInfo.userGroupTrack) {
-    payload.userGroupTrack = teacherInfo.userGroupTrack as Types.ObjectId;
-  }
-  if (teacherInfo && teacherInfo.userGroup) {
-    payload.userGroup = teacherInfo.userGroup as Types.ObjectId[];
-  }
+//   if (teacherInfo && teacherInfo.userGroupTrack) {
+//     payload.userGroupTrack = teacherInfo.userGroupTrack as Types.ObjectId;
+//   }
+//   if (teacherInfo && teacherInfo.userGroup) {
+//     payload.userGroup = teacherInfo.userGroup as Types.ObjectId[];
+//   }
+
+//   const result = await Class.create(payload);
+
+//   // Create recent activity
+//   RecentActivity.create({
+//     title: ` ${result.title}`,
+//     description: ` ${result.description}`,
+//     type: "CLASS",
+//     user: result.teacher,
+//     referenceId: result._id,
+//   });
+//   console.log("Created Class:", result.teacher);
+
+//   return result;
+// };
+const createClassToDB = async (payload: IClass) => {
+  // const teacherInfo = await User.findById(payload.teacher);
+
+  // if (!teacherInfo) {
+  //   throw new ApiError(StatusCodes.NOT_FOUND, "Teacher doesn't exist!");
+  // }
+
+  // if (teacherInfo.userGroupTrack) {
+  //   payload.userGroupTrack = teacherInfo.userGroupTrack as Types.ObjectId;
+  // }
+
+  // if (teacherInfo.userGroup) {
+  //   payload.userGroup = teacherInfo.userGroup as Types.ObjectId[];
+  // }
 
   const result = await Class.create(payload);
 
-  // Create recent activity
-  RecentActivity.create({
-    title: ` ${result.title}`,
-    description: ` ${result.description}`,
-    type: "CLASS",
+
+  console.log('Created Class teacher field:', result.teacher);
+
+
+  await RecentActivity.create({
+    title: result.title,
+    description: result.description,
+    type: 'CLASS',
     user: result.teacher,
     referenceId: result._id,
   });
 
-  return result;
-};
 
-// const getAllClassesFromDB = async (query: Record<string, any>) => {
-//   const result = new QueryBuilder(Class.find(), query)
-//     .search(["title", "location", "description"])
-//     .filter()
-//     .sort()
-//     .paginate();
-//   const classes = await result.queryModel
-//     .populate({
-//       path: "userGroup",
-//       select: "name",
-//     })
-//     .populate({
-//       path: "userGroupTrack",
-//       select: "name",
-//     });
-//   const pagination = await result.getPaginationInfo();
-//   return { classes, pagination };
-// };
+  const populated = await Class.findById(result._id)
+    .populate({
+      path: 'teacher',
+      select: 'firstName lastName email profile',
+      model: 'User',
+    })
+    .populate({
+      path: 'userGroup',
+      select: 'name',
+    })
+    .populate({
+      path: 'userGroupTrack',
+      select: 'name',
+    });
+
+  return populated;
+};
 const getAllClassesFromDB = async (query: Record<string, any>) => {
-  let baseQuery = Class.find();
+  let filterConditions: Record<string, any> = {};
 
   if (query.userGroup) {
     const userGroupIds = Array.isArray(query.userGroup)
       ? query.userGroup
       : [query.userGroup];
-    baseQuery = baseQuery.where("userGroup").in(userGroupIds);
+    filterConditions['userGroup'] = { $in: userGroupIds };
   }
 
   if (query.userGroupTrack) {
-    baseQuery = baseQuery.where("userGroupTrack").equals(query.userGroupTrack);
+    filterConditions['userGroupTrack'] = query.userGroupTrack;
   }
 
+  const baseQuery = Class.find(filterConditions);
+
   const result = new QueryBuilder(baseQuery, query)
-    .search(["title", "location", "description"])
-    .filter() 
+    .search(['title', 'location', 'description'])
+    .filter()
     .sort()
     .paginate();
 
   const classes = await result.queryModel
     .populate({
-      path: "userGroup",
-      select: "name",
+      path: 'userGroup',
+      select: 'name',
     })
     .populate({
-      path: "userGroupTrack",
-      select: "name",
+      path: 'userGroupTrack',
+      select: 'name',
+    })
+    .populate({
+      path: 'teacher',
+      select: 'firstName lastName email profile',
+      model: 'User',
     });
 
   const pagination = await result.getPaginationInfo();

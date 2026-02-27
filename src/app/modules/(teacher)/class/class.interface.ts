@@ -4,6 +4,7 @@ import { IUser } from '../../user/user.interface';
 export type IClass = {
   title: string;
   teacher: Types.ObjectId | IUser;
+  studentId: Types.ObjectId | IUser;
   description: string;
   classDate: Date;
   location: string;

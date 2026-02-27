@@ -7,7 +7,12 @@ const classSchema = new Schema<IClass, ClassModel>(
     teacher: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: false,
+    },
+    studentId:{
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
     },
     title: {
       type: String,
