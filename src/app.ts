@@ -9,6 +9,30 @@ import { requestLogger } from "./shared/response.time.logger";
 import path from "path";
 import { logger } from "./shared/logger";
 const app = express();
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+
+        "http://72.61.74.10:4173",
+        "http://localhost:4173",
+        "http://10.10.7.6:4173",
+      ];
+      
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        logger.warn(`Blocked by CORS: ${origin}`);
+        callback(null, false);
+      }
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
 //debug
 app.use(requestLogger());
 // morgan
@@ -26,28 +50,7 @@ app.use(
 
 //body parser
 // app.use(cors());
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
 
-        "http://72.61.74.10:4173",
-      ];
-      
-      if (!origin) return callback(null, true);
-      
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        logger.warn(`Blocked by CORS: ${origin}`);
-        callback(null, false);
-      }
-    },
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  })
-);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
