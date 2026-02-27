@@ -78,7 +78,7 @@ const getMentorDashboardDataFromDB = async (
 
 const getMentorDashboardWoops = async (mentorId: string) => {
     const mentor = await User.findById(mentorId)
-        .populate({ path: 'woopGoals', select: 'title description progress nextSessionDate' });
+        .populate({ path: 'woop', select: 'title description progress nextSessionDate' });
 
     if (!mentor || mentor.role !== USER_ROLES.MENTOR) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Mentor not found');
