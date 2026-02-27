@@ -56,7 +56,8 @@ router.post(
         USER_ROLES.ADMIN, 
         USER_ROLES.STUDENT, 
         USER_ROLES.TEACHER, 
-        USER_ROLES.SUPER_ADMIN
+        USER_ROLES.SUPER_ADMIN,
+        USER_ROLES.MENTOR
     ),
     validateRequest(AuthValidation.createChangePasswordZodSchema),
     AuthController.changePassword
@@ -73,7 +74,7 @@ router.post(
 );
 router.delete(
     '/delete-account',
-    auth(USER_ROLES.ADMIN, USER_ROLES.STUDENT, USER_ROLES.TEACHER, USER_ROLES.SUPER_ADMIN),
+    auth(USER_ROLES.ADMIN, USER_ROLES.STUDENT, USER_ROLES.TEACHER, USER_ROLES.SUPER_ADMIN, USER_ROLES.MENTOR),
     AuthController.deleteUser
 );
 

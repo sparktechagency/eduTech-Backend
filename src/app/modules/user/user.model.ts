@@ -141,23 +141,27 @@ const userSchema = new Schema<IUser, UserModal>(
       type: String,
       required: false,
     },
-    // review: [
-    //   {
-    //     teacherNote: {
-    //       type: String,
-    //       required: false,
-    //     },
-    //     teacherId: {
-    //       type: Schema.Types.ObjectId,
-    //       ref: "User",
-    //       required: false,
-    //     },
-    //     rating: {
-    //       type: Number,
-    //       required: false,
-    //     },
-    //   },
-    // ],
+    review: [
+      {
+        teacherNote: {
+          type: String,
+          required: false,
+        },
+        teacherId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: false,
+        },
+        rating: {
+          type: Number,
+          required: false,
+        },
+        courseCompletion: {
+          type: Number,
+          required: false,
+        },
+      },
+    ],
 
   careerDirections: {
         type: [String],
@@ -221,11 +225,11 @@ const userSchema = new Schema<IUser, UserModal>(
       required: false,
     },
 
-    classId: {
+    classId: [{
         type: Schema.Types.ObjectId,
         ref: 'Class', 
         requiured: false
-    },
+    }],
     assignedStudents: [
         {
             type: Schema.Types.ObjectId,

@@ -39,7 +39,11 @@ export type IUser = {
     aviliableHours: string;
     motivationLearning: string;
     readBooks: string;
-    // review: string[];
+    review: [{
+        rating: number;
+        comment: string;
+        courseCompletion: number;
+    }];
     note: string;
     careerDirections: string[];
     password: string;

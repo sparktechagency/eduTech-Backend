@@ -26,7 +26,8 @@ const getMentorDashboardDataFromDB = async (
 ): Promise<DashboardData> => {
   const mentor = await User.findById(mentorId)
     .populate('assignedStudents', 'firstName lastName email profile contactNumber location')
-    .populate('woopGoals', 'title description progress nextSessionDate')
+    .populate('woop', 'title description progress nextSessionDate')
+    .populate('Goals', 'title description progress nextSessionDate')
     .lean();
 
   if (!mentor || mentor.role !== USER_ROLES.MENTOR) {
