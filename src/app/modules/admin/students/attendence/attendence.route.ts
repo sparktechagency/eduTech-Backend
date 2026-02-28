@@ -38,6 +38,7 @@ router.get(
     AttendanceController.getAttendanceStats
 );
 
+
 router.patch(
     "/record/:id",
     auth(
@@ -59,5 +60,18 @@ router.get(
         ),
     AttendanceController.getStudentIdFromAttendance
 );
+
+router.get(
+    "/recent",
+    auth(
+        USER_ROLES.ADMIN, 
+        USER_ROLES.SUPER_ADMIN,
+         USER_ROLES.MENTOR,
+         USER_ROLES.TEACHER
+        ),
+    AttendanceController.getRecentAttendance
+);
+
+
 
 export const AttendenceRoutes = router;

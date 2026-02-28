@@ -95,11 +95,25 @@ const getStudentIdFromAttendance = catchAsync(async (req: Request, res: Response
     });
 });
 
+const getRecentAttendance = catchAsync(async (req: Request, res: Response) => {
+    const days = parseInt(req.query.days as string) || 3;
+
+    const result = await AttendanceService.getRecentAttendance(days);
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: `Attendance records from the last ${days} days fetched successfully`,
+        data: result,
+    });
+});
+
 export const AttendanceController = {
     saveBatchAttendance,
     updateStudentStatus,
     getAttendance,
     getAttendanceStats,
     updateSpecificRecord,
-    getStudentIdFromAttendance
+    getStudentIdFromAttendance,
+    getRecentAttendance
 };

@@ -279,11 +279,30 @@ const getstudentIdFromAttendance = async (studentId: string) => {
     return result;
 }
 
+const getRecentAttendance = async (days: number = 3) => {
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    startDate.setHours(0, 0, 0, 0);
+
+    const result = await ClassAttendance.find({
+        date: { $gte: startDate }
+    })
+    .populate('classId', 'className') 
+    .populate('takenBy', 'name email') 
+    .populate('records.studentId', 'name rollNo') 
+    .sort({ date: -1 }); 
+
+    return result;
+};
+
+
 export const AttendanceService = {
     saveBatchAttendanceInDB,
     updateSingleStudentStatus,
     getAttendanceByDateAndClass,
     getStudentAttendanceStats,
     updateallAttendanceRecordsFromDB,
-    getstudentIdFromAttendance
+    getstudentIdFromAttendance,
+    getRecentAttendance
 };
