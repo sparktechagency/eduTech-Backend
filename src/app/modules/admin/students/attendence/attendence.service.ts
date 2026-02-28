@@ -21,6 +21,7 @@ const getDayRange = (dateStr?: string | Date) => {
     return { start, end };
 };
 
+
 const saveBatchAttendanceInDB = async (payload: IClassAttendance) => {
     const targetDate = new Date(payload.date);
     const start = new Date(targetDate);
@@ -50,7 +51,6 @@ const saveBatchAttendanceInDB = async (payload: IClassAttendance) => {
 
     return result;
 };
-
 
 
 const updateSingleStudentStatus = async (
@@ -128,6 +128,8 @@ const updateSingleStudentStatus = async (
 
 //     return result;
 // };
+
+
 const getAttendanceByDateAndClass = async (dateStr?: string, classId?: string) => {
     const { start, end } = getDayRange(dateStr);
 
@@ -155,6 +157,7 @@ const getAttendanceByDateAndClass = async (dateStr?: string, classId?: string) =
 
     return result;
 };
+
 const getStudentAttendanceStats = async (classId: string, query: Record<string, any>) => {
     
     const pipeline: any[] = [
@@ -253,7 +256,7 @@ const getStudentAttendanceStats = async (classId: string, query: Record<string, 
     };
 };
 
-//update specific attendeance recordsBy attendeance id
+
 const updateallAttendanceRecordsFromDB = async (attendanceId: string, records: any[]) => {
     const result = await ClassAttendance.findByIdAndUpdate(
         attendanceId,
