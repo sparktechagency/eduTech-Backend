@@ -14,6 +14,7 @@ app.use(
     origin: function (origin, callback) {
       const allowedOrigins = [
         "http://72.61.74.10:4173",
+        "https://web.share-network.org",
         "http://localhost:4173",
         "http://10.10.7.6:4173",
       ];
