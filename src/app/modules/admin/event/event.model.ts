@@ -29,20 +29,21 @@ const eventSchema = new Schema<IEvent>({
         enum: ['webinar', 'workshop', 'seminar', 'conference'],
         required: [true, "Event type is required"]
     },
-    group: {
-        type: Schema.Types.ObjectId,
-        ref: 'UserGroup',
-        required: [true, "Associated user group is required"]
-    },
 
-    targetUser: {
+
+    studentAssigned: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
+    targetTrack: {
         type: Schema.Types.ObjectId,
         ref: 'UserGroupTrack'
+    },
+    targetGroup: {
+        type: Schema.Types.ObjectId,
+        ref: 'UserGroup'
     }
-    // targetUser: {
-    //     type: [Schema.Types.ObjectId],
-    //     ref: 'User'
-    // }
 }, {
     timestamps: true    
 })

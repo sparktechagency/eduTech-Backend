@@ -113,10 +113,23 @@ const deleteEventById = catchAsync(async (req, res) => {
     })
 });
 
+const getEventForStudent = catchAsync(async (req, res) => {
+    const studentId = req.user.id;
+    const result = await EventService.getEventsForStudentFromDB(studentId, req.query);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Events for student retrieved successfully',
+        data: result,
+    });
+});
+
 export const EventController = {
     createEvent,
     getAllEvents,
     getEventById,
     updateEventById,
-    deleteEventById
+    deleteEventById,
+    getEventForStudent
 };

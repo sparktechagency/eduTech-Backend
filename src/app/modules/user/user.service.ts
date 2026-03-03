@@ -174,6 +174,8 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
         path: 'goal',
       }
     })
+    .populate('userGroup', 'name')
+    .populate('userGroupTrack', 'name')
     .populate('Onboarding')
     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
     .lean();

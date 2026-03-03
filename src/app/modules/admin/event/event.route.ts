@@ -11,9 +11,10 @@ const router = express.Router();
 
 router.route("/")
 .get(
-        // auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN),
+        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.STUDENT, USER_ROLES.MENTOR, USER_ROLES.TEACHER),
         EventController.getAllEvents
     )   
+
 .post(
         auth(
             USER_ROLES.ADMIN, 
@@ -24,6 +25,11 @@ router.route("/")
         EventController.createEvent
     );
 
+router.route("/student")
+    .get(
+        auth(USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.STUDENT, USER_ROLES.MENTOR, USER_ROLES.TEACHER),
+        EventController.getEventForStudent
+    )
 
 router.route("/:id")
     .get(

@@ -6,8 +6,10 @@ export interface IEvent extends Document {
     date: Date;
     location?: string;
     type: 'webinar' | 'workshop' | 'seminar' | 'conference';
+    studentAssigned: Types.ObjectId[];
     group: Types.ObjectId;
-    targetUser: Types.ObjectId;
+    targetTrack: Types.ObjectId;
+    targetGroup: Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
