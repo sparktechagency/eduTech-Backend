@@ -5,7 +5,7 @@ import { USER_ROLES } from "../../../../enums/user";
 
 
 const learningMaterialSchema = new Schema<ILearningMaterial>({
-    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     
     title: { type: String, required: true },
     description: { type: String, required: false },
@@ -16,6 +16,7 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
         required: true,
     },
     contentUrl: { type: String, required: false },
+    pdf: { type: String, required: false },
     targeteAudience: {
             type: String,
             enum: Object.values(USER_ROLES),

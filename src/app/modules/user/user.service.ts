@@ -138,12 +138,33 @@ const getProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser | null>
     .populate('mentorId', 'firstName lastName email profile contact location professionalTitle highestEducation havealaptop company jobTitle preferedGroup aviliableHours motivationLearning readBooks note careerDirections userGroup linkedInProfile githubProfile PortfolioWebsite PortfolioWebsite')
 .populate({
   path: 'assignedStudents',
-  select: 'firstName lastName profile email contactNumber location classId woop Goals review',
+  select: `
+    firstName 
+    lastName 
+    profile 
+    email 
+    contactNumber 
+    about 
+    location 
+    classId 
+    woop 
+    Goals 
+    review 
+    Onboarding
+  `,
   populate: [
     { path: 'classId' },
     {
       path: 'review.teacherId',
       select: 'firstName lastName profile email'
+    },
+    {
+      path: 'Goals',
+      model: 'Goal'
+    },
+    {
+      path: 'Onboarding',
+      model: 'Onboarding' 
     }
   ]
 })

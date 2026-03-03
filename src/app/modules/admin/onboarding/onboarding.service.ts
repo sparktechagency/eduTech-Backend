@@ -16,7 +16,7 @@ const saveOnboardingToDB = async (payload: Partial<IOnboarding>) => {
     }
   );
 
-  if (result && payload.user) {
+  if (result) {
     await User.findByIdAndUpdate(payload.user, {
       Onboarding: result._id,
     });

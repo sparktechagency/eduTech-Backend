@@ -6,6 +6,9 @@ const createResource = catchAsync(async (req, res) => {
     const result = req.body;
     const userId = req.user.id;
     result.createdBy = userId;
+    if (req.file) {
+        result.file = req.file.filename;
+    }
     const newResource = await LearningMaterialService.createResourceFromDB(result);
     res.status(201).json({
         success: true,
