@@ -4,6 +4,7 @@ import { IUserGroup } from '../user-group/user-group.interface';
 import { IUserGroupTrack } from '../user-group/user-group-track/user-group-track.interface';
 import { Portfolio } from '../portfolio/portfolio.model';
 import { IClass } from '../(teacher)/class/class.interface';
+import { Onboarding } from '../admin/onboarding/onboarding.model';
 
 interface IStripeAccountInfo {
     status?: boolean;
@@ -46,6 +47,7 @@ export type IUser = {
     }];
     note: string;
     careerDirections: string[];
+    Onboarding?: mongoose.Types.ObjectId | typeof Onboarding;
     password: string;
     confirmPassword?: string;
     location: {};

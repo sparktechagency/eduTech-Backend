@@ -6,6 +6,7 @@ import ApiError from "../../../errors/ApiError";
 import { StatusCodes } from "http-status-codes";
 import config from "../../../config";
 import { Goal } from '../admin/goal/goal.model';
+import { Onboarding } from '../admin/onboarding/onboarding.model';
 
 const userSchema = new Schema<IUser, UserModal>(
   {
@@ -162,6 +163,10 @@ const userSchema = new Schema<IUser, UserModal>(
         },
       },
     ],
+  Onboarding: {
+        type: Schema.Types.ObjectId,
+        ref: "Onboarding",
+    },
 
   careerDirections: {
         type: [String],

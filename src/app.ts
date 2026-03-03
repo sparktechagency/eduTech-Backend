@@ -17,6 +17,7 @@ app.use(
         "https://web.share-network.org",
         "http://localhost:4173",
         "http://10.10.7.6:4173",
+        "http://10.10.7.72:4173"
       ];
       
       if (!origin) return callback(null, true);

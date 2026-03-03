@@ -19,7 +19,10 @@ const weeklySchema = new Schema<IWeeklyReport>({
         plannedProgress: { type: Number, required: true },
         actualProgress: { type: Number, required: true },
     },
-    objectives: { type: String },
-}, { timestamps: true });
+    objectives: { type: String, required: false },
+}, {
+ 
+    timestamps: true
+ });
 
 export const WeeklyReport = model<IWeeklyReport>('WeeklyReport', weeklySchema);

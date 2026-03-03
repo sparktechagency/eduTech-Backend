@@ -3,16 +3,25 @@ import ApiError from "../../../../errors/ApiError";
 import { get } from "mongoose";
 import { IOnboarding } from "./onboarding.interface";
 import { Onboarding } from "./onboarding.model";
+import { User } from "../../user/user.model";
+
 const saveOnboardingToDB = async (payload: Partial<IOnboarding>) => {
   const result = await Onboarding.findOneAndUpdate(
     { user: payload.user },
     payload,
     {
       new: true,
-      upsert: true, 
+      upsert: true,
       runValidators: true,
     }
   );
+
+  if (result && payload.user) {
+    await User.findByIdAndUpdate(payload.user, {
+      Onboarding: result._id,
+    });
+  }
+
   return result;
 };
 
