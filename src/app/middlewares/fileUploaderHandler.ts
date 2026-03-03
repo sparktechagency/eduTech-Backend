@@ -35,6 +35,9 @@ const fileUploadHandler = () => {
                 case 'attachment':
                     uploadDir = path.join(baseUploadDir, 'attachments');
                 break;
+                case 'file':
+                    uploadDir = path.join(baseUploadDir, 'files');
+                break;
                 default:
                     throw new ApiError(StatusCodes.BAD_REQUEST, 'File is not supported');
             }
@@ -60,7 +63,7 @@ const fileUploadHandler = () => {
     const filterFilter = (req: Request, file: any, cb: FileFilterCallback) => {
 
         // console.log("file handler",file)
-        if (file.fieldname === 'image' || file.fieldname === 'submittedfile' || file.fieldname === 'attachment') {
+        if (file.fieldname === 'image' || file.fieldname === 'submittedfile' || file.fieldname === 'attachment' || file.fieldname === 'file') {
             if (
                 file.mimetype === 'image/jpeg' ||
                 file.mimetype === 'image/png' ||
@@ -110,6 +113,7 @@ const fileUploadHandler = () => {
         { name: 'image', maxCount: 30 },
         { name: 'submittedfile', maxCount: 15 },
         { name: 'attachment', maxCount: 15 },
+        { name: 'file', maxCount: 15 },
      ]);
     return upload;
 

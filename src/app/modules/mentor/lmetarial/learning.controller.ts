@@ -3,17 +3,22 @@ import { LearningMaterialService } from "./learning.service";
 
 
 const createResource = catchAsync(async (req, res) => {
-    const result = req.body;
-    const userId = req.user.id;
-    result.createdBy = userId;
-    if (req.file) {
-        result.file = req.file.filename;
-    }
-    const newResource = await LearningMaterialService.createResourceFromDB(result);
-    res.status(201).json({
-        success: true,
-        data: newResource,
-    });
+  const result = req.body;
+  result.createdBy = req.user.id;
+
+  if (req.files && (req.files as any)["file"]?.[0]) {
+    result.pdf = `/files/${(req.files as any)["file"][0].filename}`;
+  }
+
+  console.log("REQ FILES:", req.files);
+  console.log("PAYLOAD:", result);
+
+  const newResource = await LearningMaterialService.createResourceFromDB(result);
+
+  res.status(201).json({
+    success: true,
+    data: newResource,
+  });
 });
 
 const getCreatedByResources = catchAsync(async (req, res) => {

@@ -11,9 +11,9 @@ const createEventValidationZodSchema = z.object({
             required_error: 'Date is required',
         }),
         location: z.string().optional(),
-        type: z.enum(['webinar', 'workshop', 'seminar', 'conference'], {
-            required_error: 'Type is required and must be one of webinar, workshop, seminar, or conference',
-        }),
+        // type: z.enum(['webinar', 'workshop', 'seminar', 'conference'], {
+        //     required_error: 'Type is required and must be one of webinar, workshop, seminar, or conference',
+        // }),
         group: z.string({
             required_error: 'Group ID is required',
         }),

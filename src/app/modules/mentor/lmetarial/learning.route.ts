@@ -2,6 +2,7 @@ import express from "express";
 import { mentorLearningMaterial } from "./learning.controller";
 import auth from "../../../middlewares/auth";
 import { USER_ROLES } from "../../../../enums/user";
+import fileUploadHandler from "../../../middlewares/fileUploaderHandler";
 
 
 
@@ -10,9 +11,11 @@ const router = express.Router();
 router.route("/")
     .post(
         auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER),
+       fileUploadHandler(),
         mentorLearningMaterial.createResource
     )
     .get(
+        auth(USER_ROLES.MENTOR, USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN, USER_ROLES.TEACHER, USER_ROLES.STUDENT),
         mentorLearningMaterial.getAllResources
     );
 

@@ -11,9 +11,9 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
     description: { type: String, required: false },
     dueDate: { type: Date, required: false},
     type: {
-        type: String, 
-        enum: Object.values(ResourceType),
-        required: true,
+    type: String,
+    enum: Object.values(ResourceType),
+    required: true,
     },
     contentUrl: { type: String, required: false },
     pdf: { type: String, required: false },

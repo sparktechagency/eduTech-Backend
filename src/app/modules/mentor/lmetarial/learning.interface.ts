@@ -9,7 +9,7 @@ export interface ILearningMaterial extends Document {
     description?: string;
     dueDate?: Date;
     type: ResourceType;
-    contentUrl: string;
+    contentUrl: string;  
     pdf?: string;
     targeteAudience: string;
     targertGroup?: Types.ObjectId;
