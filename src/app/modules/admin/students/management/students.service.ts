@@ -113,7 +113,18 @@ const getSingleStudentFromDB = async (id: string) => {
           path: 'classId'
         }
       ]
-    });
+    })
+    .populate({
+      path: 'userGroup',
+      select: 'name description',
+      model: 'UserGroup',
+    })
+    .populate({
+      path: 'userGroupTrack',
+      select: 'name description',
+      model: 'UserGroupTrack',
+    })
+    .exec();
 
   return result;
 };

@@ -12,25 +12,87 @@ const createEventFromDB = async (payload: Partial<IEvent>) => {
   return event;
 };
 
-const getAllEventsFromDB = async (query?: GetAllEventsQuery) => {
+// const getAllEventsFromDB = async (query?: GetAllEventsQuery) => {
+//   const safeQuery = query || {};
+
+//   const page = Number(safeQuery.page) || 1;
+//   const limit = Number(safeQuery.limit) || 10;
+//   const skip = (page - 1) * limit;
+
+//   let queryBuilder = Event.find();
+
+//   if (safeQuery.searchTerm) {
+//     queryBuilder = queryBuilder.find({
+//       $or: [
+//         { title: { $regex: safeQuery.searchTerm, $options: "i" } },
+//         { description: { $regex: safeQuery.searchTerm, $options: "i" } },
+//       ],
+//     });
+//   }
+
+//   const total = await queryBuilder.clone().countDocuments();
+
+//   const events = await queryBuilder
+//     .sort(safeQuery.sort || "-createdAt")
+//     .skip(skip)
+//     .limit(limit)
+//     .populate("targetTrack")
+//     .populate("targetGroup")
+//     .populate("studentAssigned")
+//     .exec();
+
+//   return {
+//     success: true,
+//     data: events || [],
+//     pagination: {
+//       total,
+//       totalPage: Math.ceil(total / limit),
+//       page,
+//       limit,
+//     },
+//   };
+// };
+
+
+const getAllEventsFromDB = async (studentId: string | undefined, query?: GetAllEventsQuery) => {
   const safeQuery = query || {};
 
   const page = Number(safeQuery.page) || 1;
   const limit = Number(safeQuery.limit) || 10;
   const skip = (page - 1) * limit;
 
-  let queryBuilder = Event.find();
 
-  if (safeQuery.searchTerm) {
-    queryBuilder = queryBuilder.find({
-      $or: [
-        { title: { $regex: safeQuery.searchTerm, $options: "i" } },
-        { description: { $regex: safeQuery.searchTerm, $options: "i" } },
-      ],
-    });
+  let filter: any = {
+    $or: [
+      { studentAssigned: { $size: 0 } },
+      { studentAssigned: { $exists: false } } 
+    ]
+  };
+
+  if (studentId) {
+    const sId = new Types.ObjectId(studentId);
+    filter.$or.push({ studentAssigned: sId });
   }
 
-  const total = await queryBuilder.clone().countDocuments();
+
+  let finalQuery = filter;
+  if (safeQuery.searchTerm) {
+    finalQuery = {
+      $and: [
+        filter,
+        {
+          $or: [
+            { title: { $regex: safeQuery.searchTerm, $options: "i" } },
+            { description: { $regex: safeQuery.searchTerm, $options: "i" } },
+          ],
+        },
+      ],
+    };
+  }
+
+
+  const queryBuilder = Event.find(finalQuery);
+  const total = await Event.countDocuments(finalQuery);
 
   const events = await queryBuilder
     .sort(safeQuery.sort || "-createdAt")
@@ -52,7 +114,6 @@ const getAllEventsFromDB = async (query?: GetAllEventsQuery) => {
     },
   };
 };
-
 //write g service for only studentAssigned id and this get user token to id match then get specific event others event not needs
 const getEventsForStudentFromDB = async (studentId: string, query?: GetAllEventsQuery) => {
     const safeQuery = query || {};

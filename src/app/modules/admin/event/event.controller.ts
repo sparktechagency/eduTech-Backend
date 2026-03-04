@@ -54,8 +54,10 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
 const getAllEvents = catchAsync(async (req, res) => {
-    const result = await EventService.getAllEventsFromDB(req.query);
+
+    const result = await EventService.getAllEventsFromDB(req.user?.id, req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

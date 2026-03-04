@@ -99,7 +99,7 @@ const getMentorDashboardWoops = async (mentorId: string) => {
                 location: event.location,
                 type: event.type,
                 group: event.group,
-                targetUser: event.targetUser,
+                targetGroup: event.targetGroup,
             }
             : null,
 
@@ -145,7 +145,7 @@ const getMentorStudentrdWoops = async (mentorId: string, query: Record<string, u
             location: event.location,
             type: event.type,
             group: event.group,
-            targetUser: event.targetUser,
+            targetGroup : event.targetGroup,
         })) : [];
     }
 
