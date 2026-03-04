@@ -10,6 +10,7 @@ const superUser = {
     email: config.admin.email,
     password: config.admin.password,
     verified: true,
+    status: 'ACTIVE',
 };
 
 const seedSuperAdmin = async () => {
