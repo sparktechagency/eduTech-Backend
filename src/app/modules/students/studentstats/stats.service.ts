@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { User } from "../../user/user.model";
 import { Event } from "../../admin/event/event.model";
 import { AssignmentsSub } from "../assignments/assignmentsSub.model";
@@ -35,15 +35,50 @@ const getMyStatsFromDB = async (userId: string) => {
   return countindividual;
 };
 
-const getUpcomingEventsFromDB = async (studentId: string) => {
-  const upcomingEvents = await Event.find({ date: { $gte: new Date() } })
-    .sort({ date: 1 })
-    .limit(3)
-    .select('title description date time image location type group');
+// const getUpcomingEventsFromDB = async (studentId: string) => {
+//   const upcomingEvents = await Event.find({ date: { $gte: new Date() } })
+//     .sort({ date: 1 })
+//     .limit(3)
+//     .select('title description date time image location type group');
   
-  return upcomingEvents;
-}
+//   return upcomingEvents;
+// }
 
+const getUpcomingEventsFromDB = async (studentId: string | undefined, role: string | undefined) => {
+  let finalFilter: any = {
+    date: { $gte: new Date() } 
+  };
+
+  
+  if (role !== 'SUPER_ADMIN') {
+    const permissionFilter = {
+      $or: [
+        { studentAssigned: { $size: 0 } },     
+        { studentAssigned: { $exists: false } } 
+      ]
+    };
+
+    if (studentId) {
+      permissionFilter.$or.push({ studentAssigned: new Types.ObjectId(studentId) } as any);
+    }
+
+
+    finalFilter = { $and: [finalFilter, permissionFilter] };
+  }
+
+  const upcomingEvents = await Event.find(finalFilter)
+    .sort({ date: 1 }) 
+    .limit(3)
+    .populate("targetTrack") 
+    .populate("targetGroup")
+    .populate("studentAssigned")
+    .exec();
+  
+  return {
+    success: true,
+    data: upcomingEvents || []
+  };
+};
 
 const getPendingAssignmentsFromDB = async (studentId: string) => {
   const activeAssignments = await Assignment.find({ dueDate: { $gte: new Date() } })

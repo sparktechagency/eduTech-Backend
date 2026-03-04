@@ -87,23 +87,19 @@ const getAllEventsFromDB = async (
 
   let finalFilter: any = {};
 
-  // ১. যদি SUPER_ADMIN না হয়, তবেই ফিল্টার অ্যাপ্লাই হবে
   if (role !== 'SUPER_ADMIN') {
     finalFilter = {
       $or: [
-        { studentAssigned: { $size: 0 } },      // পাবলিক ইভেন্ট (খালি অ্যারে)
-        { studentAssigned: { $exists: false } } // ফিল্ড নেই এমন ইভেন্ট
+        { studentAssigned: { $size: 0 } },   
+        { studentAssigned: { $exists: false } }
       ]
     };
 
-    // যদি স্টুডেন্ট আইডি থাকে, তবে তার জন্য নির্দিষ্ট ইভেন্টও যোগ হবে
     if (studentId) {
       finalFilter.$or.push({ studentAssigned: new Types.ObjectId(studentId) });
     }
   } 
-  // role === 'SUPER_ADMIN' হলে finalFilter = {} থাকবে, যার মানে সব ডাটা আসবে।
 
-  // ২. সার্চ টার্ম হ্যান্ডলিং
   if (safeQuery.searchTerm) {
     const searchCondition = {
       $or: [
@@ -112,7 +108,6 @@ const getAllEventsFromDB = async (
       ],
     };
 
-    // যদি আগে থেকেই ফিল্টার থাকে (Non-Admin), তবে $and করবে, নাহলে শুধু সার্চ
     if (Object.keys(finalFilter).length > 0) {
       finalFilter = { $and: [finalFilter, searchCondition] };
     } else {

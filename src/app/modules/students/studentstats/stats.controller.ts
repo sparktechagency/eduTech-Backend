@@ -18,7 +18,7 @@ const getMystats = catchAsync(async (req: Request, res: Response) => {
 
 const getUpcomingEvents = catchAsync(async (req: Request, res: Response) => {
   const studentId = req.user?.id;
-  const result = await StudentStatsService.getUpcomingEventsFromDB(studentId!);
+  const result = await StudentStatsService.getUpcomingEventsFromDB(studentId!, req.user?.role);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

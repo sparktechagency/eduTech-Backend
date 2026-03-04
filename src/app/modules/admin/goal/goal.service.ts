@@ -51,16 +51,8 @@ import { User } from "../../user/user.model";
 
 const createGoalFromDb = async (studentId: string, payload: IGoal[]) => {
   const goalsArray = Array.isArray(payload) ? payload : [payload];
-  const indices = goalsArray.map(goal => goal.index);
-  const existingGoals = await Goal.find({ index: { $in: indices } });
-  
-  if (existingGoals.length > 0) {
-    const existingIndices = existingGoals.map(g => g.index).join(', ');
-    throw new ApiError(StatusCodes.BAD_REQUEST, `Goals with indices [${existingIndices}] already exist!`);
-  }
 
-
-  const isUserExist = await User.findById(studentId);
+  const isUserExist = await User.findById(studentId).populate("Goals");
   if (!isUserExist) {
     throw new ApiError(StatusCodes.NOT_FOUND, "User not found!");
   }
@@ -70,31 +62,53 @@ const createGoalFromDb = async (studentId: string, payload: IGoal[]) => {
   try {
     session.startTransaction();
 
-    const newGoals = await Goal.insertMany(goalsArray, { session });
+    const existingGoals = isUserExist.Goals || [];
+    let result;
+
+    if (existingGoals.length >= 3) {
+      const updateResults = [];
     
-    const goalIds = newGoals.map(goal => goal._id);
-    await User.findByIdAndUpdate(
-      studentId,
-      {
-        $addToSet: { Goals: { $each: goalIds } } 
-      },
-      { session, new: true }
-    );
+      for (let i = 0; i < 3; i++) {
+        const goalId = existingGoals[i]._id;
+        const goalData = goalsArray[i];
+
+        if (goalData) {
+          const updatedGoal = await Goal.findByIdAndUpdate(
+            goalId,
+            { ...goalData },
+            { session, new: true, runValidators: true }
+          );
+          updateResults.push(updatedGoal);
+        }
+      }
+      result = updateResults;
+    } 
+    else {
+      const newGoals = await Goal.insertMany(goalsArray, { session });
+      const goalIds = newGoals.map(goal => goal._id);
+      
+      await User.findByIdAndUpdate(
+        studentId,
+        { $addToSet: { Goals: { $each: goalIds } } },
+        { session, new: true }
+      );
+      result = newGoals;
+    }
 
     await session.commitTransaction();
-    session.endSession();
-
     return { 
-      message: `${newGoals.length} Goals created and assigned successfully`, 
-      result: newGoals 
+      message: existingGoals.length >= 3 ? "Goals updated successfully" : "Goals created successfully", 
+      result 
     };
 
   } catch (error: any) {
     await session.abortTransaction();
-    session.endSession();
     throw error;
+  } finally {
+    await session.endSession();
   }
 };
+
 const getAllGoalsFromDB = async (query: Record<string, any>) => {
     const result = new QueryBuilder(Goal.find(), query).search(['title', 'description']).filter().sort().paginate();
     const goals = await result.queryModel;

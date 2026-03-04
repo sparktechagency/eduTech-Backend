@@ -9,26 +9,7 @@ const createStudentIntoDB = async (payload: IStudentProfile) => {
   return result;
 };
 
-// const getAllStudentsFromDB = async (query: Record<string, any>) => {
 
-//   const queryBuilder = new QueryBuilder(
-//     User.find({ role: 'STUDENT' }), query)
-//     .search(['studentId', 'department'])
-//     .filter()
-//     .sort()
-//     .paginate();
-
-//   const result = await queryBuilder.queryModel
-//     .populate('mentorId' , 'firstName lastName email profile contact location')
-//     .populate('woop' , 'title')
-//     .populate('Goals' , 'title')
-//     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack')
-//     .exec();
-
-//   const pagination = await queryBuilder.getPaginationInfo();
-
-//   return { data: result, pagination };
-// }
 
 const getAllStudentsFromDB = async (query: Record<string, any>) => {
   const queryBuilder = new QueryBuilder(
@@ -42,7 +23,7 @@ const getAllStudentsFromDB = async (query: Record<string, any>) => {
 const result = await queryBuilder.queryModel
   .populate('mentorId', 'firstName lastName email profile contact location')
   .populate('woop', 'title')
-  .populate('Goals', 'title')
+  .populate('Goals', 'title index description')
   .populate({
     path: 'classId',
     select: 'title description classDate location virtualClass published status',

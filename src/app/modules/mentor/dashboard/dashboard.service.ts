@@ -85,8 +85,9 @@ const getMentorDashboardWoops = async (mentorId: string) => {
     }
 
     const event = await Event.findOne({ date: { $gte: new Date() } })
-        .populate('group')
-        .populate('targetUser');
+        .populate('targetGroup')
+        .populate('studentAssigned')
+        .populate('targetTrack')
 
     const woopsGoals = await WoopGoal.findOne().lean();
 

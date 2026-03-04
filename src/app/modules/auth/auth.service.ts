@@ -56,6 +56,10 @@ const loginUserFromDB = async (payload: ILoginData) => {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Please verify your account, then try to login again');
     }
 
+    if (isExistUser.status !== "ACTIVE" && isExistUser.status !== "ALUMNI_GRADUATED") {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Your account is not approved yet. Please contact support.');
+    }
+
     //check match password
     if (password && !(await User.isMatchPassword(password, isExistUser.password))) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Password is incorrect!');

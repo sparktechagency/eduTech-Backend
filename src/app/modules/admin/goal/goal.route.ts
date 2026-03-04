@@ -8,7 +8,7 @@ import { GoalValidation } from "./goal.validation";
 const router = express.Router();
 
 router.route("/:studentId")
-    .post(
+    .put(
         auth(
             USER_ROLES.ADMIN, 
             USER_ROLES.SUPER_ADMIN, 

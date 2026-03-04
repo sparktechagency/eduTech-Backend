@@ -10,11 +10,9 @@ const goalSchema = new Schema<IGoal>({
     title: {
         type: String,
         required: [true, "Goal title is required"],
-        trim: true
     },
     description: {
         type: String,
-        trim: true
     },
     isActive: {
         type: Boolean,

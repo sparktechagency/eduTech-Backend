@@ -258,7 +258,11 @@ const userSchema = new Schema<IUser, UserModal>(
       },
       select: 0,
     },
-
+    status: {
+      type: String,
+      enum: ["PENDING", "ACTIVE", "NON_ACTIVE","ALUMNI_GRADUATED"],
+      default: "PENDING",
+    },
     accountInformation: {
       status: { type: Boolean },
       accountId: { type: String },
