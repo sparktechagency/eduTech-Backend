@@ -4,8 +4,9 @@ import { goalService } from "./goal.service";
 
 
 const createGoal = catchAsync(async (req: Request, res: Response) => {
+    const studentId = req.params.studentId; 
     const payload = req.body;
-    const result = await goalService.createGoalFromDb(payload);
+    const result = await goalService.createGoalFromDb(studentId, payload);
     res.status(201).json({
         success: true,
         ...result,

@@ -7,7 +7,7 @@ import { GoalValidation } from "./goal.validation";
 
 const router = express.Router();
 
-router.route("/")
+router.route("/:studentId")
     .post(
         auth(
             USER_ROLES.ADMIN, 
@@ -17,9 +17,15 @@ router.route("/")
         validateRequest(GoalValidation.createZodSchema),
         goalController.createGoal
     )
+router.route("/")
     .get(
+        auth(
+            USER_ROLES.ADMIN, 
+            USER_ROLES.SUPER_ADMIN, 
+            USER_ROLES.MENTOR
+        ),
         goalController.getAllGoals
-    );
+    )
 
 router.route("/:id")
     .get(

@@ -5,8 +5,7 @@ import { IGoal } from "./goal.interface";
 const goalSchema = new Schema<IGoal>({
     index: {
         type: Number,
-        required: true,
-        unique: true
+        required: false,
     },
     title: {
         type: String,

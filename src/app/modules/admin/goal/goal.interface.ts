@@ -1,7 +1,7 @@
 
 
 export interface IGoal extends Document {
-    index: number;
+    index?: number;
     title: string;
     description?: string;
     isActive: boolean;
