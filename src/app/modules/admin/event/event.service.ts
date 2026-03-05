@@ -12,47 +12,49 @@ const createEventFromDB = async (payload: Partial<IEvent>) => {
   return event;
 };
 
-// const getAllEventsFromDB = async (studentId: string | undefined, query?: GetAllEventsQuery) => {
-//   const safeQuery = query || {};
 
+// const getAllEventsFromDB = async (
+//   studentId: string | undefined, 
+//   role: string | undefined, 
+//   query?: any
+// ) => {
+//   const safeQuery = query || {};
 //   const page = Number(safeQuery.page) || 1;
 //   const limit = Number(safeQuery.limit) || 10;
 //   const skip = (page - 1) * limit;
 
+//   let finalFilter: any = {};
 
-//   let filter: any = {
-//     $or: [
-//       { studentAssigned: { $size: 0 } },
-//       { studentAssigned: { $exists: false } } 
-//     ]
-//   };
+//   if (role !== 'SUPER_ADMIN') {
+//     finalFilter = {
+//       $or: [
+//         { studentAssigned: { $size: 0 } },   
+//         { studentAssigned: { $exists: false } }
+//       ]
+//     };
 
-//   if (studentId) {
-//     const sId = new Types.ObjectId(studentId);
-//     filter.$or.push({ studentAssigned: sId });
-//   }
+//     if (studentId) {
+//       finalFilter.$or.push({ studentAssigned: new Types.ObjectId(studentId) });
+//     }
+//   } 
 
-
-//   let finalQuery = filter;
 //   if (safeQuery.searchTerm) {
-//     finalQuery = {
-//       $and: [
-//         filter,
-//         {
-//           $or: [
-//             { title: { $regex: safeQuery.searchTerm, $options: "i" } },
-//             { description: { $regex: safeQuery.searchTerm, $options: "i" } },
-//           ],
-//         },
+//     const searchCondition = {
+//       $or: [
+//         { title: { $regex: safeQuery.searchTerm, $options: "i" } },
+//         { description: { $regex: safeQuery.searchTerm, $options: "i" } },
 //       ],
 //     };
+
+//     if (Object.keys(finalFilter).length > 0) {
+//       finalFilter = { $and: [finalFilter, searchCondition] };
+//     } else {
+//       finalFilter = searchCondition;
+//     }
 //   }
 
-
-//   const queryBuilder = Event.find(finalQuery);
-//   const total = await Event.countDocuments(finalQuery);
-
-//   const events = await queryBuilder
+//   const total = await Event.countDocuments(finalFilter);
+//   const events = await Event.find(finalFilter)
 //     .sort(safeQuery.sort || "-createdAt")
 //     .skip(skip)
 //     .limit(limit)
@@ -72,12 +74,9 @@ const createEventFromDB = async (payload: Partial<IEvent>) => {
 //     },
 //   };
 // };
-
-
-
 const getAllEventsFromDB = async (
-  studentId: string | undefined, 
-  role: string | undefined, 
+  studentId: string | undefined,
+  role: string | undefined,
   query?: any
 ) => {
   const safeQuery = query || {};
@@ -87,19 +86,33 @@ const getAllEventsFromDB = async (
 
   let finalFilter: any = {};
 
-  if (role !== 'SUPER_ADMIN') {
+  if (role !== "SUPER_ADMIN") {
     finalFilter = {
       $or: [
-        { studentAssigned: { $size: 0 } },   
-        { studentAssigned: { $exists: false } }
-      ]
+        { studentAssigned: { $size: 0 } },
+        { studentAssigned: { $exists: false } },
+      ],
     };
 
     if (studentId) {
       finalFilter.$or.push({ studentAssigned: new Types.ObjectId(studentId) });
     }
-  } 
+  }
 
+  // ✅ targetGroup filter
+  if (safeQuery.targetGroup) {
+    const groupCondition = {
+      targetGroup: new Types.ObjectId(safeQuery.targetGroup),
+    };
+
+    if (Object.keys(finalFilter).length > 0) {
+      finalFilter = { $and: [finalFilter, groupCondition] };
+    } else {
+      finalFilter = groupCondition;
+    }
+  }
+
+  // ✅ search filter
   if (safeQuery.searchTerm) {
     const searchCondition = {
       $or: [
@@ -116,6 +129,7 @@ const getAllEventsFromDB = async (
   }
 
   const total = await Event.countDocuments(finalFilter);
+
   const events = await Event.find(finalFilter)
     .sort(safeQuery.sort || "-createdAt")
     .skip(skip)
@@ -136,7 +150,6 @@ const getAllEventsFromDB = async (
     },
   };
 };
-
 //write g service for only studentAssigned id and this get user token to id match then get specific event others event not needs
 const getEventsForStudentFromDB = async (studentId: string, query?: GetAllEventsQuery) => {
     const safeQuery = query || {};

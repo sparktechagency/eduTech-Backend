@@ -27,7 +27,7 @@ const createAdminToDB = async (payload: any): Promise<IUser> => {
   if (!createAdmin) {
     throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create Admin');
   } else {
-    await User.findByIdAndUpdate({ _id: createAdmin?._id }, { verified: true }, { new: true });
+    await User.findByIdAndUpdate({ _id: createAdmin?._id }, { verified: true, status: 'ACTIVE' }, { new: true });
   }
 
   return createAdmin;
