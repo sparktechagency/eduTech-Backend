@@ -42,54 +42,78 @@ const verifyTwilioOTP = async (mobileNumber: string, otpCode: string): Promise<b
     return false;
   }
 };
-//login
+
 const loginUserFromDB = async (payload: ILoginData) => {
+  const { email, password, deviceToken } = payload;
 
-    const { email, password, deviceToken } = payload;
-    const isExistUser: any = await User.findOne({ email }).select('+password');
-    if (!isExistUser) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
-    }
+  const isExistUser = await User.findOne({ email }).select("+password");
 
-    //check verified and status
-    if (!isExistUser.verified) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Please verify your account, then try to login again');
-    }
+  if (!isExistUser) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
+  }
 
-    if (isExistUser.status !== "ACTIVE" && isExistUser.status !== "ALUMNI_GRADUATED") {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Your account is not approved yet. Please contact support.');
-    }
-
-    //check match password
-    if (password && !(await User.isMatchPassword(password, isExistUser.password))) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Password is incorrect!');
-    }
-
-    await User.findOneAndUpdate(
-        { _id: isExistUser._id },
-        { deviceToken: deviceToken },
-        { new: true },
-    )
-
-    //create token
-    const accessToken = jwtHelper.createToken(
-        { id: isExistUser._id, role: isExistUser.role, email: isExistUser.email },
-        config.jwt.jwt_secret as Secret,
-        config.jwt.jwt_expire_in as string,
-        
+  // check verified
+  if (!isExistUser.verified) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      "Please verify your account, then try to login again"
     );
+  }
 
-    //create token
-    const refreshToken = jwtHelper.createToken(
-        { id: isExistUser._id, role: isExistUser.role, email: isExistUser.email },
-        config.jwt.jwtRefreshSecret as Secret,
-        config.jwt.jwtRefreshExpiresIn as string,
-
+  // check account status
+  if (
+    isExistUser.status !== "ACTIVE" &&
+    isExistUser.status !== "ALUMNI_GRADUATED"
+  ) {
+    throw new ApiError(
+      StatusCodes.BAD_REQUEST,
+      "Your account is not approved yet. Please contact support."
     );
+  }
 
-    return { accessToken, refreshToken, role: isExistUser.role };
+  // check password
+  const isPasswordMatched = await User.isMatchPassword(
+    password,
+    isExistUser.password
+  );
+
+  if (!isPasswordMatched) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, "Password is incorrect!");
+  }
+
+  // update device token if provided
+  if (deviceToken) {
+    isExistUser.deviceToken = deviceToken;
+    await isExistUser.save();
+  }
+
+  // jwt payload
+  const jwtPayload = {
+    id: isExistUser._id,
+    role: isExistUser.role,
+    email: isExistUser.email,
+  };
+
+  // create access token
+  const accessToken = jwtHelper.createToken(
+    jwtPayload,
+    config.jwt.jwt_secret as Secret,
+    config.jwt.jwt_expire_in as string
+  );
+
+  // create refresh token
+  const refreshToken = jwtHelper.createToken(
+    jwtPayload,
+    config.jwt.jwtRefreshSecret as Secret,
+    config.jwt.jwtRefreshExpiresIn as string
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    role: isExistUser.role,
+  };
 };
-
 
 const forgetPasswordToDB = async (email: string) => {
 
