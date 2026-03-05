@@ -94,7 +94,7 @@ const bulkImportMentors = async (fileBuffer: Buffer) => {
 
 const getAllMentorsFromDB = async (query: any) => {
   const qb = new QueryBuilder(User.find({ role: USER_ROLES.MENTOR }), query)
-    .search(['firstName', 'lastName', 'email'])
+    .search(['firstName', 'lastName', 'email','userGroup'])
     .filter()
     .sort()
     .paginate();
