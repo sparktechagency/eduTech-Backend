@@ -9,16 +9,10 @@ import { LearningMaterial } from '../../mentor/lmetarial/learning.model';
 import { Assignment } from '../../(teacher)/assignment/assignment.model';
 
 const createAdminToDB = async (payload: IUser): Promise<IUser> => {
+    payload.verified = true;
     const createAdmin: any = await User.create(payload);
     if (!createAdmin) {
         throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create Admin');
-    }
-    if (createAdmin) {
-        await User.findByIdAndUpdate(
-            { _id: createAdmin?._id },
-            { verified: true },
-            { new: true }
-        );
     }
     return createAdmin;
 };
@@ -165,6 +159,7 @@ const getAllCoordinatorFromDB = async (query: Record<string, any>) => {
     .paginate();
 const result = await queryBuilder.queryModel
   .populate('mentorId', 'firstName lastName email profile contact location')
+  .populate('assignedMentors', 'firstName lastName email profile contact location')
   .populate('woop', 'title')
   .populate('Goals', 'title index description')
   .populate({
@@ -191,6 +186,8 @@ const result = await queryBuilder.queryModel
 
   return { data: result, pagination };
 };
+
+
 
 export const AdminService = {
     createAdminToDB,

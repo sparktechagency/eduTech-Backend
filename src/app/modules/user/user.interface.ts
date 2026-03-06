@@ -77,6 +77,7 @@ export type IUser = {
     accountInformation?: IStripeAccountInfo;
     userGroup?: (mongoose.Types.ObjectId | IUserGroup)[];
     userGroupTrack?: mongoose.Types.ObjectId | IUserGroupTrack;
+    assignedMentors?: (mongoose.Types.ObjectId | IUser)[];
 }
 
 export type UserModal = {

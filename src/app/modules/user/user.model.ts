@@ -278,6 +278,12 @@ const userSchema = new Schema<IUser, UserModal>(
     deviceToken: {
       type: String,
     },
+    assignedMentors: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
