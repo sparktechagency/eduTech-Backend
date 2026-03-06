@@ -154,11 +154,49 @@ allActivities.sort((a, b) =>
 
     return allActivities;
 };
+const getAllCoordinatorFromDB = async (query: Record<string, any>) => {
+  const queryBuilder = new QueryBuilder(
+    User.find({ role: 'COORDINATOR' }),
+    query
+  )
+    // .search(['studentId', 'department'])
+    .filter()
+    .sort()
+    .paginate();
+const result = await queryBuilder.queryModel
+  .populate('mentorId', 'firstName lastName email profile contact location')
+  .populate('woop', 'title')
+  .populate('Goals', 'title index description')
+  .populate({
+    path: 'classId',
+    select: 'title description classDate location virtualClass published status',
+    populate: [
+      { path: 'userGroup', select: 'name description', model: 'UserGroup' },
+      { path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' },
+    ],
+  })
+  .populate({
+    path: 'userGroup',
+    select: 'name description',
+    model: 'UserGroup',
+  })
+  .populate({
+    path: 'userGroupTrack',
+    select: 'name description',
+    model: 'UserGroupTrack',
+  })
+  .exec();
+
+  const pagination = await queryBuilder.getPaginationInfo();
+
+  return { data: result, pagination };
+};
 
 export const AdminService = {
     createAdminToDB,
     deleteAdminFromDB,
     getAdminFromDB,
     getTotalUsersByRoleFromDB,
-    getRecentActivitiesFromDB
+    getRecentActivitiesFromDB,
+    getAllCoordinatorFromDB
 };

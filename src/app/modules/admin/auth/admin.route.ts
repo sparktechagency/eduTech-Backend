@@ -16,6 +16,10 @@ router.post(
     AdminController.createAdmin
 );
 
+
+router.get('/coordinator',
+    AdminController.getAllcoordinator
+);
 router.get('/get-admin',
     auth(
         USER_ROLES.SUPER_ADMIN
