@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../../../shared/catchAsync';
 import sendResponse from '../../../../shared/sendResponse';
 import { AdminService } from './admin.service';
+import { StudentService } from '../students/management/students.service';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body;
@@ -51,6 +52,16 @@ const getTotalUsersByRole = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getAllcoordinator = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.getAllCoordinatorFromDB(req.query);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: ' retrieved successfully',
+    data: result,
+  });
+});
+
 const getRecentActivities = catchAsync(async (req: Request, res: Response) => {
 
     const result = await AdminService.getRecentActivitiesFromDB();
@@ -67,6 +78,7 @@ export const AdminController = {
     createAdmin,
     getAdmin,
     getTotalUsersByRole,
-    getRecentActivities
+    getRecentActivities,
+    getAllcoordinator
 
 };
