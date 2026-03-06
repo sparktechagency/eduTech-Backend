@@ -143,7 +143,7 @@ const getAttendanceByDateAndClass = async (dateStr?: string, classId?: string) =
     const result = await ClassAttendance.find(query)
         .populate({
             path: 'records.studentId',
-            select: 'name rollNumber image email' 
+            select: 'firstName lastName rollNumber profile email' 
         })
         .populate({
             path: 'classId',

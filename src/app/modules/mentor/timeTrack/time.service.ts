@@ -12,7 +12,7 @@ const createTimeTrackFromDB = async (payload: ITimeTrack): Promise<any> => {
 
 const getMentorTimeTracksFromDB = async (id: string) => {
     const result = await TimeTrack.find({ mentorId: id })
-        .populate('mentorId') 
+        .populate(['mentorId', 'studentId'])
         .sort({ startTime: -1 }); 
 
     return result;
@@ -20,7 +20,7 @@ const getMentorTimeTracksFromDB = async (id: string) => {
 
 const getAllMentorTimeTracksFromDB = async () => {
     const result = await TimeTrack.find()
-        .populate('mentorId')
+        .populate(['mentorId', 'studentId'])
         .sort({ startTime: -1 }); 
     console.log(result);
     return result;
