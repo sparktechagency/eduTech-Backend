@@ -233,7 +233,6 @@ const userSchema = new Schema<IUser, UserModal>(
     classId: [{
         type: Schema.Types.ObjectId,
         ref: 'Class', 
-        requiured: false
     }],
     assignedStudents: [
         {

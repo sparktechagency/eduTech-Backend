@@ -7,48 +7,6 @@ import mongoose from "mongoose";
 import { User } from "../../user/user.model";
 
 
-// const createGoalFromDb = async (studentId: string, payload: IGoal) => {
-//   const isGoalExist = await Goal.exists({ index: payload.index });
-//   if (isGoalExist) {
-//     throw new ApiError(StatusCodes.BAD_REQUEST, "Goal with this index already exists!");
-//   }
-
-//   const isUserExist = await User.findById(studentId);
-//   if (!isUserExist) {
-//     throw new ApiError(StatusCodes.NOT_FOUND, "User not found!");
-//   }
-
-//   const session = await mongoose.startSession();
-  
-//   try {
-//     session.startTransaction();
-
-//     const newGoal = await Goal.create([payload], { session });
-//     const goalId = newGoal[0]._id;
-
-//     await User.findByIdAndUpdate(
-//       studentId,
-//       {
-//         $addToSet: { Goals: goalId } 
-//       },
-//       { session, new: true }
-//     );
-
-//     await session.commitTransaction();
-//     session.endSession();
-
-//     return { 
-//       message: "Goal created and assigned to student successfully", 
-//       result: newGoal[0] 
-//     };
-
-//   } catch (error: any) {
-//     await session.abortTransaction();
-//     session.endSession();
-//     throw error;
-//   }
-// };
-
 const createGoalFromDb = async (studentId: string, payload: IGoal[]) => {
   const goalsArray = Array.isArray(payload) ? payload : [payload];
 
