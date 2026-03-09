@@ -3,6 +3,8 @@ import { StudentProfile } from './students.model';
 import {  IStudentProfile, IStudentReview } from './students.interface';
 import { User } from '../../../user/user.model';
 import QueryBuilder from '../../../../../shared/apiFeature';
+import { UserGroupTrack } from '../../../user-group/user-group-track/user-group-track.model';
+import { UserGroup } from '../../../user-group/user-group.model';
 
 const createStudentIntoDB = async (payload: IStudentProfile) => {
   const result = await StudentProfile.create(payload);
@@ -11,44 +13,94 @@ const createStudentIntoDB = async (payload: IStudentProfile) => {
 
 
 
+// const getAllStudentsFromDB = async (query: Record<string, any>) => {
+//   const queryBuilder = new QueryBuilder(
+//     User.find({ role: 'STUDENT' }),
+//     query
+//   )
+//     .search(['studentId', 'department', 'group', 'track', 'location', 'email', 'firstName', 'lastName', 'userGroup', 'userGroupTrack','status'])
+//     .filter()
+//     .sort()
+//     .paginate();
+// const result = await queryBuilder.queryModel
+//   .populate('mentorId', 'firstName lastName email profile contact location')
+//   .populate('woop', 'title')
+//   .populate('Goals', 'title index description')
+//   .populate({
+//     path: 'classId',
+//     select: 'title description classDate location virtualClass published status',
+//     populate: [
+//       { path: 'userGroup', select: 'name description', model: 'UserGroup' },
+//       { path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' },
+//     ],
+//   })
+//   .populate({
+//     path: 'userGroup',
+//     select: 'name description',
+//     model: 'UserGroup',
+//   })
+//   .populate({
+//     path: 'userGroupTrack',
+//     select: 'name description',
+//     model: 'UserGroupTrack',
+//   })
+//   .exec();
+
+//   const pagination = await queryBuilder.getPaginationInfo();
+
+//   return { data: result, pagination };
+// };
 const getAllStudentsFromDB = async (query: Record<string, any>) => {
-  const queryBuilder = new QueryBuilder(
-    User.find({ role: 'STUDENT' }),
-    query
-  )
-    .search(['studentId', 'department', 'group', 'track', 'location', 'email', 'firstName', 'lastName', 'userGroup', 'userGroupTrack','status'])
+  const { searchTerm, ...restQuery } = query;
+  
+  let extraFilter = {};
+
+  if (searchTerm) {
+    const [matchingGroups, matchingTracks] = await Promise.all([
+      UserGroup.find({ name: { $regex: searchTerm, $options: 'i' } }).select('_id'),
+      UserGroupTrack.find({ name: { $regex: searchTerm, $options: 'i' } }).select('_id'),
+    ]);
+
+    const groupIds = matchingGroups.map(g => g._id);
+    const trackIds = matchingTracks.map(t => t._id);
+
+    extraFilter = {
+      $or: [
+        ...(groupIds.length ? [{ userGroup: { $in: groupIds } }] : []),
+        ...(trackIds.length ? [{ userGroupTrack: { $in: trackIds } }] : []),
+      ]
+    };
+  }
+
+  const baseQuery = Object.keys(extraFilter).length
+    ? User.find({ role: 'STUDENT', ...extraFilter })
+    : User.find({ role: 'STUDENT' });
+
+  const queryBuilder = new QueryBuilder(baseQuery, { searchTerm, ...restQuery })
+    .search(['email', 'firstName', 'lastName', 'department', 'status'])
     .filter()
     .sort()
     .paginate();
-const result = await queryBuilder.queryModel
-  .populate('mentorId', 'firstName lastName email profile contact location')
-  .populate('woop', 'title')
-  .populate('Goals', 'title index description')
-  .populate({
-    path: 'classId',
-    select: 'title description classDate location virtualClass published status',
-    populate: [
-      { path: 'userGroup', select: 'name description', model: 'UserGroup' },
-      { path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' },
-    ],
-  })
-  .populate({
-    path: 'userGroup',
-    select: 'name description',
-    model: 'UserGroup',
-  })
-  .populate({
-    path: 'userGroupTrack',
-    select: 'name description',
-    model: 'UserGroupTrack',
-  })
-  .exec();
+
+  const result = await queryBuilder.queryModel
+    .populate('mentorId', 'firstName lastName email profile contact location')
+    .populate('woop', 'title')
+    .populate('Goals', 'title index description')
+    .populate({
+      path: 'classId',
+      select: 'title description classDate location virtualClass published status',
+      populate: [
+        { path: 'userGroup', select: 'name description', model: 'UserGroup' },
+        { path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' },
+      ],
+    })
+    .populate({ path: 'userGroup', select: 'name description', model: 'UserGroup' })
+    .populate({ path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' })
+    .exec();
 
   const pagination = await queryBuilder.getPaginationInfo();
-
   return { data: result, pagination };
 };
-
 // const getSingleStudentFromDB = async (id: string) => {
 //   const result = await User.findById(id)
 //     // .populate('userId')
