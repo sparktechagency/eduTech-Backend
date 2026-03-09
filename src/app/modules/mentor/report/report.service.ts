@@ -65,17 +65,14 @@ const deleteWeeklyReportFromDB = async (id: string): Promise<void> => {
     }
 };
 
-// get specific report By Student Id and week range
-const getReportByStudentIdAndWeekRange = async (studentId: string) => {
-    const result = await WeeklyReport.findOne({
-        studentId,
-        // weekStartDate: { $gte: startDate },
-        // weekEndDate: { $lte: endDate }
-    }).populate('studentId');
 
-    if (!result) {
-        throw new ApiError(StatusCodes.NOT_FOUND, 'Weekly Report not found for the specified student and week range');
-    }
+const getReportByStudentIdAndWeekRange = async (studentId: string) => {
+    // .find() returns an array [], whereas .findOne() returns an object {}
+    const result = await WeeklyReport.find({
+        studentId,
+    })
+    .populate('studentId')
+    .sort({ createdAt: -1 });
 
     return result;
 };

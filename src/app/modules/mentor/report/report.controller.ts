@@ -49,15 +49,18 @@ const deleteWeeklyReport = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+
 const getReportByStudentIdAndWeekRange = catchAsync(async (req: Request, res: Response) => {
     const studentId = req.params.studentId;
-    // const { startDate, endDate } = req.query;
 
     const reports = await WeeklyReportService.getReportByStudentIdAndWeekRange(studentId);
 
     res.status(200).json({
         success: true,
-        data: reports,
+        message: "Reports retrieved successfully",
+        data: {
+            reports: reports 
+        },
     });
 });
 
