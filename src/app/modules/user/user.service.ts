@@ -14,24 +14,7 @@ import { formatPhoneNumber } from "../../../helpers/formatedPhoneNumber";
 import { AppError } from "../../../errors/error.app";
 import path from 'path';
 
-// const createAdminToDB = async (payload: any): Promise<IUser> => {
 
-//   // check admin is exist or not;
-//   const isExistAdmin = await User.findOne({ email: payload.email })
-//   if (isExistAdmin) {
-//     throw new ApiError(StatusCodes.CONFLICT, "This Email already taken");
-//   }
-
-//   // create admin to db
-//   const createAdmin = await User.create(payload);
-//   if (!createAdmin) {
-//     throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create Admin');
-//   } else {
-//     await User.findByIdAndUpdate({ _id: createAdmin?._id }, { verified: true, status: 'ACTIVE' }, { new: true });
-//   }
-
-//   return createAdmin;
-// }
 const createAdminToDB = async (payload: any): Promise<IUser> => {
 
   const isExistAdmin = await User.findOne({ email: payload.email });
