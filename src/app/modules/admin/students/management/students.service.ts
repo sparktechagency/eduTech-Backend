@@ -16,7 +16,7 @@ const getAllStudentsFromDB = async (query: Record<string, any>) => {
     User.find({ role: 'STUDENT' }),
     query
   )
-    .search(['studentId', 'department', 'group', 'track', 'location', 'email', 'firstName', 'lastName'])
+    .search(['studentId', 'department', 'group', 'track', 'location', 'email', 'firstName', 'lastName', 'userGroup', 'userGroupTrack','status'])
     .filter()
     .sort()
     .paginate();
