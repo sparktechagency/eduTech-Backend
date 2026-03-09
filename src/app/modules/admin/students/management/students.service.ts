@@ -1,10 +1,12 @@
-import mongoose, { SortOrder } from 'mongoose';
+import mongoose, { SortOrder, Types } from 'mongoose';
 import { StudentProfile } from './students.model';
 import {  IStudentProfile, IStudentReview } from './students.interface';
 import { User } from '../../../user/user.model';
 import QueryBuilder from '../../../../../shared/apiFeature';
 import { UserGroupTrack } from '../../../user-group/user-group-track/user-group-track.model';
 import { UserGroup } from '../../../user-group/user-group.model';
+import { StatusCodes } from 'http-status-codes';
+import ApiError from '../../../../../errors/ApiError';
 
 const createStudentIntoDB = async (payload: IStudentProfile) => {
   const result = await StudentProfile.create(payload);
@@ -50,34 +52,35 @@ const createStudentIntoDB = async (payload: IStudentProfile) => {
 
 //   return { data: result, pagination };
 // };
+
 const getAllStudentsFromDB = async (query: Record<string, any>) => {
-  const { searchTerm, ...restQuery } = query;
-  
-  let extraFilter = {};
+  const { userGroup, userGroupTrack, ...restQuery } = query;
 
-  if (searchTerm) {
-    const [matchingGroups, matchingTracks] = await Promise.all([
-      UserGroup.find({ name: { $regex: searchTerm, $options: 'i' } }).select('_id'),
-      UserGroupTrack.find({ name: { $regex: searchTerm, $options: 'i' } }).select('_id'),
-    ]);
+  const baseFilter: Record<string, any> = { role: 'STUDENT' };
 
-    const groupIds = matchingGroups.map(g => g._id);
-    const trackIds = matchingTracks.map(t => t._id);
-
-    extraFilter = {
-      $or: [
-        ...(groupIds.length ? [{ userGroup: { $in: groupIds } }] : []),
-        ...(trackIds.length ? [{ userGroupTrack: { $in: trackIds } }] : []),
-      ]
-    };
+  if (userGroup) {
+    if (!Types.ObjectId.isValid(userGroup)) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid userGroup ID');
+    }
+    baseFilter.userGroup = new Types.ObjectId(userGroup);
   }
 
-  const baseQuery = Object.keys(extraFilter).length
-    ? User.find({ role: 'STUDENT', ...extraFilter })
-    : User.find({ role: 'STUDENT' });
+  if (userGroupTrack) {
+    if (!Types.ObjectId.isValid(userGroupTrack)) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid userGroupTrack ID');
+    }
+    baseFilter.userGroupTrack = new Types.ObjectId(userGroupTrack);
+  }
 
-  const queryBuilder = new QueryBuilder(baseQuery, { searchTerm, ...restQuery })
-    .search(['email', 'firstName', 'lastName', 'department', 'status'])
+  const queryBuilder = new QueryBuilder(
+    User.find(baseFilter),
+    restQuery  
+  )
+    .search([
+      'studentId', 'department', 'group', 'track',
+      'location', 'email', 'firstName', 'lastName', 'status'
+    
+    ])
     .filter()
     .sort()
     .paginate();
@@ -101,6 +104,7 @@ const getAllStudentsFromDB = async (query: Record<string, any>) => {
   const pagination = await queryBuilder.getPaginationInfo();
   return { data: result, pagination };
 };
+
 // const getSingleStudentFromDB = async (id: string) => {
 //   const result = await User.findById(id)
 //     // .populate('userId')

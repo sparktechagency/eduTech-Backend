@@ -33,15 +33,27 @@ search(searchableFields: string[]) {
 }
 
   // filtering
+  // filter() {
+  //   const queryCopy = { ...this.query };
+  //   const removeFields = ["searchTerm", "page", "limit", "sort"];
+  //   removeFields.forEach((field) => delete queryCopy[field]);
+  //   let queryStr = JSON.stringify(queryCopy);
+  //   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+  //   this.queryModel = this.queryModel.find(JSON.parse(queryStr));
+  //   return this;
+  // }
   filter() {
-    const queryCopy = { ...this.query };
-    const removeFields = ["searchTerm", "page", "limit", "sort"];
-    removeFields.forEach((field) => delete queryCopy[field]);
-    let queryStr = JSON.stringify(queryCopy);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
-    this.queryModel = this.queryModel.find(JSON.parse(queryStr));
-    return this;
-  }
+  const queryCopy = { ...this.query };
+  
+  // Add userGroup and userGroupTrack here so filter() ignores them
+  const removeFields = ["searchTerm", "page", "limit", "sort", "userGroup", "userGroupTrack"];
+  removeFields.forEach((field) => delete queryCopy[field]);
+  
+  let queryStr = JSON.stringify(queryCopy);
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+  this.queryModel = this.queryModel.find(JSON.parse(queryStr));
+  return this;
+}
 
   // sorting
   sort() {
@@ -50,38 +62,10 @@ search(searchableFields: string[]) {
     return this;
   }
 
-  // pagination
-  // paginate() {
-  //   const page = this.query.page * 1 || 1;
-  //   const limit = this.query.limit * 1 || 10;
-  //   const skip = (page - 1) * limit;
-  //   this.queryModel = this.queryModel.skip(skip).limit(limit);
-  //   return this;
-  // }
-
-  // // pagination info
-  // async getPaginationInfo() {
-  //   const limit = this.query.limit * 1 || 10;
-  //   const page = this.query.page * 1 || 1;
-
-  //   const total = await this.queryModel.model.countDocuments(
-  //     this.queryModel.getQuery()
-  //   );
-  //   const totalPage = Math.ceil(total / limit);
-
-  //   return {
-  //     total,
-  //     totalPage,
-  //     page,
-  //     limit,
-  //   };
-  // }
-  // pagination
 paginate() {
   const page = Math.max(Number(this.query.page) || 1, 1);
   const limit = Number(this.query.limit);
 
-  // Jodi explicit bhabe limit 0 thake, pagination hobe na
   if (this.query.limit !== undefined && limit === 0) {
     return this;
   }
@@ -93,7 +77,6 @@ paginate() {
   return this;
 }
 
-// pagination info
 async getPaginationInfo() {
   const page = Math.max(Number(this.query.page) || 1, 1);
   const limit = Number(this.query.limit);
