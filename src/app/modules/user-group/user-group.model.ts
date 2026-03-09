@@ -7,6 +7,10 @@ const userGroupSchema = new Schema<IUserGroup, UserGroupModel>(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      required: false,
+    },
     published: {
       type: Boolean,
       default: true,

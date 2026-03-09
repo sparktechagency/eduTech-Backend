@@ -46,28 +46,28 @@ const getMyAssignmentsFromDB = async (userId: string) => {
         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found!');
     }
 
-    if (!user.userGroupTrack) {
-        return [];
-    }
+const query: any = { published: true };
 
-   
-    const query: any = {
-        userGroupTrack: user.userGroupTrack,
-        published: true 
-    };
+if (user.userGroupTrack) {
+    query.userGroupTrack = user.userGroupTrack;
+}
 
-    if (user.userGroup && user.userGroup.length > 0) {
-        query.userGroup = { $in: user.userGroup };
-    }
+if (user.userGroup && user.userGroup.length > 0) {
 
-    const result = await Assignment.find(query)
-        .populate('teacher', 'firstName lastName profile')
-        .populate('userGroup')
-        .populate('userGroupTrack')
-        .populate('submitAssignment')
-        .sort({ createdAt: -1 });
+    const userGroupIds = user.userGroup.map(g => g._id?.toString() || g.toString());
+    query.userGroup = { $in: userGroupIds };
+}
 
-    return result;
+const result = await Assignment.find(query)
+    .populate('teacher', 'firstName lastName profile')
+    .populate('userGroup')
+    .populate({
+        path: 'submitAssignment',
+        match: { studentId: userId } 
+    })
+    .sort({ createdAt: -1 });
+
+return result;
 };
 
 

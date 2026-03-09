@@ -2,6 +2,7 @@ import { Model } from 'mongoose'
 
 export type IUserGroup = {
   name: string
+  description?: string
   createdAt: Date
   updatedAt: Date
   _id: string
