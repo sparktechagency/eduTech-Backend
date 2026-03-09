@@ -16,12 +16,13 @@ import path from 'path';
 
 
 const createAdminToDB = async (payload: any): Promise<IUser> => {
-
   const isExistAdmin = await User.findOne({ email: payload.email });
-  if (isExistAdmin) {
-    throw new ApiError(StatusCodes.CONFLICT, "This Email already taken");
+if (isExistAdmin) {
+    throw new ApiError(
+      StatusCodes.CONFLICT, 
+      `This Email is already taken. Existing User ID: ${isExistAdmin._id}`
+    );
   }
-
   const adminData = {
     ...payload,
     verified: true,
@@ -36,6 +37,7 @@ const createAdminToDB = async (payload: any): Promise<IUser> => {
 
   return createAdmin;
 }
+
 const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
   const createUser = await User.create(payload);
   if (!createUser) {
