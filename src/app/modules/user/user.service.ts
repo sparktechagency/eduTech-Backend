@@ -17,16 +17,17 @@ import path from 'path';
 
 const createAdminToDB = async (payload: any): Promise<IUser> => {
   const isExistAdmin = await User.findOne({ email: payload.email });
-if (isExistAdmin) {
+  if (isExistAdmin) {
     throw new ApiError(
       StatusCodes.CONFLICT, 
       `This Email is already taken. Existing User ID: ${isExistAdmin._id}`
     );
   }
+
   const adminData = {
     ...payload,
     verified: true,
-    status: 'ACTIVE' 
+    status: 'ACTIVE'  
   };
 
   const createAdmin = await User.create(adminData);
@@ -36,7 +37,7 @@ if (isExistAdmin) {
   }
 
   return createAdmin;
-}
+};
 
 const createUserToDB = async (payload: Partial<IUser>): Promise<IUser> => {
   const createUser = await User.create(payload);
