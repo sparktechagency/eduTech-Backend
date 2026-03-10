@@ -8,42 +8,6 @@ import { StatusCodes } from "http-status-codes";
 
 const createEvent = catchAsync(async (req: Request, res: Response) => {
   
-  
-  // const files = req.files as {
-  //   [fieldname: string]: Express.Multer.File[];
-  // };
-
-  // let imagePath: string | undefined;
-
-  // if (files?.image && files.image.length > 0) {
-  //   imagePath = `/images/${files.image[0].filename}`;
-  // }
-
-  // const {
-  //   title,
-  //   description,
-  //   date,
-  //   location,
-  //   type,
-  //   group,
-  //   targetUser,
-  // } = req.body;
-
-  // let parsedTargetUser = targetUser;
-  // if (typeof targetUser === "string") {
-  //   parsedTargetUser = JSON.parse(targetUser);
-  // }
-
-  // const eventData = {
-  //   title,
-  //   description,
-  //   date,
-  //   location,
-  //   type,
-  //   group,
-  //   targetUser: parsedTargetUser,
-  //   image: imagePath,
-  // };
 
   const result = await EventService.createEventFromDB(req.body);
 
@@ -54,16 +18,7 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getAllEvents = catchAsync(async (req, res) => {
-//     const result = await EventService.getAllEventsFromDB(req.user?.id, req.query);
 
-//     sendResponse(res, {
-//         statusCode: httpStatus.OK,
-//         success: true,
-//         message: 'Events retrieved successfully',
-//         data: result,
-//     });
-// });
 
 const getAllEvents = catchAsync(async (req, res) => {
 

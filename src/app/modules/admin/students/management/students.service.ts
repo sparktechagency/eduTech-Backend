@@ -14,45 +14,6 @@ const createStudentIntoDB = async (payload: IStudentProfile) => {
 };
 
 
-
-// const getAllStudentsFromDB = async (query: Record<string, any>) => {
-//   const queryBuilder = new QueryBuilder(
-//     User.find({ role: 'STUDENT' }),
-//     query
-//   )
-//     .search(['studentId', 'department', 'group', 'track', 'location', 'email', 'firstName', 'lastName', 'userGroup', 'userGroupTrack','status'])
-//     .filter()
-//     .sort()
-//     .paginate();
-// const result = await queryBuilder.queryModel
-//   .populate('mentorId', 'firstName lastName email profile contact location')
-//   .populate('woop', 'title')
-//   .populate('Goals', 'title index description')
-//   .populate({
-//     path: 'classId',
-//     select: 'title description classDate location virtualClass published status',
-//     populate: [
-//       { path: 'userGroup', select: 'name description', model: 'UserGroup' },
-//       { path: 'userGroupTrack', select: 'name description', model: 'UserGroupTrack' },
-//     ],
-//   })
-//   .populate({
-//     path: 'userGroup',
-//     select: 'name description',
-//     model: 'UserGroup',
-//   })
-//   .populate({
-//     path: 'userGroupTrack',
-//     select: 'name description',
-//     model: 'UserGroupTrack',
-//   })
-//   .exec();
-
-//   const pagination = await queryBuilder.getPaginationInfo();
-
-//   return { data: result, pagination };
-// };
-
 const getAllStudentsFromDB = async (query: Record<string, any>) => {
   const { userGroup, userGroupTrack, ...restQuery } = query;
 
@@ -105,19 +66,11 @@ const getAllStudentsFromDB = async (query: Record<string, any>) => {
   return { data: result, pagination };
 };
 
-// const getSingleStudentFromDB = async (id: string) => {
-//   const result = await User.findById(id)
-//     // .populate('userId')
-//     .populate('mentorId')
-//     .populate('woop', 'title description status')
-//     .populate('Goals', 'title index description')
-//     .populate('classId', 'title description classDate location virtualClass published status userGroup userGroupTrack');
-//   return result;
-// };
+
 
 const getSingleStudentFromDB = async (id: string) => {
   const result = await User.findById(id)
-    .populate('mentorId') // full mentor data
+    .populate('mentorId')
 
     .populate({
       path: 'woop',
@@ -126,7 +79,7 @@ const getSingleStudentFromDB = async (id: string) => {
       }
     })
 
-    .populate('Goals') // full goal
+    .populate('Goals') 
 
     .populate({
       path: 'classId',
@@ -137,7 +90,7 @@ const getSingleStudentFromDB = async (id: string) => {
     })
 
     .populate({
-      path: 'review.teacherId', // 👈 populate teacher inside review
+      path: 'review.teacherId', 
     })
 
     .populate({

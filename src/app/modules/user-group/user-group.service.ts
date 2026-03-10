@@ -6,14 +6,12 @@ import QueryBuilder from '../../../shared/apiFeature'
 
 //user group
 const createUserGroupToDB = async (payload: IUserGroup) => {
-    // check if user group exist or not
     const isExistUserGroup = await UserGroup.findOne({ name: payload.name })
 
     if (isExistUserGroup) {
         throw new ApiError(StatusCodes.CONFLICT, "User Group already exists!")
     }
 
-    // create new if not exist
     const result = await UserGroup.create(payload)
     const message = "User Group Created successfully"
 

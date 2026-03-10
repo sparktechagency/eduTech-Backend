@@ -111,24 +111,6 @@ const updateSingleStudentStatus = async (
     return result;
 };
 
-// const getAttendanceByDateAndClass = async (dateStr: string, classId: string) => {
-//     const { start, end } = getDayRange(dateStr);
-
-//     const result = await ClassAttendance.findOne({ 
-//         classId,
-//         date: { $gte: start, $lte: end }
-//     }).populate({
-//         path: 'records.studentId',
-//         select: 'studentId name userId rollNumber image', 
-//         populate: {
-//             path: 'userId', 
-//             select: 'name profile'
-//         }
-//     });
-
-//     return result;
-// };
-
 
 const getAttendanceByDateAndClass = async (dateStr?: string, classId?: string) => {
     const { start, end } = getDayRange(dateStr);

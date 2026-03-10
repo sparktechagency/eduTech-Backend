@@ -7,48 +7,8 @@ import { User } from "../../user/user.model";
 import { Types } from "mongoose";
 import { RecentActivity } from "../recentActivities/recentActivity.model";
 
-// const createClassToDB = async (payload: IClass) => {
-//   const teacherInfo = await User.findById(payload.teacher);
-//   console.log("Teacher ID:", payload.teacher);
-//   if (!teacherInfo) {
-//     throw new ApiError(StatusCodes.NOT_FOUND, "Teacher doesn't exist!");
-//   }
-
-//   if (teacherInfo && teacherInfo.userGroupTrack) {
-//     payload.userGroupTrack = teacherInfo.userGroupTrack as Types.ObjectId;
-//   }
-//   if (teacherInfo && teacherInfo.userGroup) {
-//     payload.userGroup = teacherInfo.userGroup as Types.ObjectId[];
-//   }
-
-//   const result = await Class.create(payload);
-
-//   // Create recent activity
-//   RecentActivity.create({
-//     title: ` ${result.title}`,
-//     description: ` ${result.description}`,
-//     type: "CLASS",
-//     user: result.teacher,
-//     referenceId: result._id,
-//   });
-//   console.log("Created Class:", result.teacher);
-
-//   return result;
-// };
 const createClassToDB = async (payload: IClass) => {
-  // const teacherInfo = await User.findById(payload.teacher);
 
-  // if (!teacherInfo) {
-  //   throw new ApiError(StatusCodes.NOT_FOUND, "Teacher doesn't exist!");
-  // }
-
-  // if (teacherInfo.userGroupTrack) {
-  //   payload.userGroupTrack = teacherInfo.userGroupTrack as Types.ObjectId;
-  // }
-
-  // if (teacherInfo.userGroup) {
-  //   payload.userGroup = teacherInfo.userGroup as Types.ObjectId[];
-  // }
 
   const result = await Class.create(payload);
 

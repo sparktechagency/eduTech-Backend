@@ -48,55 +48,6 @@ const getTotalUsersByRoleFromDB = async (): Promise<{ totalStudents: number; tot
     };
 };
 
-// const getRecentActivitiesFromDB = async () => {
-
-//     const [events, resources, assignments] = await Promise.all([
-//         Event.find()
-//             .sort({ createdAt: -1 })
-//             .limit(2)
-//             .lean(),
-
-//         LearningMaterial.find()
-//             .sort({ createdAt: -1 })
-//             .limit(2)
-//             .lean(),
-
-//         Assignment.find()
-//             .sort({ createdAt: -1 })
-//             .limit(2)
-//             .lean(),
-//     ]);
-
-//     const formattedEvents = events.map(item => ({
-//         ...item,
-//         activityType: 'event'
-//     }));
-
-//     const formattedResources = resources.map(item => ({
-//         ...item,
-//         activityType: 'resource'
-//     }));
-
-//     const formattedAssignments = assignments.map(item => ({
-//         ...item,
-//         activityType: 'assignment'
-//     }));
-
-//     // Merge all
-//     const allActivities = [
-//         ...formattedEvents,
-//         ...formattedResources,
-//         ...formattedAssignments
-//     ];
-
-//     // Sort again by createdAt (so mixed recent order)
-    // allActivities.sort((a, b) =>
-    //     new Date(b.createdAt || 0).getTime() -
-    //     new Date(a.createdAt || 0).getTime()
-    // );
-
-//     return allActivities;
-// };
 
 const getRecentActivitiesFromDB = async () => {
 

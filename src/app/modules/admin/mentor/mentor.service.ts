@@ -108,20 +108,6 @@ const getAllMentorsFromDB = async (query: any) => {
   return { mentors, pagination };
 };
 
-// const getAllStudentReportsFromDB = async (query: Record<string, any>) => {
-//     const result = new QueryBuilder(WeeklyReport.find(), query)
-//     .search(['studentId', 'weekStartDate', 'weekEndDate', 'isPresent', 'achievedHardOutcomes', 'softSkillImprovements', 'comments', 'goalSheet', 'objectives'])
-//     .filter()
-//     .sort()
-//     .paginate();
-//     const reports = await result.queryModel
-//     .populate('studentId') 
-//         .sort({ weekStartDate: -1 }); 
-
-//     return { reports, pagination: await result.getPaginationInfo() };
-// };
-
-
 const getMentorById = async (id: string) => {
     const mentor = await User.findById(id)
     .populate('userGroup')

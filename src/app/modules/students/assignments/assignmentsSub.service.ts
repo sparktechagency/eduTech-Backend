@@ -10,18 +10,28 @@ import { AssignmentsSub } from './assignmentsSub.model';
 import QueryBuilder from '../../../../shared/apiFeature';
 import mongoose, { Types } from 'mongoose';
 
+
 const submitAssignmentIntoDB = async (payload: IAssignmentsSub) => {
-  const result = await AssignmentsSub.create(payload);
+
   const assignment = await Assignment.findById(payload.assignmentId);
   if (!assignment) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Assignment not found');
   }
-  else if (assignment.status === 'IN_PROGRESS') {
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Cannot submit to a already you submited assignment');
+
+  const existingSubmission = await AssignmentsSub.findOne({
+    assignmentId: payload.assignmentId,
+    studentId: payload.studentId
+  });
+
+  if (existingSubmission) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'You have already submitted this assignment');
   }
 
-  assignment!.status = 'IN_PROGRESS';
-  await assignment!.save();
+  const result = await AssignmentsSub.create({
+    ...payload,
+    status: 'COMPLETED' 
+  });
+
   return result;
 };
 
@@ -37,38 +47,6 @@ const getStudentOwnSubmissionsFromDB = async (studentId: string) => {
     .populate('assignmentId');
   return result;
 };
-
-// const getMyAssignmentsFromDB = async (userId: string) => {
-
-//     const user = await User.findById(userId);
-
-//     if (!user) {
-//         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found!');
-//     }
-
-// const query: any = { published: true };
-
-// if (user.userGroupTrack) {
-//     query.userGroupTrack = user.userGroupTrack;
-// }
-
-// if (user.userGroup && user.userGroup.length > 0) {
-
-//     const userGroupIds = user.userGroup.map(g => g._id?.toString() || g.toString());
-//     query.userGroup = { $in: userGroupIds };
-// }
-
-// const result = await Assignment.find(query)
-//     .populate('teacher', 'firstName lastName profile')
-//     .populate('userGroup')
-//     .populate({
-//         path: 'submitAssignment',
-//         match: { studentId: userId } 
-//     })
-//     .sort({ createdAt: -1 });
-
-// return result;
-// };
 
 const getMyAssignmentsFromDB = async (userId: string) => {
     const user = await User.findById(userId);

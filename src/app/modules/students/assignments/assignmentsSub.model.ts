@@ -26,14 +26,13 @@ const AssignmentsSubSchema = new Schema<IAssignmentsSub>({
         type: String,
         default: ''
     },
-    // status: {
-    //     type: String,
-    //     enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED'],
-    //     default: 'PENDING'
-    // }
+        status: {
+        type: String,
+        enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED'],
+        default: 'PENDING'
+    }
     
 }, {
     timestamps: true
 });
-// export const AssignmentsSub = Assignment.discriminator<IAssignmentsSub>('AssignmentsSub', AssignmentsSubSchema);
 export const AssignmentsSub = model<IAssignmentsSub>('AssignmentsSub', AssignmentsSubSchema);

@@ -30,9 +30,7 @@ const getMyStatsFromDB = async (userId: string) => {
     totalPendingAssignments,
    totalClasses: result.classId ? 1 : 0,
    totalMentors: result.mentorId ? 1 : 0,
-    // mentorName: result.mentorId
-    //   ? `${(result.mentorId as any).totalMentors || 0} ${(result.mentorId as any).name || ''}`
-    //   : '',
+
     totalGoals: result.Goals?.length || 0, 
     totalWoops: result.woop?.length || 0,
   };
@@ -40,14 +38,6 @@ const getMyStatsFromDB = async (userId: string) => {
   return countindividual;
 };
 
-// const getUpcomingEventsFromDB = async (studentId: string) => {
-//   const upcomingEvents = await Event.find({ date: { $gte: new Date() } })
-//     .sort({ date: 1 })
-//     .limit(3)
-//     .select('title description date time image location type group');
-  
-//   return upcomingEvents;
-// }
 
 const getUpcomingEventsFromDB = async (studentId: string | undefined, role: string | undefined) => {
   let finalFilter: any = {

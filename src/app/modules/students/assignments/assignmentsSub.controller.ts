@@ -5,10 +5,11 @@ import { AssignmentsSubService } from './assignmentsSub.service';
 import path from 'path';
 import { StatusCodes } from 'http-status-codes';
 import { Assignment } from '../../(teacher)/assignment/assignment.model';
+import { AssignmentsSub } from './assignmentsSub.model';
 
 const submitAssignment = catchAsync(async (req: Request, res: Response) => {
     const { assignmentId } = req.params;
-    const studentId = req.user?.id; 
+    const studentId = req.user?.id;
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const fileData = files?.['submittedfile'] ? files['submittedfile'][0] : null;
@@ -31,7 +32,7 @@ const submitAssignment = catchAsync(async (req: Request, res: Response) => {
 
     const result = await AssignmentsSubService.submitAssignmentIntoDB(submissionData);
 
-    await Assignment.findByIdAndUpdate(
+    await AssignmentsSub.findByIdAndUpdate(
         assignmentId,
         { 
             submitAssignment: result._id, 
