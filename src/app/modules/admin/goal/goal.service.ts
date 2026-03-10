@@ -74,6 +74,9 @@ const getGoalByIdFromDB = async (id: string) => {
 }
 
 const updateGoalInDB = async (id: string, payload: Partial<IGoal>) => {
+    console.log("Type of payload:", Array.isArray(payload) ? "ARRAY" : typeof payload);
+    console.log("Payload value:", payload);
+
     if (payload.index) {
         const isGoalExist = await Goal.exists({ index: payload.index, _id: { $ne: id } });
         if (isGoalExist) {
@@ -81,12 +84,23 @@ const updateGoalInDB = async (id: string, payload: Partial<IGoal>) => {
         }
     }
 
-    const result = await Goal.findByIdAndUpdate(id, payload, { new: true });
-    if (!result) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "Goal doesn't exist!");
+    const updateData = Array.isArray(payload) ? payload[0] : payload;
+
+    if (!updateData || Object.keys(updateData).length === 0) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "No valid update data provided");
     }
-    const message = "Goal updated successfully";
-    return { message, result };
+
+    const result = await Goal.findByIdAndUpdate(
+        id, 
+        { $set: updateData }, 
+        { new: true, runValidators: true }
+    );
+
+    if (!result) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "Goal doesn't exist!");
+    }
+
+    return { message: "Goal updated successfully", result };
 }
 
 const deleteGoalFromDB = async (id: string) => {

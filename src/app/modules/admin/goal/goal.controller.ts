@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import catchAsync from "../../../../shared/catchAsync";
 import { goalService } from "./goal.service";
+import sendResponse from "../../../../shared/sendResponse";
+import { StatusCodes } from "http-status-codes";
 
 
 const createGoal = catchAsync(async (req: Request, res: Response) => {
@@ -31,13 +33,17 @@ const getGoalById = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const updateGoal = catchAsync(async (req: Request, res: Response) => {
-    const id = req.params.id;
+const updateGoal = catchAsync(async (req, res) => {
+    const { id } = req.params;
     const payload = req.body;
+
     const result = await goalService.updateGoalInDB(id, payload);
-    res.status(200).json({
+    
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
         success: true,
-        ...result,
+        message: 'Goal updated successfully',
+        data: result,
     });
 });
 
