@@ -42,7 +42,7 @@ router.route("/:id")
             USER_ROLES.SUPER_ADMIN, 
             USER_ROLES.MENTOR
         ),
-        validateRequest(GoalValidation.updateZodSchema),
+        // validateRequest(GoalValidation.updateZodSchema),
         goalController.updateGoal
     )
     .delete(
