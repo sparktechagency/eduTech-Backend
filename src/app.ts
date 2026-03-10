@@ -15,7 +15,7 @@ app.use(
       const allowedOrigins = [
         "http://72.61.74.10:4173",
         "https://web.share-network.org",
-        "https://app.share-network.org/",
+        "https://app.share-network.org",
         "http://localhost:4173",
         "http://10.10.7.6:4173",
         "http://10.10.7.72:4173",

@@ -16,13 +16,18 @@ const getMyStatsFromDB = async (userId: string) => {
     throw new Error('Student profile not found for this user');
   }
 
-  
   const totalSubmittedAssignments = await AssignmentsSub.countDocuments({
     studentId: result._id,
   });
+  const totalPendingAssignments = await Assignment.countDocuments({
+  published: true,
+  status: 'PENDING',
+  _id: { $nin: await Assignment.distinct('assignmentId', { submitAssignment: { $exists: true } }) },
+});
 
   const countindividual = {
     totalSubmittedAssignments,
+    totalPendingAssignments,
    totalClasses: result.classId ? 1 : 0,
    totalMentors: result.mentorId ? 1 : 0,
     // mentorName: result.mentorId
