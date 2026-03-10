@@ -15,56 +15,47 @@ const createGoalFromDb = async (studentId: string, payload: IGoal[]) => {
     throw new ApiError(StatusCodes.NOT_FOUND, "User not found!");
   }
 
-  const session = await mongoose.startSession();
-  
-  try {
-    session.startTransaction();
+  const existingGoals = isUserExist.Goals || [];
+  let result;
+  let message;
 
-    const existingGoals = isUserExist.Goals || [];
-    let result;
+  if (existingGoals.length >= 3) {
+    // Update existing goals
+    const updateResults = [];
 
-    if (existingGoals.length >= 3) {
-      const updateResults = [];
-    
-      for (let i = 0; i < 3; i++) {
-        const goalId = existingGoals[i]._id;
-        const goalData = goalsArray[i];
+    for (let i = 0; i < 3; i++) {
+      const goalId = (existingGoals[i] as any)._id;
+      const goalData = goalsArray[i];
 
-        if (goalData) {
-          const updatedGoal = await Goal.findByIdAndUpdate(
-            goalId,
-            { ...goalData },
-            { session, new: true, runValidators: true }
-          );
-          updateResults.push(updatedGoal);
-        }
+      if (goalData) {
+        const updatedGoal = await Goal.findByIdAndUpdate(
+          goalId,
+          { ...goalData },
+          { new: true, runValidators: true }
+        );
+        updateResults.push(updatedGoal);
       }
-      result = updateResults;
-    } 
-    else {
-      const newGoals = await Goal.insertMany(goalsArray, { session });
-      const goalIds = newGoals.map(goal => goal._id);
-      
-      await User.findByIdAndUpdate(
-        studentId,
-        { $addToSet: { Goals: { $each: goalIds } } },
-        { session, new: true }
-      );
-      result = newGoals;
     }
 
-    await session.commitTransaction();
-    return { 
-      message: existingGoals.length >= 3 ? "Goals updated successfully" : "Goals created successfully", 
-      result 
-    };
+    result = updateResults;
+    message = "Goals updated successfully";
 
-  } catch (error: any) {
-    await session.abortTransaction();
-    throw error;
-  } finally {
-    await session.endSession();
+  } else {
+    // Create new goals
+    const newGoals = await Goal.insertMany(goalsArray);
+    const goalIds = newGoals.map(goal => goal._id);
+
+    await User.findByIdAndUpdate(
+      studentId,
+      { $addToSet: { Goals: { $each: goalIds } } },
+      { new: true }
+    );
+
+    result = newGoals;
+    message = "Goals created successfully";
   }
+
+  return { message, result };
 };
 
 const getAllGoalsFromDB = async (query: Record<string, any>) => {

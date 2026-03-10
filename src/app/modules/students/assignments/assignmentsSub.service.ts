@@ -38,38 +38,74 @@ const getStudentOwnSubmissionsFromDB = async (studentId: string) => {
   return result;
 };
 
-const getMyAssignmentsFromDB = async (userId: string) => {
+// const getMyAssignmentsFromDB = async (userId: string) => {
 
+//     const user = await User.findById(userId);
+
+//     if (!user) {
+//         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found!');
+//     }
+
+// const query: any = { published: true };
+
+// if (user.userGroupTrack) {
+//     query.userGroupTrack = user.userGroupTrack;
+// }
+
+// if (user.userGroup && user.userGroup.length > 0) {
+
+//     const userGroupIds = user.userGroup.map(g => g._id?.toString() || g.toString());
+//     query.userGroup = { $in: userGroupIds };
+// }
+
+// const result = await Assignment.find(query)
+//     .populate('teacher', 'firstName lastName profile')
+//     .populate('userGroup')
+//     .populate({
+//         path: 'submitAssignment',
+//         match: { studentId: userId } 
+//     })
+//     .sort({ createdAt: -1 });
+
+// return result;
+// };
+
+const getMyAssignmentsFromDB = async (userId: string) => {
     const user = await User.findById(userId);
 
     if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'User not found!');
     }
 
-const query: any = { published: true };
+    const query: any = { published: true };
 
-if (user.userGroupTrack) {
-    query.userGroupTrack = user.userGroupTrack;
-}
+    const orConditions: any[] = [];
 
-if (user.userGroup && user.userGroup.length > 0) {
+    if (user.userGroupTrack) {
+        const trackId = user.userGroupTrack._id?.toString() || user.userGroupTrack.toString();
+        orConditions.push({ userGroupTrack: trackId });
+    }
 
-    const userGroupIds = user.userGroup.map(g => g._id?.toString() || g.toString());
-    query.userGroup = { $in: userGroupIds };
-}
+    if (user.userGroup && user.userGroup.length > 0) {
+        const userGroupIds = user.userGroup.map((g: any) => g._id?.toString() || g.toString());
+        orConditions.push({ userGroup: { $in: userGroupIds } });
+    }
 
-const result = await Assignment.find(query)
-    .populate('teacher', 'firstName lastName profile')
-    .populate('userGroup')
-    .populate({
-        path: 'submitAssignment',
-        match: { studentId: userId } 
-    })
-    .sort({ createdAt: -1 });
+    if (orConditions.length > 0) {
+        query.$or = orConditions;
+    }
 
-return result;
+    const result = await Assignment.find(query)
+        .populate('teacher', 'firstName lastName profile')
+        .populate('userGroup')
+        .populate({
+            path: 'submitAssignment',
+            match: { studentId: userId },
+        })
+        .sort({ createdAt: -1 });
+
+    return result;
 };
-
 
 
 const getupcomigEventsFromDB = async () => {
