@@ -53,9 +53,65 @@ const getResourceByIdFromDB = async (id: string) => {
   return resource;
 };
 
-const getAllMentorResourcesFromDB = async (query?: Record<string, any>) => {
+// const getAllMentorResourcesFromDB = async (query?: Record<string, any>) => {
+//   const safeQuery = query || {};
+//   const searchableFields = ['title', 'description', 'type', 'contentUrl'];
+
+//   const qb = new QueryBuilder(LearningMaterial.find(), safeQuery)
+//     .search(searchableFields)
+//     .filter()
+//     .sort()
+//     .paginate();
+
+//   const resources = await qb.queryModel
+//     .populate({
+//       path: 'createdBy',
+//       select: 'firstName lastName email profile contact location',
+//     })
+//     .populate({
+//       path: 'targertGroup',
+//       select: 'name description'
+//     })
+//     .exec();
+
+//   const pagination = await qb.getPaginationInfo();
+
+//   return { resources, pagination };
+// };
+
+const getAllMentorResourcesFromDB = async (query?: Record<string, any>, userId?: string) => {
   const safeQuery = query || {};
   const searchableFields = ['title', 'description', 'type', 'contentUrl'];
+
+  if (safeQuery.targeteAudience === 'STUDENT' && userId) {
+    const student = await User.findById(userId).select('userGroup').lean();
+    const studentGroupIds = student?.userGroup || [];
+
+   
+    const filterCondition = {
+      targeteAudience: 'STUDENT',
+      $or: [
+        { targertGroup: { $in: studentGroupIds } },
+        { targertGroup: null },
+        { targertGroup: { $exists: false } },
+      ],
+    };
+
+    delete safeQuery.targeteAudience; 
+    const qb = new QueryBuilder(LearningMaterial.find(filterCondition), safeQuery)
+      .search(searchableFields)
+      .sort()
+      .paginate();
+
+    const resources = await qb.queryModel
+      .populate({ path: 'createdBy', select: 'firstName lastName email profile contact location' })
+      .populate({ path: 'targertGroup', select: 'name description' })
+      .exec();
+
+    const pagination = await qb.getPaginationInfo();
+    return { resources, pagination };
+  }
+
 
   const qb = new QueryBuilder(LearningMaterial.find(), safeQuery)
     .search(searchableFields)
@@ -64,21 +120,13 @@ const getAllMentorResourcesFromDB = async (query?: Record<string, any>) => {
     .paginate();
 
   const resources = await qb.queryModel
-    .populate({
-      path: 'createdBy',
-      select: 'firstName lastName email profile contact location',
-    })
-    .populate({
-      path: 'targertGroup',
-      select: 'name description'
-    })
+    .populate({ path: 'createdBy', select: 'firstName lastName email profile contact location' })
+    .populate({ path: 'targertGroup', select: 'name description' })
     .exec();
 
   const pagination = await qb.getPaginationInfo();
-
   return { resources, pagination };
 };
-
 const getFilteredResourcesFromDB = async (query?: Record<string, any>) => {
   const safeQuery = query || {};
   const searchableFields = ['title', 'type', 'targetAudience'];
