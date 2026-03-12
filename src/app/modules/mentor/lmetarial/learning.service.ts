@@ -65,22 +65,13 @@ const getAllMentorResourcesFromDB = async (query?: Record<string, any>) => {
 
   const resources = await qb.queryModel
     .populate({
-    path: 'createdBy',
-    select: 'firstName lastName email profile contact location userGroup',
-    populate: {
-      path: 'userGroup',
-      select: 'name'
-    }
-  })
-  .populate({
-      path: 'targertGroup',
-      populate: {
-        path: 'userGroup',
-        select: 'name'
-      }
+      path: 'createdBy',
+      select: 'firstName lastName email profile contact location',
     })
-    .select('-createdBy') 
-
+    .populate({
+      path: 'targertGroup',
+      select: 'name description'
+    })
     .exec();
 
   const pagination = await qb.getPaginationInfo();
@@ -99,7 +90,7 @@ const getFilteredResourcesFromDB = async (query?: Record<string, any>) => {
     .paginate();
 
   const resources = await qb.queryModel
-    .populate('targetGroup') // fix typo
+    .populate('targertGroup') // fix typo
     .select('-createdBy')
     .exec();
 

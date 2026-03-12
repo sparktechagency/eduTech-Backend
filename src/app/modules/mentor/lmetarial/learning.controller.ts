@@ -1,16 +1,21 @@
 import catchAsync from "../../../../shared/catchAsync";
 import { LearningMaterialService } from "./learning.service";
-
+import { Types } from "mongoose";
 
 const createResource = catchAsync(async (req, res) => {
   const result = req.body;
   result.createdBy = req.user.id;
 
+  if (result.targertGroup) {
+    result.targertGroup = new Types.ObjectId(result.targertGroup);
+  }
+
+  console.log("targertGroup ID being saved:", result.targertGroup);
+  console.log("Type:", typeof result.targertGroup);
   if (req.files && (req.files as any)["file"]?.[0]) {
     result.pdf = `/files/${(req.files as any)["file"][0].filename}`;
   }
 
-  console.log("REQ FILES:", req.files);
   console.log("PAYLOAD:", result);
 
   const newResource = await LearningMaterialService.createResourceFromDB(result);

@@ -23,7 +23,7 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
             default: USER_ROLES.STUDENT,
             required: true
         },
-    targertGroup: { type: Schema.Types.ObjectId, ref: 'UserGroupTrack', required: false },
+    targertGroup: { type: Schema.Types.ObjectId, ref: 'UserGroup', required: false },
     markAsAssigned: { type: Boolean, required: false },
     
 }, { timestamps: true });
