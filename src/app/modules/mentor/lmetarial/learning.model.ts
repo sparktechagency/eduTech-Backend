@@ -17,13 +17,14 @@ const learningMaterialSchema = new Schema<ILearningMaterial>({
     },
     contentUrl: { type: String, required: false },
     pdf: { type: String, required: false },
+    targertGroup: { type: Schema.Types.ObjectId, ref: 'UserGroup', required: false },
     targeteAudience: {
             type: String,
             enum: Object.values(USER_ROLES),
             default: USER_ROLES.STUDENT,
             required: true
         },
-    targertGroup: { type: Schema.Types.ObjectId, ref: 'UserGroup', required: false },
+    
     markAsAssigned: { type: Boolean, required: false },
     
 }, { timestamps: true });

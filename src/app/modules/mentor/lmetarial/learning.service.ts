@@ -53,31 +53,6 @@ const getResourceByIdFromDB = async (id: string) => {
   return resource;
 };
 
-// const getAllMentorResourcesFromDB = async (query?: Record<string, any>) => {
-//   const safeQuery = query || {};
-//   const searchableFields = ['title', 'description', 'type', 'contentUrl'];
-
-//   const qb = new QueryBuilder(LearningMaterial.find(), safeQuery)
-//     .search(searchableFields)
-//     .filter()
-//     .sort()
-//     .paginate();
-
-//   const resources = await qb.queryModel
-//     .populate({
-//       path: 'createdBy',
-//       select: 'firstName lastName email profile contact location',
-//     })
-//     .populate({
-//       path: 'targertGroup',
-//       select: 'name description'
-//     })
-//     .exec();
-
-//   const pagination = await qb.getPaginationInfo();
-
-//   return { resources, pagination };
-// };
 
 const getAllMentorResourcesFromDB = async (query?: Record<string, any>, userId?: string) => {
   const safeQuery = query || {};
@@ -127,6 +102,7 @@ const getAllMentorResourcesFromDB = async (query?: Record<string, any>, userId?:
   const pagination = await qb.getPaginationInfo();
   return { resources, pagination };
 };
+
 const getFilteredResourcesFromDB = async (query?: Record<string, any>) => {
   const safeQuery = query || {};
   const searchableFields = ['title', 'type', 'targetAudience'];
@@ -148,16 +124,25 @@ const getFilteredResourcesFromDB = async (query?: Record<string, any>) => {
 };
 
 const updateResourceFromDB = async (id: string, payload: ILearningMaterial) => {
+    const updatePayload: any = { ...payload };
+    
+    if (updatePayload.targertGroup) {
+        const { Types } = await import('mongoose');
+        updatePayload.targertGroup = new Types.ObjectId(updatePayload.targertGroup);
+    }
+
     const result = await LearningMaterial.findByIdAndUpdate(
-        id, payload, 
+        id, 
+        { $set: updatePayload },  
         {
-             new: true, 
+            new: true, 
             runValidators: true
-            }
-        );
-        if (!result) {
-            throw new ApiError(StatusCodes.NOT_FOUND, ('Resource not found'));
         }
+    );
+
+    if (!result) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Resource not found');
+    }
     return result;
 };
 

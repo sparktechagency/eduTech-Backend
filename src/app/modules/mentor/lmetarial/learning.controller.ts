@@ -62,12 +62,14 @@ const getFilteredResources = catchAsync(async (req, res) => {
 
 const updateResource = catchAsync(async (req, res) => {
     const id = req.params.id;
-    const updateData = req.body;
+    const updateData = { ...req.body };
+    
+    if (req.file) {
+        updateData.pdf = req.file.path;
+    }
+
     const updatedResource = await LearningMaterialService.updateResourceFromDB(id, updateData);
-    res.status(200).json({
-        success: true,
-        data: updatedResource,
-    });
+    res.status(200).json({ success: true, data: updatedResource });
 });
 
 const deleteResource = catchAsync(async (req, res) => {
